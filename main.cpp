@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-typedef struct {
+typedef struct{
 	int x;
 	int y;
 	int z;
 } tPos;
 
-typedef struct {
+typedef struct{
 	//posicao é absoluta
 	tPos posicao;
 	//direcao é +1, 0 ou -1 em cada um dos eixos, não podendo ser 0 nos três
@@ -15,12 +16,12 @@ typedef struct {
 	int peso;
 } tPeixe;
 
-typedef struct {
+typedef struct{
 	tPos posicao;
 	int peso;
 } tAlga;
 
-typdef struct{
+typedef struct{
 	tPos posicao;
 } tPedra;
 
@@ -36,8 +37,8 @@ int compara(tPos a, tPos b){
 
 //função sorteia para sortear as posições iniciais, trata-se sobreposições utilizando a função compara
 tPos sorteiaPos(tPos max){
-	tPos resultado;
 	srand (time(NULL));
+	tPos resultado;
 	resultado.x=rand()%max.x+1;
 	resultado.y=rand()%max.y+1;
 	resultado.z=rand()%max.z+1;
@@ -46,15 +47,33 @@ tPos sorteiaPos(tPos max){
 
 //funcao que retorna uma direção, pra mudar usa a funcao compara
 tPos sorteiaDir(){
+	srand (time(NULL));
 	tPos resultado;
 	resultado.x=0;
 	resultado.y=0;
 	resultado.z=0;
-	srand (time(NULL));
 	while(resultado.x==0 && resultado.y==0 && resultado.z==0){
 		resultado.x=rand()%3-1;
 		resultado.y=rand()%3-1;
 		resultado.z=rand()%3-1;
 	}
 	return resultado;
+}
+
+void imprimetPos(tPos posicao){
+	printf("x = %d, y = %d, z = %d\n",posicao.x,posicao.y,posicao.z);
+}
+
+int main(int argc, char** argv) {
+	tPos teste, max;
+	max.x=10;
+	max.y=8;
+	max.z=6;
+	teste = sorteiaPos(max);
+	imprimetPos(teste);
+	teste = sorteiaDir();
+	imprimetPos(teste);
+	printf("Hello World");
+	
+	return 0;
 }
