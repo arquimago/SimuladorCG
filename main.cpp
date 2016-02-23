@@ -24,8 +24,8 @@ typdef struct{
 	tPos posicao;
 } tPedra;
 
+//Funcao de comparação, creio que precisaremos desse trecho de código repetidamente. Se as posicoes forem iguais retorna 1 - True, senão retorna 0 - False
 int compara(tPos a, tPos b){
-	//se as posicoes forem iguais retorna 1 - True, senão retorna 0 - False
 	int resultado;
 	if (a.x == b.x && a.y == b.y && a.z == b.z){
 		resultado = 1;
@@ -34,7 +34,8 @@ int compara(tPos a, tPos b){
 	}	
 }
 
-tPos sorteia(tPos max){
+//função sorteia para sortear as posições iniciais, trata-se sobreposições utilizando a função compara
+tPos sorteiaPos(tPos max){
 	tPos resultado;
 	srand (time(NULL));
 	resultado.x=rand()%max.x+1;
@@ -43,7 +44,8 @@ tPos sorteia(tPos max){
 	return resultado;
 }
 
-tPos mudaDir(tPos direcao){
+//funcao que retorna uma direção, pra mudar usa a funcao compara
+tPos sorteiaDir(){
 	tPos resultado;
 	resultado.x=0;
 	resultado.y=0;
