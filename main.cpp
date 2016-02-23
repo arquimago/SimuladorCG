@@ -10,7 +10,7 @@ typedef struct {
 typedef struct {
 	//posicao é absoluta
 	tPos posicao;
-	//direcao é +1 ou -1 em cada um dos eixos
+	//direcao é +1, 0 ou -1 em cada um dos eixos, não podendo ser 0 nos três
 	tPos direcao;
 	int peso;
 } tPeixe;
