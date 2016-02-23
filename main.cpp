@@ -13,12 +13,12 @@ typedef struct{
 	tPos posicao;
 	//direcao é +1, 0 ou -1 em cada um dos eixos, não podendo ser 0 nos três
 	tPos direcao;
-	int peso;
+	int massa;
 } tPeixe;
 
 typedef struct{
 	tPos posicao;
-	int peso;
+	int massa;
 } tAlga;
 
 typedef struct{
@@ -32,7 +32,8 @@ int compara(tPos a, tPos b){
 		resultado = 1;
 	} else {
 		resultado = 0;
-	}	
+	}
+	return resultado;
 }
 
 //função sorteia para sortear as posições iniciais, trata-se sobreposições utilizando a função compara
@@ -73,7 +74,6 @@ int main(int argc, char** argv) {
 	imprimetPos(teste);
 	teste = sorteiaDir();
 	imprimetPos(teste);
-	printf("Hello World");
 	
 	return 0;
 }
