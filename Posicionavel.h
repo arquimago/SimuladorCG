@@ -15,16 +15,17 @@ typedef struct {
 class Posicionavel //pedra planta e peixe herdam dessa classe.
 {
 	private:
+
 		posicao localizacao;
 
 		void posicionar ();
-
-			//codigo para gerar uma posicao aleatoria x y z
-			//checar em Cubo se a posicao esta ocupada ou nao.
-			//pedra e planta sobrecarregam essa função, pois tem propriedades especiais para ela.
+        //codigo para gerar uma posicao aleatoria x y z
+        //checar em Cubo se a posicao esta ocupada ou nao.
+        //pedra e planta sobrecarregam essa função, pois tem propriedades especiais para ela.
 
 
 	public:
+
 		posicao getPosicao();
 		void setPosicao();
 
@@ -40,7 +41,7 @@ class Peixe: public Posicionavel
 		int massa;
 
 		//funcoes privadas da classe peixe, somente os metodos daqui as utilizam.
-		bool explodir(); // tenta se dividir. chama a função diminuir e aloca varios peixes no Cubo
+        bool explodir(); // tenta se dividir. chama a função diminuir e aloca varios peixes menores no Cubo
 		void diminuir(int i);// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a função morrer
 		void morrer(); //destroi o objeto e limpa sua posicao no Cubo
 
@@ -57,7 +58,7 @@ class Peixe: public Posicionavel
 
 		bool virar();//muda aleatoriamente sua direção. testar para nao ficar de cabeça para baixo
 
-		void fome(int i); // testa o tempo (i). chama a função privada diminuir
+		void fome(int i); // testa o tempo i. chama a função privada diminuir
 
 		void sangrar(); //ocorre ao ser mordido. chama a função privada diminuir
 
@@ -89,7 +90,7 @@ class Planta: public Posicionavel
 
 		int getMassa();
 
-		void crescer(int i); // testa o tempo (i). chama a função privada diminuir
+		void crescer(int i); // testa o tempo (i). chama a função privada diminuir e explodir caso passe do limite
 
 		void sangrar(); //ocorre ao ser mordido. chama a função privada diminuir
 
@@ -102,8 +103,8 @@ class Pedra: public Posicionavel
 	private:
 
 		void posicionar();
-			//pedra e planta sempre sao alocadas no chão
-			//pedra acumula em cima das outras
+        //pedra e planta sempre sao alocadas no chão
+        //pedra acumula em cima das outras
 
 
 	public:
