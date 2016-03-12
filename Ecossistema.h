@@ -12,22 +12,23 @@ typedef struct {
 } unidade;
 //plano formado pelas unidades minimas
 typedef struct {
-	 unidade grid[0][0]; // matriz [x][y] de variaveis local
+	 unidade* grid; // matriz [x,y] de variaveis local
 } plano;
 //cubo formado pelos planos
 typedef struct {
-	  plano dimensao[0]; //vetor de [z] planos
+	  plano* dimensao; //vetor de [z] planos
 } cubo;
 
 
-// a ideia dessa classe é armazenar o "mapa" do ecossistema, localizações com ponteiros para os respectivos objetos
+// a ideia dessa classe Ã© armazenar o "mapa" do ecossistema, localizaÃ§Ãµes com ponteiros para os respectivos objetos
 
 
 class Ecossistema
 {
 	public:
 		static cubo aquario;
-		static Posicionavel* identificarOcupante();// retorna quem ocupa o local   retorna vazio se não tem
+		static Posicionavel* identificarOcupante();// retorna quem ocupa o local   retorna vazio se nÃ£o tem
+		static inicializar (int x, int y, int z); // grid = new unidade [x,y];   dimensao = new plano [z];
 };
 
 #endif // ECOSSISTEMA_H
