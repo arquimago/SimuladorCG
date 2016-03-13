@@ -36,9 +36,15 @@
 			<Add library="glu32" />
 			<Add library="gdi32" />
 		</Linker>
+		<Unit filename="SimuladorCG.layout" />
+		<Unit filename="include/Ecossistema.h" />
+		<Unit filename="include/Posicionavel.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="main.cpp" />
+		<Unit filename="src/Ecossistema.cpp" />
+		<Unit filename="src/Posicionavel.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
