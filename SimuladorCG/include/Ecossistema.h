@@ -6,18 +6,17 @@
 // definicoes para montar o cubo
 //unidade minima do cubo.
 typedef struct {
-	 bool ocupada;
-	 Posicionavel* ocupante;//uma variavel ponteiro para a classe posicionavel, pai de todas as outras 3 classes
+	 Posicionavel* ocupante[2];//ponteiro de duas posições de posicionavel (caso de peixe+ planta)
 } unidade;
 
 //plano formado pelas unidades minimas
 typedef struct {
-	 unidade* grid; // matriz [x][y] de variaveis local
+	 unidade* grid; // matriz [x][z] de variaveis local
 } plano;
 
 //cubo formado pelos planos
 typedef struct {
-	  plano* dimensao; //vetor de [z] planos
+	  plano* dimensao; //vetor de [y] planos
 } cubo;
 
 
@@ -27,11 +26,11 @@ class Ecossistema
 	public:
 		static cubo aquario;
 
-		static void inicializar (int x, int y, int z); // grid = new unidade [x,y];   dimensao = new plano [z];
-
-		static Posicionavel* identificarOcupante(int x, int y, int z);// retorna quem ocupa o local   retorna null se não tem
+		static void inicializar (int x, int y, int z); // grid = new unidade [x,z];   dimensao = new plano [y];
+		//inicializar tudo como nulo
+        // arredores de pedra
+		static Posicionavel** identificarOcupantes (int x, int y, int z);// retorna quem ocupa o local   retorna null se não tem
 
 };
 
 #endif // ECOSSISTEMA_H
-
