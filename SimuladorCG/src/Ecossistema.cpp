@@ -1,35 +1,28 @@
 #include "Ecossistema.h"
+#include "stddef.h"
 
 
-Ecossistema::inicializar (x, y, z)
+void Ecossistema::inicializar (int x, int y, int z)
 {
     aquario.dimensao = new plano[y+2];
-        for(int i = 0; i < y+2; i++){
-            aquario.dimensao[i].grid = new unidade[x+2,z+2];
-        }
-        for(int i = 0; i < y+2; i++){
-            for(int j = 0; j < x+2; j++){
-                for(int k = 0; k < z+2; k++){
-                    if(i==0||i==y+1||j==0||j==x+1||k==0||k==z+1){
-                        aquario.dimensao[i].grid[j,k].ocupante[0] = new Posicionavel('r');
-                        aquario.dimensao[i].grid[j,k].ocupante[1] = NULL;
-                    } else {
-                        aquario.dimensao[i].grid[j,k].ocupante[0] = NULL;
-                        aquario.dimensao[i].grid[j,k].ocupante[1] = NULL;
-                    }
+    for(int i = 0; i < y+2; i++){
+        aquario.dimensao[i].grid = new unidade[x+2,z+2];
+    }
+    for(int i = 0; i < y+2; i++){
+        for(int j = 0; j < x+2; j++){
+            for(int k = 0; k < z+2; k++){
+                if(i==0||i==y+1||j==0||j==x+1||k==0||k==z+1){
+                    aquario.dimensao[i].grid[j,k].ocupante[0] = new Posicionavel('r');
+                    aquario.dimensao[i].grid[j,k].ocupante[1] = NULL;
+                } else {
+                    aquario.dimensao[i].grid[j,k].ocupante[0] = NULL;
+                    aquario.dimensao[i].grid[j,k].ocupante[1] = NULL;
                 }
             }
         }
+    }
 }
-
-Ecossistema::identificarOcupantes()
-{
+cubo Ecossistema::aquario;
 
 
-}
 
-
-Ecossistema::~Ecossistema()
-{
-    //dtor
-}
