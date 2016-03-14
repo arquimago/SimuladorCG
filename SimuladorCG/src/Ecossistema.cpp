@@ -1,7 +1,7 @@
 #include "Ecossistema.h"
 
 
-Ecossistema::inicializar (int x, int y, int z)
+Ecossistema::inicializar (x, y, z)
 {
     aquario.dimensao = new plano[y+2];
         for(int i = 0; i < y+2; i++){
