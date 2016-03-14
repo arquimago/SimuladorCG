@@ -18,8 +18,34 @@ int main ()
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,largura,altura);
+
+     for(int i = 0; i < altura+2; i++){
+            for(int j = 0; j < comprimento+2; j++){
+                for(int k = 0; k < largura+2; k++){
+                   printf(Ecossistema::aquario.dimensao[i].grid[j,k].ocupante(0).getTipo());
+                   printf(" ");
+                   printf(Ecossistema::aquario.dimensao[i].grid[j,k].ocupante(1).getTipo());
+                   printf(" ");
+                }
+                printf('\n');
+            }
+            printf('\n');
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     //posicionar plantas pedras e peixes
-    for (int i=0 ; i < qtdPedra ; i++) new Pedra();
+    /*for (int i=0 ; i < qtdPedra ; i++) new Pedra();
     for (int i=0 ; i < qtdPlanta ; i++) new Planta(taxaCrescimentoPlanta);
     for (int i=0 ; i < qtdPeixe ; i++) new Peixe(taxaDiminuicaoPeixe);
 
@@ -56,24 +82,22 @@ int main ()
                             {
                                 if (proximo.getMassa() > ocupante.getMassa())
                                 {
-
+                                    proximo.morder(ocupante);
                                 }
                                 if (proximo.getMassa() < ocupante.getMassa())
                                 {
-
+                                    ocupante.morder(proximo);
                                 }
                                 if (proximo.getMassa() == ocupante.getMassa())
                                 {
-
+                                    //aleatorio entre um morder o outro
                                 }
 
                             }
 
                             if (proximo.getTipo() = 'p')
                             {
-                                ocupante.morder
-                                proximo.
-
+                                ocupante.morder(proximo);
                             }
 
                             ocupante[pos].nadar();
@@ -82,7 +106,7 @@ int main ()
                     }
                 }
             }
-        }
+        }*/
 
 
     }
