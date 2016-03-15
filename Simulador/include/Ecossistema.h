@@ -28,7 +28,7 @@ typedef struct {
 
 //plano formado pelas unidades minimas
 typedef struct {
-	 unidade* grid; // matriz [x][z] de variaveis local
+	 unidade** grid; // matriz [x][z] de variaveis local
 } plano;
 
 //cubo formado pelos planos

@@ -26,11 +26,11 @@ int main ()
             for(int j = 0; j < comprimento+2; j++){
                 for(int k = 0; k < largura+2; k++){
                    //printf("X = %d Y = %d Z=%d ", j, i, k);
-                   if(Ecossistema::aquario.dimensao[i].grid[j,k].ocupante[0]!=NULL){
-                        printf("%c ", Ecossistema::aquario.dimensao[i].grid[j,k].ocupante[0]->getTipo());
+                   if(Ecossistema::aquario.dimensao[i].grid[j][k].ocupante[0]!=NULL){
+                        printf("%c ", Ecossistema::aquario.dimensao[i].grid[j][k].ocupante[0]->getTipo());
                    } else {
-                        //printf("w ");
-                        printf("%d ", j);
+                        printf("w ");
+                       // printf("%d ", j);
                    }
                 }
                 printf(" Quebrou linhaaaaaaa \n");
