@@ -118,7 +118,7 @@ class Planta: public Posicionavel
         int taxa; //taxa de crescimento
 		//funcoes privadas da classe planta, somente os metodos daqui as utilizam.
 		bool explodir(); // tenta se dividir. chama a fun��o diminuir e aloca varios peixes no Cubo
-		void diminuir(int i);// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
+		int diminuir(int i);// diminui massa em i pontos por mordida. se a massa chegar a 0, chama a fun��o morrer. retorna massa perdida
 		void morrer(); //destroi o objeto e limpa sua posicao no Cubo
 
 
@@ -135,7 +135,7 @@ class Planta: public Posicionavel
 
 		void crescer(); //aumenta massa e chama a fun��o privada diminuir e explodir caso passe do limite
 
-		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir
+		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir, recebe a massa retornada
 		//retorna a quantidade que "sangrou"
 
 
