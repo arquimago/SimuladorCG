@@ -23,7 +23,7 @@ class Ecossistema
 // definicoes para montar o cubo
 //unidade minima do cubo.
 typedef struct {
-	 Posicionavel* ocupante[2];//ponteiro de duas posições de posicionavel (caso de peixe+ planta)
+	 Posicionavel* ocupante[2];//ponteiro de duas posiÃ§Ãµes de posicionavel (caso de peixe+ planta)
 } unidade;
 
 //plano formado pelas unidades minimas
@@ -37,7 +37,7 @@ typedef struct {
 } cubo;
 
 
-// a ideia dessa classe é armazenar o "mapa" do ecossistema, localizações com ponteiros para os respectivos objetos
+// a ideia dessa classe Ã© armazenar o "mapa" do ecossistema, localizaÃ§Ãµes com ponteiros para os respectivos objetos
 class Ecossistema
 {
 	public:
@@ -47,8 +47,9 @@ class Ecossistema
 		static void inicializar (int x, int y, int z); // grid = new unidade [x,z];   dimensao = new plano [y];
 		//inicializar tudo como nulo
         // arredores de pedra
-		static Posicionavel** identificarOcupantes (int x, int y, int z);// retorna quem ocupa o local   retorna null se não tem
+		static Posicionavel** identificarOcupantes (int x, int y, int z);// retorna quem ocupa o local   retorna null se nÃ£o tem
 
+        static void ocupar(int x,int y, int z,int i, Posicionavel* corpo);
 };
 
 #endif // ECOSSISTEMA_H
