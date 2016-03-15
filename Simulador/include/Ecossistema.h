@@ -1,20 +1,3 @@
-/*#ifndef ECOSSISTEMA_H
-#define ECOSSISTEMA_H
-
-
-class Ecossistema
-{
-    public:
-        Ecossistema();
-        virtual ~Ecossistema();
-
-    protected:
-
-    private:
-};
-
-#endif // ECOSSISTEMA_H*/
-
 #include "Posicionavel.h"
 #ifndef ECOSSISTEMA_H
 #define ECOSSISTEMA_H
@@ -40,9 +23,8 @@ typedef struct {
 // a ideia dessa classe é armazenar o "mapa" do ecossistema, localizações com ponteiros para os respectivos objetos
 class Ecossistema
 {
+    static cubo aquario;
 	public:
-		static cubo aquario;
-
 
 		static void inicializar (int x, int y, int z); // grid = new unidade [x,z];   dimensao = new plano [y];
 		//inicializar tudo como nulo
@@ -53,4 +35,4 @@ class Ecossistema
 };
 
 #endif // ECOSSISTEMA_H
-  
+
