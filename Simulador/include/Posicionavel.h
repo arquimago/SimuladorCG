@@ -48,7 +48,9 @@ class Posicionavel //pedra planta e peixe herdam dessa classe.
         char getTipo(); //retorna tipo
 
 		posicao getPosicao();
-		void setPosicao();
+		void setPosicao(posicao posicaoNova, int i);
+
+		void agir(); //planta e peixe vão sobrescrever esse metodo
 
 
 };
@@ -65,6 +67,16 @@ class Peixe: public Posicionavel
         bool explodir(); // tenta se dividir. chama a fun��o diminuir e aloca varios peixes menores no Cubo
 		void diminuir(int i);// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
 		void morrer(); //destroi o objeto e limpa sua posicao no Cubo
+        void nadar(int i);
+		//avan�a 1 unidade na dire��o.
+
+
+        Posicionavel** verAFrente();
+        //se tem planta/peixe/ retorna referencia
+        //vazio retorna nulo
+        //se for parede retorna pedra
+
+        void virar();//muda aleatoriamente sua dire��o. testar para nao ficar de cabe�a para baixo
 
 	public:
 		Peixe(int taxa); //construtor. seta os valores iniciais de massa e dire��o (aleatoria). chama metodo posicionar.
@@ -72,28 +84,14 @@ class Peixe: public Posicionavel
         //seta taxa
 
 
-		void setDirecao(posicao direcao);
-		//set dire��o aleatoria
-
-		posicao getDirecao( );
-
-		int getMassa( );
-
-        int nadar();
-		//avan�a 1 unidade na dire��o.
-		//se encontrar planta morde
+        void agir();
+        //usa ve a frente, muda direção de peixe
+        //se encontrar planta morde
 		//se encontrar peixe e for maior, come
 		//se encontrar peixe e for menor, morre
-		//se econtrar peixe e for =, aleatorio come
 
-		Posicionavel** verAFrente();
-        //se tem planta/peixe/ retorna referencia
-        //vazio retorna nulo
-        //se for parede retorna pedra
-
-
-
-		bool virar();//muda aleatoriamente sua dire��o. testar para nao ficar de cabe�a para baixo
+        posicao getDirecao();
+		int getMassa( );
 
 		void fome(int i); // testa o tempo i. chama a fun��o privada diminuir
 
@@ -121,7 +119,7 @@ class Planta: public Posicionavel
 		int diminuir(int i);// diminui massa em i pontos por mordida. se a massa chegar a 0, chama a fun��o morrer. retorna massa perdida
 		void morrer(); //destroi o objeto e limpa sua posicao no Cubo
 
-
+		void crescer(); //aumenta massa e chama a fun��o privada diminuir e explodir caso passe do limite
 		void posicionar();
 		//pedra e planta sempre sao alocadas no ch�o
 		//planta nao acumula em cima de outras
@@ -132,11 +130,11 @@ class Planta: public Posicionavel
         //chama o construtor de posicionavel e passa p
         //seta taxa de crescimento
 		int getMassa();
-
-		void crescer(); //aumenta massa e chama a fun��o privada diminuir e explodir caso passe do limite
-
 		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir, recebe a massa retornada
 		//retorna a quantidade que "sangrou"
+
+
+        void agir(); //chama metodo crescer
 
 
 };
@@ -162,4 +160,4 @@ class Pedra: public Posicionavel
 
 #endif // POSICIONAVEL_H
 
-    
+
