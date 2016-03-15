@@ -1,25 +1,6 @@
-/*#ifndef POSICIONAVEL_H
-#define POSICIONAVEL_H
-
-
-class Posicionavel
-{
-    public:
-        Posicionavel();
-        virtual ~Posicionavel();
-
-    protected:
-
-    private:
-};
-
-#endif // POSICIONAVEL_H*/
-
 #ifndef POSICIONAVEL_H
 #define POSICIONAVEL_H
 
-//------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------
 // usado para posicao e direcao.
 //direcao � +1, 0 ou -1 em cada um dos eixos, n�o podendo ser 0 nos tr�s
 typedef struct {
