@@ -47,3 +47,4 @@ void Planta::crescer()
     if (this->massa > 1000)
         this->explodir();
 }
+ 
