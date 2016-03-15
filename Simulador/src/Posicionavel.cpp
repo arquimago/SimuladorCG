@@ -113,6 +113,7 @@ int Peixe::sangrar()
 }
 
 
+
 Posicionavel** Peixe::verAFrente()
 {
             //se tem planta/peixe/ retorna referencia

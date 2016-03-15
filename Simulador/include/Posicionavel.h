@@ -67,6 +67,7 @@ class Peixe: public Posicionavel
         bool explodir(); // tenta se dividir. chama a fun��o diminuir e aloca varios peixes menores no Cubo
 		void diminuir(int i);// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
 		void morrer(); //destroi o objeto e limpa sua posicao no Cubo
+
         void nadar();
 		//avan�a 1 unidade na dire��o.
 
@@ -91,7 +92,7 @@ class Peixe: public Posicionavel
 		//se encontrar peixe e for menor, morre
 
         posicao getDirecao();
-		int getMassa();
+		int getMassa( );
 
 		void fome(int i); // testa o tempo i. chama a fun��o privada diminuir
 
