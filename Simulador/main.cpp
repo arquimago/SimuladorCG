@@ -68,7 +68,7 @@ int main ()
                         {
                             Posicionavel** proximo = ocupante[pos].verAFrente();
                             if (proximo != NULL)
-                            {
+                            {  
                                 while (proximo.getTipo() == 'r') //enquanto houver pedra
                                     peixes[pos].setDirecao();
                                     //mudar de direção até achar direção viavel
