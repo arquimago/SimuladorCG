@@ -15,14 +15,16 @@ int main ()
     int comprimento = 4;//x
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
-
+    //jx iy zk
 
 
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,altura,largura);
 
-     for(int i = 0; i < altura+2; i++){
+    /* //IMPRESSAO DO INICIALIZAR
+
+         for(int i = 0; i < altura+2; i++){
             for(int j = 0; j < comprimento+2; j++){
                 for(int k = 0; k < largura+2; k++){
                    //printf("X = %d Y = %d Z=%d ", j, i, k);
@@ -37,17 +39,7 @@ int main ()
             }
             printf("Quebra ordinaria\n");
         }
-
-
-
-
-
-
-
-
-
-
-
+    /*
 
     //posicionar plantas pedras e peixes
     /*for (int i=0 ; i < qtdPedra ; i++) new Pedra();
@@ -79,7 +71,7 @@ int main ()
                             {
                                 while (proximo.getTipo() == 'r') //enquanto houver pedra
                                     peixes[pos].setDirecao();
-                                    //mudar de direção até achar direção viavel
+                                    //mudar de direÃ§Ã£o atÃ© achar direÃ§Ã£o viavel
                             }
                             //nadar, tretar com peixe e planta
 
