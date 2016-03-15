@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1458002316 source:e:\documents\github\simuladorcg\simulador\main.cpp
+	"Ecossistema.h"
+	"stdio.h"
+	"Posicionavel.h"
+
+1457999370 e:\documents\github\simuladorcg\simulador\include\ecossistema.h
+	"Posicionavel.h"
+
+1457999409 e:\documents\github\simuladorcg\simulador\include\posicionavel.h
+
+1458003164 source:e:\documents\github\simuladorcg\simulador\src\ecossistema.cpp
+	"Ecossistema.h"
+	"stddef.h"
+	"stdio.h"
+
+1458000749 source:e:\documents\github\simuladorcg\simulador\src\posicionavel.cpp
+	"Posicionavel.h"
+
