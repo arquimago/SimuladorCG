@@ -31,12 +31,13 @@ class SerVivo: public Posicionavel
 {
 	private:
 		int massa;
+		int limite;
         	int taxa;
         	int getTaxa();
 		int getMassa();
 	public:
-		SerVivo(int massa,int taxa);
-		//seta massa e taxa iniciais
+		SerVivo(int massa,int taxa,int limite);
+		//seta massa e taxa iniciais e limites iniciais
 
 		void setMassa(int massa);
        		void explodir(int ser);
@@ -68,7 +69,7 @@ class Peixe: public SerVivo
 	public:
 		Peixe(int taxa);
 		//construtor. seta os valores iniciais de massa e dire��o (aleatoria). chama metodo posicionar.
-	        //chama construtor de serVivo, passando a massa e taxa
+	        //chama construtor de serVivo, passando a massa e taxa e 1500 como limite
 	        void agir();
 	        //chama função fome
 	        //usa ve a frente, muda direção de peixe
@@ -79,10 +80,6 @@ class Peixe: public SerVivo
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
 		void morder(Posicionavel*);
-		// come planta/peixe e aumenta a massa.  checa para ver se nao � uma pedra.
-		//chama a funcao privada explodir caso a massa ultrapasse do limite
-		//checar se massa do peixe � maior.
-		//chama metodo sangrar do mordido.
 		//chama metodo crescer do peixe de acordo com o retorno de sangrar do mordido
 		int sangrar();
 		//essa fun��o chama a fun��o morrer.
@@ -101,7 +98,7 @@ class Planta: public SerVivo
 	public:
 
 		Planta(int taxa);//construtor. chama metodo posicionar. seta valores iniciais de massa.
-        	//chama construtor de serVivo, passando a massa e taxa
+        	//chama construtor de serVivo, passando a massa e taxa, e 1000 como limite
 		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir, recebe a massa retornada
 		//retorna a quantidade que "sangrou"
         	void agir(); //chama metodo crescer
