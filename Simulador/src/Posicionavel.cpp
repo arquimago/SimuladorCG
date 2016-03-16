@@ -194,6 +194,7 @@ void Pedra::posicionar(int x,int y,int z)
 
     srand (time(NULL));
 
+    //tales, use o metodo identificarOcupantes de ecossistema.Cubo agora é privado.
     do{
         sorteio_x = rand()%x+1;
         sorteio_z = rand()%z+1;
@@ -202,6 +203,5 @@ void Pedra::posicionar(int x,int y,int z)
     while(Ecossistema::aquario.dimensao[sorteio_y].grid[sorteio_x][sorteio_z].ocupante[0]!=NULL){
         sorteio_y++;
     }
-
-    Ecossistema::aquario.dimensao[sorteio_y].grid[sorteio_x][sorteio_z].ocupante[0]=this;
+    Ecossistema::ocupar(sorteio_x,sorteio_y,sorteio_z,0,this);
 }    
