@@ -21,15 +21,49 @@ void Posicionavel::setPosicao(posicao posicaoNova, int i)
 void Posicionavel::agir()
 {} //sobrecarregar
 
-///PEIXE
-int Peixe::getTaxa()
+///SERVIVO
+int SerVivo::getTaxa()
 {return this->taxa;}
+
+int SerVivo::getMassa()
+{return this->massa;}
+
+void SerVivo::setMassa(int massa)
+{
+    this->massa = massa;
+}
+
+SerVivo::SerVivo(int massa,int taxa)
+{
+    this->massa = massa;
+    this->taxa = taxa;
+}
+
+
+void SerVivo::morrer(int i)
+{
+    //limbo (região dos mortos)
+    posicao limbo;
+    limbo.x,limbo.y,limbo.z = 0;
+    this->setPosicao(limbo,i);
+}
+
+void SerVivo::diminuir(int massaPerdida, int i)
+{
+    if (massaPerdida < this->getMassa())
+        this->massa = this->getMassa() - massaPerdida;
+    else
+        this->morrer(i);
+}
+
+void SerVivo::explodir(int i)
+{
+
+}
+///PEIXE
 
 posicao Peixe::getDirecao()
 {return this->direcao;}
-
-int Peixe::getMassa()
-{return this->massa;}
 
 void Peixe::virar()
 {
@@ -88,7 +122,6 @@ void Peixe::nadar()
     proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
     proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
 
-
     this->setPosicao(proximaPosicao,2);
 }
 
@@ -97,31 +130,15 @@ void Peixe::morder(Posicionavel* alvo)
 
 }
 
-void Peixe::morrer()
-{
-    //limbo (região dos mortos)
-    posicao limbo;
-    limbo.x,limbo.y,limbo.z = 0;
-    this->setPosicao(limbo,1);
-}
-
 void Peixe::fome()
 {
-    this->diminuir(this->getTaxa());
-}
-
-void Peixe::diminuir(int massaPerdida)
-{
-    if (massaPerdida < this->getMassa())
-        this->massa = this->getMassa() - massaPerdida;
-    else
-        this->morrer();
+    this->diminuir(this->getTaxa(),2);
 }
 
 int Peixe::sangrar()
 {
-    this->diminuir(0);
-    this->morrer();
+    this->diminuir(0,2);
+    this->morrer(2);
     return this->getMassa();
 }
 
@@ -133,16 +150,11 @@ Posicionavel** Peixe::verAFrente()
 }
 
 ///PLANTA
-int Planta::getTaxa()
-{return this->taxa;}
-
-int Planta::getMassa()
-{return this->massa;}
 
 int Planta::sangrar()
 {
     int massaAtual = this->getMassa();
-    this->diminuir(75);
+    this->diminuir(75,1);
     //diminui massa
     if (massaAtual >= 75)
         return 75;
@@ -151,35 +163,15 @@ int Planta::sangrar()
         return abs(massaAtual - 75);
 }
 
-void Planta::diminuir(int massaPerdida)
-{
-    if (massaPerdida < this->getMassa())
-        this->massa = this->getMassa() - massaPerdida;
-    else
-        this->morrer();
-}
-
-void Planta::morrer ()
-{
-    //limbo (região dos mortos)
-    posicao limbo;
-    limbo.x,limbo.y,limbo.z = 0;
-    this->setPosicao(limbo,1);
-}
-
-bool Planta::explodir()
-{
-
-}
-
 void Planta::agir()
 {this->crescer();}
 
 void Planta::crescer()
 {
-    this->massa = this->getMassa() + this->taxa;
-    if (this->getMassa() > 1000)
-        this->explodir();
+    this->setMassa(this->getMassa() + this->getTaxa());
+    if (this->getMassa() > 1000);
+        this->explodir(1);
+
 }
 
 ///Pedra
