@@ -32,17 +32,19 @@ class SerVivo: public Posicionavel
 	private:
 		int massa;
         	int taxa;
-
+        	int getTaxa();
+		int getMassa();
 	public:
 		SerVivo(int massa,int taxa);
 		//seta massa e taxa iniciais
-        	int getTaxa();
-		int getMassa();
+
 		void setMassa(int massa);
        		void explodir(int ser);
         	//chama a fun��o morrer e aloca varios peixes menores no Cubo
 		void diminuir(int qtd, int ser);
-		// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
+		// diminui massa em qtd pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
+		void aumentar(int qtd, int ser);
+		// aumenta massa em qtd pontos por fome/mordida. se a massa chegar a maximo, chama a fun��o explodir
 		void morrer(int ser);
 		//limpa sua posicao no Cubo (seta para 0,0,0,2)
 
