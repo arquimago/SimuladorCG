@@ -15,9 +15,9 @@ class Posicionavel
 	private:
 		posicao localizacao;
 		void posicionar ();
-        //codigo para gerar uma posicao aleatoria x y z
-        //checar em Cubo se a posicao esta ocupada ou nao.
-        //pedra e planta sobrecarregam essa fun��o, pois tem propriedades especiais para ela.
+        	//codigo para gerar uma posicao aleatoria x y z
+        	//checar em Cubo se a posicao esta ocupada ou nao.
+        	//pedra e planta sobrecarregam essa fun��o, pois tem propriedades especiais para ela.
 	public:
 		posicao getPosicao();
 		void setPosicao(posicao posicaoNova, int i);
@@ -31,16 +31,16 @@ class SerVivo: public Posicionavel
 {
 	private:
 		int massa;
-        int taxa;
+        	int taxa;
 
 	public:
-	    SerVivo(int massa,int taxa);
-	    //seta massa e taxa iniciais
-        int getTaxa();
+		SerVivo(int massa,int taxa);
+		//seta massa e taxa iniciais
+        	int getTaxa();
 		int getMassa();
 		void setMassa(int massa);
-        void explodir(int ser);
-        //chama a fun��o morrer e aloca varios peixes menores no Cubo
+       		void explodir(int ser);
+        	//chama a fun��o morrer e aloca varios peixes menores no Cubo
 		void diminuir(int qtd, int ser);
 		// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
 		void morrer(int ser);
@@ -54,26 +54,26 @@ class Peixe: public SerVivo
 {
 	private:
 		posicao direcao;
-        void nadar();
+        	void nadar();
 		//avan�a 1 unidade na dire��o.
-        Posicionavel** verAFrente();
-        //se tem planta/peixe/ retorna referencia
-        //vazio retorna nulo
-        //se for parede retorna pedra
-        void virar();
-        //muda aleatoriamente sua dire��o. testar para nao ficar de cabe�a para baixo
+	        Posicionavel** verAFrente();
+	        //se tem planta/peixe/ retorna referencia
+	        //vazio retorna nulo
+	        //se for parede retorna pedra
+	        void virar();
+	        //muda aleatoriamente sua dire��o. testar para nao ficar de cabe�a para baixo
 
 	public:
 		Peixe(int taxa);
 		//construtor. seta os valores iniciais de massa e dire��o (aleatoria). chama metodo posicionar.
-        //chama construtor de serVivo, passando a massa e taxa
-        void agir();
-        //chama função fome
-        //usa ve a frente, muda direção de peixe
-        //se encontrar planta morde
+	        //chama construtor de serVivo, passando a massa e taxa
+	        void agir();
+	        //chama função fome
+	        //usa ve a frente, muda direção de peixe
+	        //se encontrar planta morde
 		//se encontrar peixe e for maior, come
 		//se encontrar peixe e for menor, morre
-        posicao getDirecao();
+        	posicao getDirecao();
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
 		void morder(Posicionavel*);
@@ -99,18 +99,18 @@ class Planta: public SerVivo
 	public:
 
 		Planta(int taxa);//construtor. chama metodo posicionar. seta valores iniciais de massa.
-        //chama construtor de serVivo, passando a massa e taxa
+        	//chama construtor de serVivo, passando a massa e taxa
 		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir, recebe a massa retornada
 		//retorna a quantidade que "sangrou"
-        void agir(); //chama metodo crescer
+        	void agir(); //chama metodo crescer
 };
 
 class Pedra: public Posicionavel
 {
 	private:
 		void posicionar(int x,int y,int z);
-        //pedra e planta sempre sao alocadas no ch�o
-        //pedra acumula em cima das outras
+        	//pedra e planta sempre sao alocadas no ch�o
+        	//pedra acumula em cima das outras
 	public:
 		Pedra();//construtor. chama metodo posicionar.
 };
