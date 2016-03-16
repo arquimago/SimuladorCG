@@ -108,7 +108,7 @@ class Planta: public SerVivo
 class Pedra: public Posicionavel
 {
 	private:
-		void posicionar();
+		void posicionar(int x,int y,int z);
         //pedra e planta sempre sao alocadas no ch�o
         //pedra acumula em cima das outras
 	public:
