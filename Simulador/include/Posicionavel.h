@@ -25,19 +25,35 @@ class Posicionavel
 		//planta e peixe vão sobrescrever esse metodo
 };
 
-class Peixe: public Posicionavel
+
+class SerVivo: public Posicionavel
+//pedra planta e peixe herdam dessa classe.
+{
+	private:
+		int massa;
+        int taxa;
+
+	public:
+	    SerVivo(int massa,int taxa);
+	    //seta massa e taxa iniciais
+        int getTaxa();
+		int getMassa();
+		void setMassa(int massa);
+        void explodir(int ser);
+        //chama a fun��o morrer e aloca varios peixes menores no Cubo
+		void diminuir(int qtd, int ser);
+		// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
+		void morrer(int ser);
+		//limpa sua posicao no Cubo (seta para 0,0,0,2)
+
+};
+
+
+
+class Peixe: public SerVivo
 {
 	private:
 		posicao direcao;
-		int massa;
-        int taxa;
-        //taxa de diminui��o
-        bool explodir();
-        // tenta se dividir. chama a fun��o diminuir e aloca varios peixes menores no Cubo
-		void diminuir(int i);
-		// diminui massa em i pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
-		void morrer();
-		//limpa sua posicao no Cubo (seta para 0,0,0,2)
         void nadar();
 		//avan�a 1 unidade na dire��o.
         Posicionavel** verAFrente();
@@ -48,10 +64,9 @@ class Peixe: public Posicionavel
         //muda aleatoriamente sua dire��o. testar para nao ficar de cabe�a para baixo
 
 	public:
-
 		Peixe(int taxa);
 		//construtor. seta os valores iniciais de massa e dire��o (aleatoria). chama metodo posicionar.
-        //seta taxa de diminuição
+        //chama construtor de serVivo, passando a massa e taxa
         void agir();
         //chama função fome
         //usa ve a frente, muda direção de peixe
@@ -59,8 +74,6 @@ class Peixe: public Posicionavel
 		//se encontrar peixe e for maior, come
 		//se encontrar peixe e for menor, morre
         posicao getDirecao();
-        int getTaxa();
-		int getMassa();
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
 		void morder(Posicionavel*);
@@ -75,18 +88,9 @@ class Peixe: public Posicionavel
 
 };
 
-class Planta: public Posicionavel
+class Planta: public SerVivo
 {
 	private:
-		int massa;
-        int taxa;
-        //taxa de crescimento
-		bool explodir();
-		// tenta se dividir. chama a fun��o diminuir e aloca varios peixes no Cubo
-		void diminuir(int i);
-		// diminui massa em i pontos por mordida. se a massa chegar a 0, chama a fun��o morrer. retorna massa perdida
-		void morrer();
-		//destroi o objeto e limpa sua posicao no Cubo
 		void crescer();
 		//aumenta massa e chama a fun��o privada diminuir e explodir caso passe do limite
 		void posicionar();
@@ -95,14 +99,10 @@ class Planta: public Posicionavel
 	public:
 
 		Planta(int taxa);//construtor. chama metodo posicionar. seta valores iniciais de massa.
-        //seta taxa de crescimento
-		int getMassa();
-	    int getTaxa();
+        //chama construtor de serVivo, passando a massa e taxa
 		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir, recebe a massa retornada
 		//retorna a quantidade que "sangrou"
         void agir(); //chama metodo crescer
-
-
 };
 
 class Pedra: public Posicionavel
