@@ -137,9 +137,10 @@ void Peixe::fome()
 
 int Peixe::sangrar()
 {
+    int massa = this->getMassa();
     this->diminuir(0,2);
     this->morrer(2);
-    return this->getMassa();
+    return massa;
 }
 
 Posicionavel** Peixe::verAFrente()
