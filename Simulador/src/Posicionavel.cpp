@@ -29,9 +29,7 @@ int SerVivo::getMassa()
 {return this->massa;}
 
 void SerVivo::setMassa(int massa)
-{
-    this->massa = massa;
-}
+{this->massa = massa;}
 
 SerVivo::SerVivo(int massa,int taxa)
 {
@@ -54,6 +52,13 @@ void SerVivo::diminuir(int massaPerdida, int i)
         this->massa = this->getMassa() - massaPerdida;
     else
         this->morrer(i);
+}
+
+void SerVivo::aumentar(int massaGanha,int i)
+{
+   this->setMassa(this->getMassa() + massaGanha);
+   if (this->getMassa() > this->limite)
+        this->explodir(i);
 }
 
 void SerVivo::explodir(int i)
@@ -100,7 +105,6 @@ void Peixe::agir()
     {
         //tem peixe
         //testes das massas
-
         if (peixe->getMassa() >= this->getMassa())
             peixe->morder(this);
         else
@@ -126,14 +130,10 @@ void Peixe::nadar()
 }
 
 void Peixe::morder(Posicionavel* alvo)
-{
-
-}
+{this->aumentar(alvo->sangrar(),2);}
 
 void Peixe::fome()
-{
-    this->diminuir(this->getTaxa(),2);
-}
+{this->diminuir(this->getTaxa(),2);}
 
 int Peixe::sangrar()
 {
@@ -150,10 +150,7 @@ Posicionavel** Peixe::verAFrente()
     proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
     proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
     
-    return Ecossistema::dentificarOcupantes (proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
-    //se tem planta/peixe/ retorna referencia
-    //vazio retorna nulo
-    //se for parede retorna pedra
+    return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
 ///PLANTA
@@ -175,6 +172,7 @@ void Planta::agir()
 
 void Planta::crescer()
 {
+    this->aumentar()
     this->setMassa(this->getMassa() + this->getTaxa());
     if (this->getMassa() > 1000);
         this->explodir(1);
