@@ -47,6 +47,7 @@ class SerVivo: public Posicionavel
 		void aumentar(int qtd, int ser);
 		// aumenta massa em qtd pontos por fome/mordida. se a massa chegar a maximo, chama a fun��o explodir
 		void morrer(int ser);
+		int sangrar();
 		//limpa sua posicao no Cubo (seta para 0,0,0,2)
 
 };

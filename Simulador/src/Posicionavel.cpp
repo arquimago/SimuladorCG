@@ -31,11 +31,15 @@ int SerVivo::getMassa()
 void SerVivo::setMassa(int massa)
 {this->massa = massa;}
 
-SerVivo::SerVivo(int massa,int taxa)
+SerVivo::SerVivo(int massa,int taxa, int limite)
 {
     this->massa = massa;
     this->taxa = taxa;
+    this->limite = limite;
 }
+
+SerVivo::sangrar()
+{} //sobrecarregavel
 
 
 void SerVivo::morrer(int i)
@@ -130,7 +134,10 @@ void Peixe::nadar()
 }
 
 void Peixe::morder(Posicionavel* alvo)
-{this->aumentar(alvo->sangrar(),2);}
+{
+    SerVivo* ser = (SerVivo*) alvo;
+    this->aumentar(ser->sangrar(),2);
+}
 
 void Peixe::fome()
 {this->diminuir(this->getTaxa(),2);}
@@ -145,12 +152,14 @@ int Peixe::sangrar()
 
 Posicionavel** Peixe::verAFrente()
 {
+    posicao direcaoAtual = this->getDirecao();
+    posicao posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
-    
+
     proximaPosicao.x = posicaoAtual.x + direcaoAtual.x;
     proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
     proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
-    
+
     return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
@@ -172,20 +181,14 @@ void Planta::agir()
 {this->crescer();}
 
 void Planta::crescer()
-{
-    this->aumentar()
-    this->setMassa(this->getMassa() + this->getTaxa());
-    if (this->getMassa() > 1000);
-        this->explodir(1);
-
-}
+{this->aumentar(this->getTaxa(),1);}
 
 ///Pedra
 Pedra::Pedra()
 {
 
 }
-
+/*
 void Pedra::posicionar(int x,int y,int z)
 {
     int sorteio_x, sorteio_z;
@@ -203,4 +206,5 @@ void Pedra::posicionar(int x,int y,int z)
         sorteio_y++;
     }
     Ecossistema::ocupar(sorteio_x,sorteio_y,sorteio_z,0,this);
-}    
+}
+*/
