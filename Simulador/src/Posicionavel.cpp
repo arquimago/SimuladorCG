@@ -144,6 +144,13 @@ int Peixe::sangrar()
 
 Posicionavel** Peixe::verAFrente()
 {
+    posicao proximaPosicao;
+    
+    proximaPosicao.x = posicaoAtual.x + direcaoAtual.x;
+    proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
+    proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
+    
+    return Ecossistema::dentificarOcupantes (proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
     //se tem planta/peixe/ retorna referencia
     //vazio retorna nulo
     //se for parede retorna pedra
