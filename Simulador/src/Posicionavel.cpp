@@ -2,55 +2,49 @@
 #include <stdlib.h>
 #include <time.h>
 
-Posicionavel::Posicionavel(char c)
-{
-   this->tipo= c;//ctor
-}
-
-char Posicionavel::getTipo()
-{
-   return this->tipo;
-}
-
+///POSICIONAVEL
 posicao Posicionavel::getPosicao()
-{
-    return this->localizacao;
-}
+{return this->localizacao;}
 
 void Posicionavel::setPosicao(posicao posicaoNova, int i)
 {
+    //seta posicao atual no cubo para nulo
+    Ecossistema::ocupar(localizacao.x,localizacao.y,localizacao.z,i,NULL);
+    //altera posicao atual
     this->localizacao.x = posicaoNova.x;
     this->localizacao.y = posicaoNova.y;
     this->localizacao.z = posicaoNova.z;
-
+    //seta nova posicao no cubo
     Ecossistema::ocupar(localizacao.x,localizacao.y,localizacao.z,i,this);
-
 }
 
 void Posicionavel::agir()
-{
-    //faz nada
+{} //sobrecarregar
 
-}
-//PEIXE
+///PEIXE
+int Peixe::getTaxa()
+{return this->taxa;}
+
+posicao Peixe::getDirecao()
+{return this->direcao;}
+
+int Peixe::getMassa()
+{return this->massa;}
 
 void Peixe::virar()
 {
     srand(time(NULL));
     posicao direcaoNova;
-
+    //seta direcoes aleatorias entre -1,0,1
     this->direcao.x=(rand() % 3) -1;
     this->direcao.y=(rand() % 3) -1;
     this->direcao.z=(rand() % 3) -1;
 }
 
-posicao Peixe::getDirecao()
-{
-    return this->direcao;
-}
-
 void Peixe::agir()
 {
+    this->fome();
+
     Posicionavel** proximo = this->verAFrente();
     Pedra* pedra = (Pedra*) proximo[0];
 
@@ -84,11 +78,6 @@ void Peixe::agir()
         this->morder(planta);
 }
 
-int Peixe::getMassa()
-{
-    return this->massa;
-}
-
 void Peixe::nadar()
 {
     posicao direcaoAtual = this->getDirecao();
@@ -99,6 +88,7 @@ void Peixe::nadar()
     proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
     proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
 
+
     this->setPosicao(proximaPosicao,2);
 }
 
@@ -107,45 +97,74 @@ void Peixe::morder(Posicionavel* alvo)
 
 }
 
-int Peixe::sangrar()
+void Peixe::morrer()
 {
-
+    //limbo (região dos mortos)
+    posicao limbo;
+    limbo.x,limbo.y,limbo.z = 0;
+    this->setPosicao(limbo,1);
 }
 
+void Peixe::fome()
+{
+    this->diminuir(this->getTaxa());
+}
 
+void Peixe::diminuir(int massaPerdida)
+{
+    if (massaPerdida < this->getMassa())
+        this->massa = this->getMassa() - massaPerdida;
+    else
+        this->morrer();
+}
+
+int Peixe::sangrar()
+{
+    this->diminuir(0);
+    this->morrer();
+    return this->getMassa();
+}
 
 Posicionavel** Peixe::verAFrente()
 {
-            //se tem planta/peixe/ retorna referencia
-        //vazio retorna nulo
-        //se for parede retorna pedra
+    //se tem planta/peixe/ retorna referencia
+    //vazio retorna nulo
+    //se for parede retorna pedra
 }
 
-//PLANTA
+///PLANTA
+int Planta::getTaxa()
+{return this->taxa;}
+
+int Planta::getMassa()
+{return this->massa;}
 
 int Planta::sangrar()
 {
-    return this->diminuir(75);
+    int massaAtual = this->getMassa();
+    this->diminuir(75);
+    //diminui massa
+    if (massaAtual >= 75)
+        return 75;
+    else
+        //retorna a quantidade restante da massa
+        return abs(massaAtual - 75);
 }
 
-int Planta::diminuir(int massaPerdida)
+void Planta::diminuir(int massaPerdida)
 {
-
-    if (massaPerdida < this->massa)
-    {
-        this->massa = this->massa - massaPerdida;
-        return massaPerdida;
-    }
+    if (massaPerdida < this->getMassa())
+        this->massa = this->getMassa() - massaPerdida;
     else
-    {
         this->morrer();
-        return this->massa;
-    }
 }
 
 void Planta::morrer ()
 {
-
+    //limbo (região dos mortos)
+    posicao limbo;
+    limbo.x,limbo.y,limbo.z = 0;
+    this->setPosicao(limbo,1);
 }
 
 bool Planta::explodir()
@@ -154,13 +173,22 @@ bool Planta::explodir()
 }
 
 void Planta::agir()
-{
-    this->crescer();
-}
+{this->crescer();}
 
 void Planta::crescer()
 {
-    this->massa = this->massa + this->taxa;
-    if (this->massa > 1000)
+    this->massa = this->getMassa() + this->taxa;
+    if (this->getMassa() > 1000)
         this->explodir();
+}
+
+///Pedra
+Pedra::Pedra()
+{
+
+}
+
+void Pedra::posicionar()
+{
+
 }
