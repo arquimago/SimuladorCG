@@ -2,6 +2,8 @@
 #include "stddef.h"
 #include "stdio.h"
 
+cubo Ecossistema::aquario;
+
 void Ecossistema::inicializar (int x, int y, int z)
 {
     y+=2;
@@ -10,24 +12,33 @@ void Ecossistema::inicializar (int x, int y, int z)
 
     aquario.dimensao = new plano[y];
 
-    for(int i = 0; i < y; i++){
+    for(int i = 0; i < y; i++)
+    {
         aquario.dimensao[i].grid = new unidade*[x];
     }
 
-    for(int i = 0; i < y; i++) {
-        for(int j = 0; j < x; j++){
+    for(int i = 0; i < y; i++)
+    {
+        for(int j = 0; j < x; j++)
+        {
             aquario.dimensao[i].grid[j] = new unidade[z];
         }
     }
 
-    for(int i = 0; i < y; i++){
-        for(int j = 0; j < x; j++){
-            for(int k = 0; k < z; k++){
-                if(i==0||i==y-1||k==0||k==z-1||j==0||j==x-1){
-                    Ecossistema::ocupar(j,i,k,0,new Posicionavel('r'));
+    for(int i = 0; i < y; i++)
+    {
+        for(int j = 0; j < x; j++)
+        {
+            for(int k = 0; k < z; k++)
+            {
+                if(i==0||i==y-1||k==0||k==z-1||j==0||j==x-1)
+                {
+                    Ecossistema::ocupar(j,i,k,0,new Posicionavel());
                     Ecossistema::ocupar(j,i,k,1,NULL);
                     Ecossistema::ocupar(j,i,k,2,NULL);
-                } else {
+                }
+                else
+                {
                     Ecossistema::ocupar(j,i,k,0,NULL);
                     Ecossistema::ocupar(j,i,k,1,NULL);
                     Ecossistema::ocupar(j,i,k,2,NULL);
@@ -36,7 +47,6 @@ void Ecossistema::inicializar (int x, int y, int z)
         }
     }
 }
-cubo Ecossistema::aquario;
 
 Posicionavel** Ecossistema::identificarOcupantes (int x, int y, int z)
 {
