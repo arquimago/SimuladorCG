@@ -77,7 +77,7 @@ class Peixe: public SerVivo
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
 		void morder(Posicionavel*);
-		// come planta/peixe e almenta a massa.  checa para ver se nao � uma pedra.
+		// come planta/peixe e aumenta a massa.  checa para ver se nao � uma pedra.
 		//chama a funcao privada explodir caso a massa ultrapasse do limite
 		//checar se massa do peixe � maior.
 		//chama metodo sangrar do mordido.
