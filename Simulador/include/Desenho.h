@@ -1,28 +1,29 @@
 #ifndef DESENHO_H
 #define DESENHO_H
 
-
 class Desenho
 {
     public:
-        Desenho();
-        void desenhar();
+        Desenho(int argc, char** argv);
+        int desenhar();
 
 
 
         //desenha
         //faz tudo
-        virtual ~Desenho();
+        //virtual ~Desenho();
 
     protected:
 
-    private:
-        void makeStripeImage(int w);
-        void init();
-        void display();
-        void spinDisplay(void);
-        void reshape(int w, int h);
-        void mouse(int button, int state, int x, int y);
+    
+	private:
+		static void makeStripeImage(int w);
+		static void init(void);
+		static void display(void);
+		static void spinDisplay(void);
+		static void reshape(int w, int h);
+		static void mouse(int button, int state, int x, int y);
+        
 };
 
 #endif // DESENHO_H
