@@ -6,16 +6,24 @@
 posicao Posicionavel::getPosicao()
 {return this->localizacao;}
 
-void Posicionavel::setPosicao(posicao posicaoNova, int i)
+int Posicionavel::getId()
+{return this->id;}
+
+Posicionavel::Posicionavel(int id)
+{
+    this->id = id;
+}
+
+void Posicionavel::setPosicao(posicao posicaoNova)
 {
     //seta posicao atual no cubo para nulo
-    Ecossistema::ocupar(localizacao.x,localizacao.y, localizacao.z, i, NULL);
+    Ecossistema::ocupar(localizacao.x,localizacao.y, localizacao.z, this->getId(), NULL);
     //altera posicao atual
     this->localizacao.x = posicaoNova.x;
     this->localizacao.y = posicaoNova.y;
     this->localizacao.z = posicaoNova.z;
     //seta nova posicao no cubo
-    Ecossistema::ocupar(localizacao.x, localizacao.y, localizacao.z, i, this);
+    Ecossistema::ocupar(localizacao.x, localizacao.y, localizacao.z,this->getId(), this);
 }
 
 void Posicionavel::agir()
@@ -31,7 +39,7 @@ int SerVivo::getMassa()
 void SerVivo::setMassa(int massa)
 {this->massa = massa;}
 
-SerVivo::SerVivo(int massa,int taxa, int limite)
+SerVivo::SerVivo(int massa,int taxa, int limite, int id):Posicionavel(id)
 {
     this->massa = massa;
     this->taxa = taxa;
@@ -42,32 +50,32 @@ int SerVivo::sangrar()
 {} //sobrecarregavel
 
 
-void SerVivo::morrer(int i)
+void SerVivo::morrer()
 {
     //limbo (região dos mortos)
     posicao limbo;
     limbo.x,limbo.y,limbo.z = 0;
-    this->setPosicao(limbo,i);
+    this->setPosicao(limbo);
 }
 
-void SerVivo::diminuir(int massaPerdida, int i)
+void SerVivo::diminuir(int massaPerdida)
 {
     if (massaPerdida < this->getMassa())
         this->massa = this->getMassa() - massaPerdida;
     else
-        this->morrer(i);
+        this->morrer();
 }
 
-void SerVivo::aumentar(int massaGanha,int i)
+void SerVivo::aumentar(int massaGanha)
 {
    this->setMassa(this->getMassa() + massaGanha);
    if (this->getMassa() > this->limite)
-        this->explodir(i);
+        this->explodir();
 }
 
-void SerVivo::explodir(int i)
+void SerVivo::explodir()
 {
-
+    // usar this->getId();  para saber quem é  0,1,2
 }
 ///PEIXE
 
@@ -130,23 +138,23 @@ void Peixe::nadar()
     proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
     proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
 
-    this->setPosicao(proximaPosicao,2);
+    this->setPosicao(proximaPosicao);
 }
 
 void Peixe::morder(Posicionavel* alvo)
 {
     SerVivo* ser = (SerVivo*) alvo;
-    this->aumentar(ser->sangrar(),2);
+    this->aumentar(ser->sangrar());
 }
 
 void Peixe::fome()
-{this->diminuir(this->getTaxa(),2);}
+{this->diminuir(this->getTaxa());}
 
 int Peixe::sangrar()
 {
     int massa = this->getMassa();
-    this->diminuir(0,2);
-    this->morrer(2);
+    this->diminuir(0);
+    this->morrer();
     return massa;
 }
 
@@ -163,7 +171,7 @@ Posicionavel** Peixe::verAFrente()
     return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
-Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000)
+Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {this->posicionar();}
 
 
@@ -175,14 +183,14 @@ void Peixe::posicionar()
 ///PLANTA
 
 
-Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000)
+Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000,1)
 {this->posicionar();}
 
 
 int Planta::sangrar()
 {
     int massaAtual = this->getMassa();
-    this->diminuir(75,1);
+    this->diminuir(75);
     //diminui massa
     if (massaAtual >= 75)
         return 75;
@@ -195,7 +203,7 @@ void Planta::agir()
 {this->crescer();}
 
 void Planta::crescer()
-{this->aumentar(this->getTaxa(),1);}
+{this->aumentar(this->getTaxa());}
 
 void Planta::posicionar()
 {
@@ -204,7 +212,7 @@ void Planta::posicionar()
 
 
 ///Pedra
-Pedra::Pedra()
+Pedra::Pedra():Posicionavel(0)
 {this->posicionar();}
 
 void Pedra::posicionar()
