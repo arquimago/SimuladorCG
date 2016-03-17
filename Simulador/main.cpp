@@ -1,6 +1,7 @@
 #include "Ecossistema.h"
 #include "stdio.h"
 #include "Posicionavel.h"
+#include "Desenho.h"
 
 int main ()
 {
@@ -15,6 +16,9 @@ int main ()
     int comprimento = 4;//x
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
+
+    Desenho ringue;
+
 
 
     //inicializar cubo
@@ -51,7 +55,7 @@ int main ()
     /*
     while(true)
     {
-        //draw(Ecossistema::Cubo);//projeto opengl para desenhar
+        ringue.desenhar();
         for (int k=0; k<altura; k++)
         {
             for (int j=0; j<largura; j++)
