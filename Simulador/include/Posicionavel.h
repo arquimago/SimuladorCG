@@ -122,5 +122,3 @@ class Pedra: public Posicionavel
 
 
 #endif // POSICIONAVEL_H
-
-
