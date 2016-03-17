@@ -14,13 +14,17 @@ class Posicionavel
 {
 	private:
 		posicao localizacao;
+		int id; //identificador de posicionavel
 		void posicionar();
-        	//codigo para gerar uma posicao aleatoria x y z
-        	//checar em Cubo se a posicao esta ocupada ou nao.
-        	//pedra e planta sobrecarregam essa fun��o, pois tem propriedades especiais para ela.
+        //codigo para gerar uma posicao aleatoria x y z
+        //checar em Cubo se a posicao esta ocupada ou nao.
+        //pedra e planta sobrecarregam essa fun��o, pois tem propriedades especiais para ela.
 	public:
 		posicao getPosicao();
-		void setPosicao(posicao posicaoNova, int i);
+		Posicionavel(int id);
+		//seta id
+		int getId();
+		void setPosicao(posicao posicaoNova);
 		void agir();
 		//planta e peixe vão sobrescrever esse metodo
 };
@@ -36,18 +40,19 @@ class SerVivo: public Posicionavel
 
 		void setMassa(int massa);
 	public:
-		SerVivo(int massa,int taxa,int limite);
-
+		SerVivo(int massa,int taxa,int limite,int id);
+		//passa id para classe pai
 		//seta massa e taxa iniciais e limites iniciais
         int getTaxa();
 		int getMassa();
-        void explodir(int ser);
+        void explodir();
         //chama a fun��o morrer e aloca varios peixes menores no Cubo
-		void diminuir(int qtd, int ser);
+		void diminuir(int qtd);
 		// diminui massa em qtd pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
-		void aumentar(int qtd, int ser);
+		void aumentar(int qtd);
 		// aumenta massa em qtd pontos por fome/mordida. se a massa chegar a maximo, chama a fun��o explodir
-		void morrer(int ser);
+		void morrer();
+		//tira referencia no cubo e coloca na posicao do limbo, 0,0,0
 		int sangrar();
 		//limpa sua posicao no Cubo (seta para 0,0,0,2)
 
@@ -103,6 +108,7 @@ class Planta: public SerVivo
 		Planta(int taxaInicial);
 		//construtor. chama metodo posicionar.
         //chama construtor de serVivo, passando a massa e taxa, e 1000 como limite
+        //passa id para construtor de serVivo
 		int sangrar(); //ocorre ao ser mordido. chama a fun��o privada diminuir, recebe a massa retornada
 		//retorna a quantidade que "sangrou"
         void agir(); //chama metodo crescer
