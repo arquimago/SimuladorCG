@@ -33,7 +33,7 @@ void Ecossistema::inicializar (int x, int y, int z)
             {
                 if(i==0||i==y-1||k==0||k==z-1||j==0||j==x-1)
                 {
-                    Ecossistema::ocupar(j,i,k,0,new Posicionavel());
+                    Ecossistema::ocupar(j,i,k,0,new Pedra());
                     Ecossistema::ocupar(j,i,k,1,NULL);
                     Ecossistema::ocupar(j,i,k,2,NULL);
                 }
