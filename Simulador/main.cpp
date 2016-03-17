@@ -1,11 +1,10 @@
-#include "Ecossistema.h"
+#include "Ecossistema.cpp"
 #include "stdio.h"
-#include "Posicionavel.h"
-#include "Desenho.h"
+#include "Posicionavel.cpp"
+#include "Desenho.cpp"
 
-int main ()
+int main (int argc, char** argv)
 {
-
     //ler arquivo de beatriz
 
     int qtdPeixe = 3;
@@ -17,16 +16,14 @@ int main ()
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
 
-    Desenho ringue;
-
-
+	Desenho opengl(argc,argv);
+	opengl.desenhar();
 
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,altura,largura);
 
     /* //IMPRESSAO DO INICIALIZAR
-
          for(int i = 0; i < altura+2; i++){
             for(int j = 0; j < comprimento+2; j++){
                 for(int k = 0; k < largura+2; k++){
@@ -42,7 +39,6 @@ int main ()
             }
             printf("Quebra ordinaria\n");
         }
-
     */
 
     //posicionar plantas pedras e peixes
@@ -66,13 +62,10 @@ int main ()
                     for (int pos = 0, pos < 2, pos++)
                         if (ocupante[0] != NULL) //TEM ALGO
                             ocupante[pos]->agir();
-
                 }
             }
         }
     }
-
     */
 }
-
 
