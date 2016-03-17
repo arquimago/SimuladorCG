@@ -38,9 +38,11 @@
 			<Add library="glu32" />
 			<Add library="gdi32" />
 		</Linker>
+		<Unit filename="include/Desenho.h" />
 		<Unit filename="include/Ecossistema.h" />
 		<Unit filename="include/Posicionavel.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Desenho.cpp" />
 		<Unit filename="src/Ecossistema.cpp" />
 		<Unit filename="src/Posicionavel.cpp" />
 		<Extensions>

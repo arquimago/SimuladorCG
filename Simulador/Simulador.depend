@@ -17,10 +17,11 @@
 1458000749 source:e:\documents\github\simuladorcg\simulador\src\posicionavel.cpp
 	"Posicionavel.h"
 
-1458173962 source:c:\users\icaro\documents\github\simuladorcg\simulador\main.cpp
+1458175887 source:c:\users\icaro\documents\github\simuladorcg\simulador\main.cpp
 	"Ecossistema.h"
 	"stdio.h"
 	"Posicionavel.h"
+	"Desenho.h"
 
 1458171330 c:\users\icaro\documents\github\simuladorcg\simulador\include\ecossistema.h
 	"Posicionavel.h"
@@ -36,4 +37,6 @@
 	"Ecossistema.h"
 	<stdlib.h>
 	<time.h>
+
+1458176191 c:\users\icaro\documents\github\simuladorcg\simulador\include\desenho.h
 
