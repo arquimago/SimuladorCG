@@ -9,13 +9,13 @@ posicao Posicionavel::getPosicao()
 void Posicionavel::setPosicao(posicao posicaoNova, int i)
 {
     //seta posicao atual no cubo para nulo
-    Ecossistema::ocupar(localizacao.x,localizacao.y,localizacao.z,i,NULL);
+    Ecossistema::ocupar(localizacao.x,localizacao.y, localizacao.z, i, NULL);
     //altera posicao atual
     this->localizacao.x = posicaoNova.x;
     this->localizacao.y = posicaoNova.y;
     this->localizacao.z = posicaoNova.z;
     //seta nova posicao no cubo
-    Ecossistema::ocupar(localizacao.x,localizacao.y,localizacao.z,i,this);
+    Ecossistema::ocupar(localizacao.x, localizacao.y, localizacao.z, i, this);
 }
 
 void Posicionavel::agir()
@@ -38,7 +38,7 @@ SerVivo::SerVivo(int massa,int taxa, int limite)
     this->limite = limite;
 }
 
-SerVivo::sangrar()
+int SerVivo::sangrar()
 {} //sobrecarregavel
 
 
@@ -163,7 +163,21 @@ Posicionavel** Peixe::verAFrente()
     return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
+Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000)
+{this->posicionar();}
+
+
+void Peixe::posicionar()
+{
+
+}
+
 ///PLANTA
+
+
+Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000)
+{this->posicionar();}
+
 
 int Planta::sangrar()
 {
@@ -183,13 +197,23 @@ void Planta::agir()
 void Planta::crescer()
 {this->aumentar(this->getTaxa(),1);}
 
-///Pedra
-Pedra::Pedra()
+void Planta::posicionar()
 {
 
 }
+
+
+///Pedra
+Pedra::Pedra()
+{this->posicionar();}
+
+void Pedra::posicionar()
+{
+
+}
+
 /*
-void Pedra::posicionar(int x,int y,int z)
+void Pedra::posicionar()
 {
     int sorteio_x, sorteio_z;
     int sorteio_y = 1;

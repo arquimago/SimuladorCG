@@ -15,7 +15,6 @@ int main ()
     int comprimento = 4;//x
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
-    //jx iy zk
 
 
     //inicializar cubo
@@ -39,18 +38,20 @@ int main ()
             }
             printf("Quebra ordinaria\n");
         }
-    /*
+
+    */
 
     //posicionar plantas pedras e peixes
-    /*for (int i=0 ; i < qtdPedra ; i++) new Pedra();
+    //
+    for (int i=0 ; i < qtdPedra ; i++) new Pedra();
     for (int i=0 ; i < qtdPlanta ; i++) new Planta(taxaCrescimentoPlanta);
     for (int i=0 ; i < qtdPeixe ; i++) new Peixe(taxaDiminuicaoPeixe);
 
     //programa rodando
+    /*
     while(true)
     {
-        draw(Ecossistema::Cubo);//projeto opengl para desenhar
-
+        //draw(Ecossistema::Cubo);//projeto opengl para desenhar
         for (int k=0; k<altura; k++)
         {
             for (int j=0; j<largura; j++)
@@ -58,54 +59,16 @@ int main ()
                 for (int i=0; i<comprimento; i++)
                 {
                     Posicionavel ocupante** = Ecossistema::identificarOcupantes(i,j,k);
-                    for (int pos = 0; pos < 2 ; pos++)
-                    {
-                        if (ocupante[pos] ==NULL)
-                            break;
-                        if (ocupante[pos].getTipo() == 'p') //SE FOR PLANTA, CRESCE
-                            ocupante[pos].crescer();
-                        else if (ocupante[pos].getTipo() == 'f') //SE FOR peixe
-                        {
-                            Posicionavel** proximo = ocupante[pos].verAFrente();
-                            if (proximo != NULL)
-                            {  
-                                while (proximo.getTipo() == 'r') //enquanto houver pedra
-                                    peixes[pos].setDirecao();
-                                    //mudar de direção até achar direção viavel
-                            }
-                            //nadar, tretar com peixe e planta
+                    for (int pos = 0, pos < 2, pos++)
+                        if (ocupante[0] != NULL) //TEM ALGO
+                            ocupante[pos]->agir();
 
-                            if (proximo.getTipo() = 'f')
-                            {
-                                if (proximo.getMassa() > ocupante.getMassa())
-                                {
-                                    proximo.morder(ocupante);
-                                }
-                                if (proximo.getMassa() < ocupante.getMassa())
-                                {
-                                    ocupante.morder(proximo);
-                                }
-                                if (proximo.getMassa() == ocupante.getMassa())
-                                {
-                                    //aleatorio entre um morder o outro
-                                }
-
-                            }
-
-                            if (proximo.getTipo() = 'p')
-                            {
-                                ocupante.morder(proximo);
-                            }
-
-                            ocupante[pos].nadar();
-                        }
-                    }
-                    }
                 }
             }
-        }*/
-
-
+        }
     }
+
+    */
+}
 
 

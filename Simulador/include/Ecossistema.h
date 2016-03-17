@@ -37,7 +37,7 @@ class Ecossistema
         // arredores de pedra
 		static Posicionavel** identificarOcupantes (int x, int y, int z);
 		// retorna quem ocupa o local   retorna null se não tem
-        static void ocupar(int x,int y, int z,int i, Posicionavel* corpo);
+        static void ocupar(int x,int y, int z, int i,Posicionavel* corpo);
         //seta posicionavel no cubo
 };
 
