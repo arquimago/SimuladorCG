@@ -1,6 +1,6 @@
-#include "Ecossistema.cpp"
+//#include "Ecossistema.cpp"
 #include "stdio.h"
-#include "Posicionavel.cpp"
+//#include "Posicionavel.cpp"
 #include "Desenho.cpp"
 
 int main (int argc, char** argv)
@@ -12,16 +12,15 @@ int main (int argc, char** argv)
     int qtdPlanta = 4;
     int altura = 3;  //y
     int largura = 6; //z
-    int comprimento = 4;//x
+    int comprimento = 4; //x
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
 
 	Desenho opengl(argc,argv);
-	opengl.desenhar();
 
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
-    Ecossistema::inicializar(comprimento,altura,largura);
+    //Ecossistema::inicializar(comprimento,altura,largura);
 
     /* //IMPRESSAO DO INICIALIZAR
          for(int i = 0; i < altura+2; i++){
@@ -43,15 +42,17 @@ int main (int argc, char** argv)
 
     //posicionar plantas pedras e peixes
     //
-    for (int i=0 ; i < qtdPedra ; i++) new Pedra();
-    for (int i=0 ; i < qtdPlanta ; i++) new Planta(taxaCrescimentoPlanta);
-    for (int i=0 ; i < qtdPeixe ; i++) new Peixe(taxaDiminuicaoPeixe);
+    //for (int i=0 ; i < qtdPedra ; i++) new Pedra();
+    //for (int i=0 ; i < qtdPlanta ; i++) new Planta(taxaCrescimentoPlanta);
+    //for (int i=0 ; i < qtdPeixe ; i++) new Peixe(taxaDiminuicaoPeixe);
+
+	opengl.desenhar();
 
     //programa rodando
     /*
     while(true)
     {
-        ringue.desenhar();
+		opengl.desenhar();
         for (int k=0; k<altura; k++)
         {
             for (int j=0; j<largura; j++)
