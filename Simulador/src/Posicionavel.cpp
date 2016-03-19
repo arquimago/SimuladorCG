@@ -187,7 +187,20 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {this->posicionar();}
 
 Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
-{this->setPosicao(x,y,z);}
+{
+	Posicionavel ocupante** = Ecossistema::identificarOcupantes(x,y,z);
+    	Peixe* peixe = (Peixe*)proximo[2];
+	if(peixe != NULL) //há peixe
+	{
+		//testes das massas
+        	if (peixe->getMassa() >= this->getMassa())
+            		peixe->morder(this);
+        	else
+            		this->morder(peixe);
+	}
+	else //se nao tem, seta a posicao
+		this->setPosicao(x,y,z);
+}
 
 
 ///PLANTA
