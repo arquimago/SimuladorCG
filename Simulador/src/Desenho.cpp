@@ -4,27 +4,24 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Desenho.h"
+#include "CarregadorObj.cpp"
 
-#define IMAGE_WIDTH 64
-#define IMAGE_HEIGHT 64
-#define STRIPE_WIDTH 5
-
-static GLfloat spin = 0.0;
-static GLubyte checkImage[IMAGE_HEIGHT][IMAGE_WIDTH][4];
-static GLuint texName;
-	
-//cria uma imagem com listras de largura w
-//uso da função seno para fazer a pintura variar em função de j
+static float posCameraX,posCameraY,posCameraZ;
+static Modelo* peixe;  //OBJETOS DO CENARIO
 
 Desenho::Desenho(int argc, char** argv)
 {
-   glutInit(&argc, argv);
-   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
-   glutInitWindowSize (250, 250); 
-   glutInitWindowPosition (100, 100);
-   glutCreateWindow (argv[0]);
+	glutInit(&argc, argv);
+	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize (700, 700); 
+	glutInitWindowPosition (100, 100);
+	glutCreateWindow (argv[0]);
+  
+	init ();
+	
+	char *texturasPeixe[] = {NULL, NULL, (char*)"GOLDFISH.bmp",(char*)"Olho.bmp", NULL};  //NOME DAS TEXTURAS DO GOLDFISH (UMA PARA CADA PARTE DO MODELO)
    
-   Desenho::init ();
+	peixe = Modelo::carregarObj((char*)"gold.obj"); //textura é carregada automaticamente
 }
 	
 
@@ -32,137 +29,73 @@ int Desenho::desenhar()
 {
    glutDisplayFunc(Desenho::display); 
    glutReshapeFunc(Desenho::reshape); 
-   glutMouseFunc(Desenho::mouse);
+   //glutMouseFunc(Desenho::mouse);
+   //glutSpecialFunc(specialKeys);
    
    glutMainLoop();
    
    return 0;
 }
 
-
-
-void Desenho::makeStripeImage(int w)
-{
-	int i, j, r, g, b;
-	//w controla a largura das faixas
-	for (i = 0; i < IMAGE_HEIGHT; i++) {
-		for (j = 0; j < IMAGE_WIDTH; j++) {
-			if (sin(M_PI*j/w) > 0){
-				r=255; g=255; b=255;			
-			}
-			else{
-				r=255; g=0; b=0;	
-			}
-			checkImage[i][j][0] = (GLubyte) r;
-			checkImage[i][j][1] = (GLubyte) g;
-			checkImage[i][j][2] = (GLubyte) b;
-			checkImage[i][j][3] = (GLubyte) 255;
-		}
-	}
-}
-
 void Desenho::init(void) 
 {
-	glClearColor (0.0, 0.0, 0.0, 0.0);
-	glShadeModel(GL_SMOOTH);
-	
-	glEnable(GL_DEPTH_TEST);
-	makeStripeImage(STRIPE_WIDTH);
-	//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    //declara um objeto de textura
-	glGenTextures(1, &texName);
-	
-	//cria e usa objetos de textura 
-	//podem ser trocados ou removidos (remoção: texName=0)
-	glBindTexture(GL_TEXTURE_2D, texName);
-	
-	//todas as alterações feitas a seguir afetam o objeto associado
-	//à textura
-	
-	//como a textura será tratada se não há mapeamento direto 
-	//entre pixels e coordenadas de textura (GL_REPEAT ou GL_CLAMP)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	
-	//magnification e minification filters
-	//GL_NEAREST: texel com coordenadas mais próximas do centro do pixel 
-	//é usado
-	//testar GL_LINEAR
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	
-	//define uma textura bidimensional
-	/*void glTexImage2D(
-	 * GLenum target, 
-	 * GLint level, 
-	 * GLint internalFormat, (número de componentes)
-	 * GLsizei width, 
-	 * GLsizei height, 
-	 * GLint border,
-	 * GLenum format, 
-	 * GLenum type,    (tipos dos dados)
-	 * const GLvoid *pixels);*/
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE_WIDTH, 
-	    IMAGE_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, checkImage);	
-	    
-	
+   glClearColor (0.0, 0.0, 0.0, 0.0);
+  
+   // ativa teste de profundidade
+   // o que acontece se isso nÃ£o for feito?
+   glEnable(GL_DEPTH_TEST);
+   glShadeModel (GL_SMOOTH);
+   
+   posCameraX = 0.3;
+   posCameraY = 0.1;
+   posCameraZ = 0;
 }
 
 void Desenho::display(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	//ativa textura
-	glEnable(GL_TEXTURE_2D);
-		
-	//primitivas usam cores diretamente da textura
-	//Exercício: atribuir cores aos vértices e testar outros modos 
-	//onde eles também são levados em conta
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);    
-	
-	glBindTexture(GL_TEXTURE_2D, texName);
-	
-   glPushMatrix(); 
-   glRotatef(spin, 1.0, 1.0, 0.0);
-   glPushAttrib(GL_CURRENT_BIT);
-   
-   //preenche vetores com informações sobre os vértices 
-   static GLfloat vertices[] = {-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.5, 0.5, 0.0, -0.5, 0.5, 0.0};
-   static GLfloat texels[] = {0.0, 0.0, 0.0, 1.0, 1.0, 1.0 ,1.0, 0.0};
-
-   //ativa arrays que serão usados
-   glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-   glEnableClientState(GL_VERTEX_ARRAY);
-   
-   //associa dados aos arrays
-   glTexCoordPointer (2, GL_FLOAT, 0, texels);
-   glVertexPointer (3, GL_FLOAT, 0, vertices);
-   
-   glColor3f (0.7, 0.7, 0.7);
-   
-   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-	
-   glPopAttrib();
-   glPopMatrix();
+   //limpeza do zbuffer deve ser feita a cada desenho da tela
+   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+ 
+   glMatrixMode(GL_MODELVIEW);
+   glLoadIdentity();
+ 
+   gluLookAt (posCameraX, posCameraY, posCameraZ, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+ 
+   //desenhar_luz(); 
+   //desenhar_eixos();
+   desenhar_objeto();
     
    glutSwapBuffers();
-   glDisable(GL_TEXTURE_2D);
-	
 }
 
-//função que incrementa o ângulo de rotação
-void Desenho::spinDisplay(void)
-{
-   spin = spin + 2.0;
-   if (spin > 360.0)
-      spin = spin - 360.0;
-      
-   //faz com que a tela seja redesenhada na proxima iteração do loop
-   //do glut (com isso a função display é chamada)
-   glutPostRedisplay();
+//desenha objeto
+void Desenho::desenhar_objeto(){	
+   //MATERIAL
+   //define caracterÃ­sticas para aparÃªncia do material	
+   //exercÃ­cio: testar exemplos da seÃ§Ã£o 
+   //Changing Material Properties, do Red Book 
+   GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+   GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+   GLfloat mat_shininess[] = { 30.0 };
+          
+   glPushAttrib (GL_LIGHTING_BIT);
+   
+   //atribui caracterÃ­sticas ao material
+   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_diffuse);
+   
+   glEnable(GL_LIGHTING);
+   //glutSolidTeapot(0.3);
+   glScalef(0.5,0.5,0.5);
+   glPushMatrix();
+        glScalef(10.0,10.0,10.0);
+        peixe->desenhar();
+   glPopMatrix();
+   glDisable(GL_LIGHTING);
+   
+   glPopAttrib();
 }
-
 
 //função chamada quando a tela é redimensionada 
 void Desenho::reshape(int w, int h)
@@ -186,7 +119,7 @@ void Desenho::mouse(int button, int state, int x, int y)
          if (state == GLUT_DOWN)
             //faz com que a função spinDisplay seja chamada sempre que o 
             //programa estiver ocioso
-            glutIdleFunc(Desenho::spinDisplay);
+            glutIdleFunc(NULL);
          break;
       case GLUT_RIGHT_BUTTON:
          if (state == GLUT_DOWN)
@@ -199,3 +132,20 @@ void Desenho::mouse(int button, int state, int x, int y)
    }
 }
 
+// Rotaciona a posição da camera em torno do eixo y
+// Exercício: use coordenadas polares para posicionar a câmera em uma esfera ao redor do objeto
+void Desenho::specialKeys(int key, int x, int y)
+{
+   float angulo = 2*M_PI/180;
+   switch (key) {
+       case GLUT_KEY_LEFT : 
+            posCameraX =  posCameraX*cos(-angulo) + posCameraZ*sin(-angulo);
+            posCameraZ = -posCameraX*sin(-angulo) + posCameraZ*cos(-angulo);
+            break;
+       case GLUT_KEY_RIGHT : 
+            posCameraX =  posCameraX*cos(angulo) + posCameraZ*sin(angulo);
+            posCameraZ = -posCameraX*sin(angulo) + posCameraZ*cos(angulo);                      
+            break;          
+   }
+   glutPostRedisplay();
+}
