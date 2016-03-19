@@ -1,7 +1,7 @@
 #include "Ecossistema.h"
 #include <stdlib.h>
 #include <time.h>
-
+#include "stdio.h"
 ///POSICIONAVEL
 posicao Posicionavel::getPosicao()
 {return this->localizacao;}
@@ -12,6 +12,10 @@ int Posicionavel::getId()
 Posicionavel::Posicionavel(int id)
 {
     this->id = id;
+
+    this->localizacao.x = 0;
+    this->localizacao.y = 0;
+    this->localizacao.z = 0;
 }
 
 void Posicionavel::setPosicao(int x, int y, int z)
@@ -24,23 +28,40 @@ void Posicionavel::setPosicao(int x, int y, int z)
     this->localizacao.z = z;
     //seta nova posicao no cubo
     Ecossistema::ocupar(localizacao.x, localizacao.y, localizacao.z,this->getId(), this);
+
 }
 
 void Posicionavel::agir()
 {} //sobrecarregar
 
+void Posicionavel::posicionar()
+{
+    int sorteio_x, sorteio_z, sorteio_y;
+    srand (time(NULL));
+    posicao limites = Ecossistema::getLimites();
+    do{
+        sorteio_x = (rand()%limites.x) + 1;
+		sorteio_y = (rand()%limites.y) + 1;
+        sorteio_z = (rand()%limites.z) + 1;
+    } while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
+	Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[2]!=NULL);
+
+    setPosicao(sorteio_x,sorteio_y,sorteio_z);
+}
+
 ///SERVIVO
-SerVivo::explodir(){
+void SerVivo::explodir(){
 	int id = this->getId();//1 planta, 2 peixe
 	int numero_filhotes=0;
 	int massa_filhotes=0;
 	srand (time(NULL));
-	posicao posicao_pai = this.getPosicao();
-	
+	posicao posicao_pai = this->getPosicao();
+
 	if(id == 1) numero_filhotes = rand()%15+12;
 	else numero_filhotes = rand()%14+13;
-	
-	massa_filhotes = (this->morrer())/numero_filhotes;
+
+    this->morrer();
+	massa_filhotes = (this->getMassa())/numero_filhotes;
 	int pos_x = -1;
 	int pos_y = -1;
 	int pos_z = -1;
@@ -49,7 +70,8 @@ SerVivo::explodir(){
 	for(int i = 0;i < 3;i++){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
-				if((i=1&&j=1&&k=1&&id==2)||Ecossistema::identificarOcupantes(posicao_pai.x+i-1,posicao_pai+j-1,posicao_pai+k-1)[0]!=NULL){
+                Posicionavel** pedra = Ecossistema::identificarOcupantes(posicao_pai.x+i-1,posicao_pai.y+j-1,posicao_pai.z+k-1);
+				if((i==1&&j==1&&k==1&&id==2)||pedra!=NULL){
 					filhotes[i][j][k] = false;
 				} else {
 					filhotes[i][j][k] = true;
@@ -67,10 +89,11 @@ SerVivo::explodir(){
 			pos_y = rand()%3;
 			pos_z = rand()%3;
 		}while(!filhotes[pos_x][pos_y][pos_z]);
-		
-		if(id == 1) new Planta(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai+pos_y-1, posicao_pai+pos_z-1, massa_filhotes);
-		else new Peixe(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai+pos_y-1, posicao_pai+pos_z-1, massa_filhotes);
-		
+
+		if(id == 1)
+            new Planta(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai.y+pos_y-1, posicao_pai.z+pos_z-1, massa_filhotes);
+		else
+            new Peixe(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai.y+pos_y-1, posicao_pai.z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
 }
@@ -96,12 +119,7 @@ int SerVivo::sangrar()
 
 
 void SerVivo::morrer()
-{
-    //limbo (região dos mortos)
-    posicao limbo;
-    limbo.x,limbo.y,limbo.z = 0;
-    this->setPosicao(limbo);
-}
+{this->setPosicao(0,0,0);}
 
 void SerVivo::diminuir(int massaPerdida)
 {
@@ -126,23 +144,10 @@ posicao Peixe::getDirecao()
 void Peixe::virar()
 {
     srand(time(NULL));
-    posicao direcaoNova;
     //seta direcoes aleatorias entre -1,0,1
     this->direcao.x=(rand() % 3) -1;
     this->direcao.y=(rand() % 3) -1;
     this->direcao.z=(rand() % 3) -1;
-}
-void Peixe::posicionar(){
-	int sorteio_x, sorteio_z, sorteio_y;
-    srand (time(NULL));
-    do{
-        sorteio_x = rand()%x+1;
-		sorteio_y = rand()%y+1;
-        sorteio_z = rand()%z+1;
-    } while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
-	aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[2]!=NULL);
-
-    setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
 
 void Peixe::agir()
@@ -191,7 +196,7 @@ void Peixe::nadar()
     proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
     proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
 
-    this->setPosicao(proximaPosicao);
+    this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
 void Peixe::morder(Posicionavel* alvo)
@@ -225,12 +230,17 @@ Posicionavel** Peixe::verAFrente()
 }
 
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
-{this->posicionar();}
+{
+    this->localizacao.x = 0;
+    this->localizacao.y = 0;
+    this->localizacao.z = 0;
+    this->posicionar();
+}
 
 Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
 {
-	Posicionavel ocupante** = Ecossistema::identificarOcupantes(x,y,z);
-    	Peixe* peixe = (Peixe*)proximo[2];
+	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
+    Peixe* peixe = (Peixe*)ocupante[2];
 	if(peixe != NULL) //há peixe
 	{
 		//testes das massas
@@ -252,8 +262,8 @@ Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000,1)
 
 Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,1)
 {
-	Posicionavel ocupante** = Ecossistema::identificarOcupantes(x,y,z);
-    	Planta* planta = (Planta*)proximo[1];
+	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
+    	Planta* planta = (Planta*)ocupante[1];
 	if(planta != NULL) //há planta, uma planta "come" a outra
 		planta->aumentar(massa);
 	else //se nao tem, seta a posicao
@@ -279,45 +289,29 @@ void Planta::agir()
 void Planta::crescer()
 {this->aumentar(this->getTaxa());}
 
-void Planta::posicionar(){
-	int sorteio_x, sorteio_z, sorteio_y;
-    srand (time(NULL));
-    do{
-        sorteio_x = rand()%x+1;
-		sorteio_y = rand()%y+1;
-        sorteio_z = rand()%z+1;
-    } while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
-	aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[1]!=NULL);
-
-    setPosicao(sorteio_x,sorteio_y,sorteio_z);
-
-}
-
-
 
 ///Pedra
 Pedra::Pedra():Posicionavel(0)
-{this->posicionar();}
-
+{
+this->posicionar();}
 
 
 void Pedra::posicionar()
 {
     int sorteio_x, sorteio_z;
     int sorteio_y = 1;
+    posicao limites = Ecossistema::getLimites();
     srand (time(NULL));
     do{
-        sorteio_x = rand()%x+1;
-        sorteio_z = rand()%z+1;
-    } while(aquario.identificarOcupantes(sorteio_x, y, sorteio_z)[0]!=NULL);
-    
-	while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL){
+        sorteio_x = (rand()%limites.x) + 1;
+		sorteio_z = (rand()%limites.z) + 1;
+    } while(Ecossistema::identificarOcupantes(sorteio_x, limites.y, sorteio_z)[0]!=NULL);
+
+	while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL){
         sorteio_y++;
     }
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
-
-
 
 
 /*
