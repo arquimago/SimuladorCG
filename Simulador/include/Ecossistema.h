@@ -30,7 +30,9 @@ class Ecossistema
 {
     private:
         static cubo aquario;
+        static posicao limites;
 	public:
+	    static posicao getLimites();
 		static void inicializar (int x, int y, int z);
 		// grid = new unidade [x,z];   dimensao = new plano [y];
 		//inicializar tudo como nulo
