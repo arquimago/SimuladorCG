@@ -91,6 +91,18 @@ void Peixe::virar()
     this->direcao.y=(rand() % 3) -1;
     this->direcao.z=(rand() % 3) -1;
 }
+void Peixe::posicionar(){
+	int sorteio_x, sorteio_z, sorteio_y;
+    srand (time(NULL));
+    do{
+        sorteio_x = rand()%x+1;
+		sorteio_y = rand()%y+1;
+        sorteio_z = rand()%z+1;
+    } while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
+	aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[2]!=NULL);
+
+    aquario.ocupar(sorteio_x,sorteio_y,sorteio_z,2,this);
+}
 
 void Peixe::agir()
 {
@@ -175,11 +187,6 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {this->posicionar();}
 
 
-void Peixe::posicionar()
-{
-
-}
-
 ///PLANTA
 
 
@@ -205,20 +212,46 @@ void Planta::agir()
 void Planta::crescer()
 {this->aumentar(this->getTaxa());}
 
-void Planta::posicionar()
-{
+void Planta::posicionar(){
+	int sorteio_x, sorteio_z, sorteio_y;
+    srand (time(NULL));
+    do{
+        sorteio_x = rand()%x+1;
+		sorteio_y = rand()%y+1;
+        sorteio_z = rand()%z+1;
+    } while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
+	aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[1]!=NULL);
+
+    aquario.ocupar(sorteio_x,sorteio_y,sorteio_z,1,this);
 
 }
+
 
 
 ///Pedra
 Pedra::Pedra():Posicionavel(0)
 {this->posicionar();}
 
+
+
 void Pedra::posicionar()
 {
-
+    int sorteio_x, sorteio_z;
+    int sorteio_y = 1;
+    srand (time(NULL));
+    do{
+        sorteio_x = rand()%x+1;
+        sorteio_z = rand()%z+1;
+    } while(aquario.identificarOcupantes(sorteio_x, y, sorteio_z)[0]!=NULL);
+    
+	while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL){
+        sorteio_y++;
+    }
+    aquario.ocupar(sorteio_x,sorteio_y,sorteio_z,0,this);
 }
+
+
+
 
 /*
 void Pedra::posicionar()
