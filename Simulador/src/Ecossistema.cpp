@@ -3,13 +3,17 @@
 #include "stdio.h"
 
 cubo Ecossistema::aquario;
+posicao Ecossistema::limites;
 
 void Ecossistema::inicializar (int x, int y, int z)
 {
+
     y+=2;
     x+=2;
     z+=2;
-
+    limites.x = x - 1;
+    limites.y = y - 1;
+    limites.z = z - 1;
     aquario.dimensao = new plano[y];
 
     for(int i = 0; i < y; i++)
@@ -64,3 +68,5 @@ void Ecossistema::ocupar (int x, int y, int z,int i, Posicionavel* corpo)
     aquario.dimensao[y].grid[x][z].ocupante[i] = corpo;
 }
 
+posicao Ecossistema::getLimites()
+{return limites;}
