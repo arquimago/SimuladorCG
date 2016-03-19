@@ -30,6 +30,51 @@ void Posicionavel::agir()
 {} //sobrecarregar
 
 ///SERVIVO
+SerVivo::explodir(){
+	int id = this->getId();//1 planta, 2 peixe
+	int numero_filhotes=0;
+	int massa_filhotes=0;
+	srand (time(NULL));
+	posicao posicao_pai = this.getPosicao();
+	
+	if(id == 1) numero_filhotes = rand()%15+12;
+	else numero_filhotes = rand()%14+13;
+	
+	massa_filhotes = (this->morrer())/numero_filhotes;
+	int pos_x = -1;
+	int pos_y = -1;
+	int pos_z = -1;
+	int total_vagas = 0;
+	bool filhotes[3][3][3];//se tiver vaga recebe true, senão recebe false
+	for(int i = 0;i < 3;i++){
+		for(int j = 0;j < 3;j++){
+			for(int k = 0;k < 3;k++){
+				if((i=1&&j=1&&k=1&&id==2)||Ecossistema::identificarOcupantes(posicao_pai.x+i-1,posicao_pai+j-1,posicao_pai+k-1)[0]!=NULL){
+					filhotes[i][j][k] = false;
+				} else {
+					filhotes[i][j][k] = true;
+					total_vagas++;
+				}
+			}
+		}
+	}
+	if(total_vagas < numero_filhotes) numero_filhotes = total_vagas;
+	//se tiver menos vagas que filhotes, reduzo o numero de filhotes pro total de vagas, senão o proximo loop poderia ser infinito
+	//daria pra otimizar os sorteios com um vetor de ponteiros e tal, mas sem tempo pra otimizar agora.
+	for(int i = 0; i < numero_filhotes; i++){
+		do{
+			pos_x = rand()%3;
+			pos_y = rand()%3;
+			pos_z = rand()%3;
+		}while(!filhotes[pos_x][pos_y][pos_z]);
+		
+		if(id == 1) new Planta(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai+pos_y-1, posicao_pai+pos_z-1, massa_filhotes);
+		else new Peixe(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai+pos_y-1, posicao_pai+pos_z-1, massa_filhotes);
+		
+		filhotes[pos_x][pos_y][pos_z] = false;
+	}
+}
+
 int SerVivo::getTaxa()
 {return this->taxa;}
 
@@ -73,10 +118,6 @@ void SerVivo::aumentar(int massaGanha)
         this->explodir();
 }
 
-void SerVivo::explodir()
-{
-    // usar this->getId();  para saber quem é  0,1,2
-}
 ///PEIXE
 
 posicao Peixe::getDirecao()
