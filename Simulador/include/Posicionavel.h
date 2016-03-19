@@ -75,6 +75,7 @@ class Peixe: public SerVivo
 		void posicionar();
 		//qualquer lugar onde não há pedra, ou(planta e peixe)
 	public:
+		Peixe(int taxaInicial, int x, int y, int z, int massa);  //construtor da explosão
 		Peixe(int taxaInicial);
 		//construtor. seta os valores iniciais de massa e dire��o (aleatoria). chama metodo posicionar.
         //chama construtor de serVivo, passando a massa e taxa e 1500 como limite
@@ -104,7 +105,7 @@ class Planta: public SerVivo
 		//pedra e planta sempre sao alocadas no ch�o
 		//planta nao acumula em cima de outras
 	public:
-
+		Planta(int taxaInicial, int x, int y, int z, int massa);  //construtor da explosão
 		Planta(int taxaInicial);
 		//construtor. chama metodo posicionar.
         //chama construtor de serVivo, passando a massa e taxa, e 1000 como limite
