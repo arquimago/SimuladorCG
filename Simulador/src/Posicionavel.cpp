@@ -210,7 +210,15 @@ Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000,1)
 {this->posicionar();}
 
 Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,1)
-{this->setPosicao(x,y,z);}
+{
+	Posicionavel ocupante** = Ecossistema::identificarOcupantes(x,y,z);
+    	Planta* planta = (Planta*)proximo[1];
+	if(planta != NULL) //há planta, uma planta "come" a outra
+		planta->aumentar(massa);
+	else //se nao tem, seta a posicao
+		this->setPosicao(x,y,z);
+}
+
 
 int Planta::sangrar()
 {
