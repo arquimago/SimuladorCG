@@ -186,6 +186,9 @@ Posicionavel** Peixe::verAFrente()
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {this->posicionar();}
 
+Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
+{this->setPosicao(x,y,z);}
+
 
 ///PLANTA
 
@@ -193,6 +196,8 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000,1)
 {this->posicionar();}
 
+Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,1)
+{this->setPosicao(x,y,z);}
 
 int Planta::sangrar()
 {
