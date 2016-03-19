@@ -24,7 +24,7 @@ class Posicionavel
 		Posicionavel(int id);
 		//seta id
 		int getId();
-		void setPosicao(posicao posicaoNova);
+		void setPosicao(int x,int y, int z);
 		void agir();
 		//planta e peixe vão sobrescrever esse metodo
 };
