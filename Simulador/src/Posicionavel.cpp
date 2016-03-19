@@ -14,14 +14,14 @@ Posicionavel::Posicionavel(int id)
     this->id = id;
 }
 
-void Posicionavel::setPosicao(posicao posicaoNova)
+void Posicionavel::setPosicao(int x, int y, int z)
 {
     //seta posicao atual no cubo para nulo
     Ecossistema::ocupar(localizacao.x,localizacao.y, localizacao.z, this->getId(), NULL);
     //altera posicao atual
-    this->localizacao.x = posicaoNova.x;
-    this->localizacao.y = posicaoNova.y;
-    this->localizacao.z = posicaoNova.z;
+    this->localizacao.x = x;
+    this->localizacao.y = y;
+    this->localizacao.z = z;
     //seta nova posicao no cubo
     Ecossistema::ocupar(localizacao.x, localizacao.y, localizacao.z,this->getId(), this);
 }
@@ -101,7 +101,7 @@ void Peixe::posicionar(){
     } while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
 	aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[2]!=NULL);
 
-    aquario.ocupar(sorteio_x,sorteio_y,sorteio_z,2,this);
+    setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
 
 void Peixe::agir()
@@ -222,7 +222,7 @@ void Planta::posicionar(){
     } while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
 	aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[1]!=NULL);
 
-    aquario.ocupar(sorteio_x,sorteio_y,sorteio_z,1,this);
+    setPosicao(sorteio_x,sorteio_y,sorteio_z);
 
 }
 
@@ -247,7 +247,7 @@ void Pedra::posicionar()
 	while(aquario.identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL){
         sorteio_y++;
     }
-    aquario.ocupar(sorteio_x,sorteio_y,sorteio_z,0,this);
+    setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
 
 
