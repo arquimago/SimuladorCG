@@ -3,8 +3,8 @@
 #include <time.h>
 #include "stdio.h"
 ///POSICIONAVEL
-posicao Posicionavel::getPosicao()
-{return this->localizacao;}
+posicao* Posicionavel::getPosicao()
+{return &this->localizacao;}
 
 int Posicionavel::getId()
 {return this->id;}
@@ -12,7 +12,6 @@ int Posicionavel::getId()
 Posicionavel::Posicionavel(int id)
 {
     this->id = id;
-
     this->localizacao.x = 0;
     this->localizacao.y = 0;
     this->localizacao.z = 0;
@@ -21,7 +20,9 @@ Posicionavel::Posicionavel(int id)
 void Posicionavel::setPosicao(int x, int y, int z)
 {
     //seta posicao atual no cubo para nulo
-    Ecossistema::ocupar(localizacao.x,localizacao.y, localizacao.z, this->getId(), NULL);
+    if (localizacao.x != 0 && localizacao.y != 0 && localizacao.z != 0) //se não estiver na origem
+        Ecossistema::ocupar(localizacao.x,localizacao.y, localizacao.z, this->getId(), NULL);
+
     //altera posicao atual
     this->localizacao.x = x;
     this->localizacao.y = y;
@@ -37,15 +38,15 @@ void Posicionavel::agir()
 void Posicionavel::posicionar()
 {
     int sorteio_x, sorteio_z, sorteio_y;
-    srand (time(NULL));
-    posicao limites = Ecossistema::getLimites();
-    do{
-        sorteio_x = (rand()%limites.x) + 1;
-		sorteio_y = (rand()%limites.y) + 1;
-        sorteio_z = (rand()%limites.z) + 1;
-    } while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
-	Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[2]!=NULL);
+    srand(rand());
 
+    posicao* limites = Ecossistema::getLimites();
+    do{
+        sorteio_x = (rand() % limites->x) + 1;
+		sorteio_y = (rand() % limites->y) + 1;
+        sorteio_z = (rand() % limites->z) + 1;
+    } while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
+	Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[this->getId()]!=NULL);
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
 
@@ -55,7 +56,7 @@ void SerVivo::explodir(){
 	int numero_filhotes=0;
 	int massa_filhotes=0;
 	srand (time(NULL));
-	posicao posicao_pai = this->getPosicao();
+	posicao* posicao_pai = this->getPosicao();
 
 	if(id == 1) numero_filhotes = rand()%15+12;
 	else numero_filhotes = rand()%14+13;
@@ -70,7 +71,7 @@ void SerVivo::explodir(){
 	for(int i = 0;i < 3;i++){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
-                Posicionavel** pedra = Ecossistema::identificarOcupantes(posicao_pai.x+i-1,posicao_pai.y+j-1,posicao_pai.z+k-1);
+                Posicionavel** pedra = Ecossistema::identificarOcupantes(posicao_pai->x+i-1,posicao_pai->y+j-1,posicao_pai->z+k-1);
 				if((i==1&&j==1&&k==1&&id==2)||pedra!=NULL){
 					filhotes[i][j][k] = false;
 				} else {
@@ -91,9 +92,9 @@ void SerVivo::explodir(){
 		}while(!filhotes[pos_x][pos_y][pos_z]);
 
 		if(id == 1)
-            new Planta(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai.y+pos_y-1, posicao_pai.z+pos_z-1, massa_filhotes);
+            new Planta(this->getTaxa(),posicao_pai->x+pos_x-1, posicao_pai->y+pos_y-1, posicao_pai->z+pos_z-1, massa_filhotes);
 		else
-            new Peixe(this->getTaxa(),posicao_pai.x+pos_x-1, posicao_pai.y+pos_y-1, posicao_pai.z+pos_z-1, massa_filhotes);
+            new Peixe(this->getTaxa(),posicao_pai->x+pos_x-1, posicao_pai->y+pos_y-1, posicao_pai->z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
 }
@@ -101,11 +102,11 @@ void SerVivo::explodir(){
 int SerVivo::getTaxa()
 {return this->taxa;}
 
-int SerVivo::getMassa()
-{return this->massa;}
-
 void SerVivo::setMassa(int massa)
 {this->massa = massa;}
+
+int SerVivo::getMassa()
+{return this->massa;}
 
 SerVivo::SerVivo(int massa,int taxa, int limite, int id):Posicionavel(id)
 {
@@ -123,23 +124,23 @@ void SerVivo::morrer()
 
 void SerVivo::diminuir(int massaPerdida)
 {
-    if (massaPerdida < this->getMassa())
-        this->massa = this->getMassa() - massaPerdida;
+    if (massaPerdida < this->massa)
+        this->massa = this->massa- massaPerdida;
     else
         this->morrer();
 }
 
 void SerVivo::aumentar(int massaGanha)
 {
-   this->setMassa(this->getMassa() + massaGanha);
-   if (this->getMassa() > this->limite)
+   this->massa = this->getMassa() + massaGanha;
+   if (this->massa> this->limite)
         this->explodir();
 }
 
 ///PEIXE
 
-posicao Peixe::getDirecao()
-{return this->direcao;}
+posicao* Peixe::getDirecao()
+{return &this->direcao;}
 
 void Peixe::virar()
 {
@@ -188,15 +189,15 @@ void Peixe::agir()
 
 void Peixe::nadar()
 {
-    posicao direcaoAtual = this->getDirecao();
-    posicao posicaoAtual = this->getPosicao();
-    posicao proximaPosicao;
+    posicao* direcaoAtual = this->getDirecao();
+    posicao* posicaoAtual = this->getPosicao();
+    posicao* proximaPosicao;
 
-    proximaPosicao.x = posicaoAtual.x + direcaoAtual.x;
-    proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
-    proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
+    proximaPosicao->x = posicaoAtual->x + direcaoAtual->x;
+    proximaPosicao->y = posicaoAtual->y + direcaoAtual->y;
+    proximaPosicao->z = posicaoAtual->z + posicaoAtual->z;
 
-    this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
+    this->setPosicao(proximaPosicao->x,proximaPosicao->y,proximaPosicao->z);
 }
 
 void Peixe::morder(Posicionavel* alvo)
@@ -218,15 +219,15 @@ int Peixe::sangrar()
 
 Posicionavel** Peixe::verAFrente()
 {
-    posicao direcaoAtual = this->getDirecao();
-    posicao posicaoAtual = this->getPosicao();
-    posicao proximaPosicao;
+    posicao* direcaoAtual = this->getDirecao();
+    posicao* posicaoAtual = this->getPosicao();
+    posicao* proximaPosicao;
 
-    proximaPosicao.x = posicaoAtual.x + direcaoAtual.x;
-    proximaPosicao.y = posicaoAtual.y + direcaoAtual.y;
-    proximaPosicao.z = posicaoAtual.z + posicaoAtual.z;
+    proximaPosicao->x = posicaoAtual->x + direcaoAtual->x;
+    proximaPosicao->y = posicaoAtual->y + direcaoAtual->y;
+    proximaPosicao->z = posicaoAtual->z + posicaoAtual->z;
 
-    return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
+    return Ecossistema::identificarOcupantes(proximaPosicao->x,proximaPosicao->y,proximaPosicao->z);
 }
 
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
@@ -292,26 +293,35 @@ void Planta::crescer()
 
 ///Pedra
 Pedra::Pedra():Posicionavel(0)
-{
-this->posicionar();}
+{this->posicionar();}
+
 
 
 void Pedra::posicionar()
 {
     int sorteio_x, sorteio_z;
-    int sorteio_y = 1;
-    posicao limites = Ecossistema::getLimites();
-    srand (time(NULL));
+    int sorteio_y = 0;
+    posicao* limites = Ecossistema::getLimites();
+    srand(rand());
+    Posicionavel** ocupante;
     do{
-        sorteio_x = (rand()%limites.x) + 1;
-		sorteio_z = (rand()%limites.z) + 1;
-    } while(Ecossistema::identificarOcupantes(sorteio_x, limites.y, sorteio_z)[0]!=NULL);
+        sorteio_x = (rand()%limites->x) + 1;
+        sorteio_z = (rand()%limites->z) + 1;
 
-	while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL){
+        ocupante = Ecossistema::identificarOcupantes(sorteio_x, limites->y, sorteio_z);
+    } while(ocupante[0]!= NULL);
+
+    ocupante = Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z);
+    while(ocupante[0]!=NULL){
         sorteio_y++;
+        ocupante = Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z);
     }
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
+
+
+
+
 
 
 /*
