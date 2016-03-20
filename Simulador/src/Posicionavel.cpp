@@ -235,6 +235,7 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
     this->localizacao.x = 0;
     this->localizacao.y = 0;
     this->localizacao.z = 0;
+    this->virar();
     this->posicionar();
 }
 
@@ -251,7 +252,10 @@ Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxa
             		this->morder(peixe);
 	}
 	else //se nao tem, seta a posicao
-		this->setPosicao(x,y,z);
+	{
+        this->virar();
+        this->setPosicao(x,y,z);
+	}
 }
 
 
@@ -318,29 +322,3 @@ void Pedra::posicionar()
     }
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
-
-
-
-
-
-
-/*
-void Pedra::posicionar()
-{
-    int sorteio_x, sorteio_z;
-    int sorteio_y = 1;
-
-    srand (time(NULL));
-
-    //tales, use o metodo identificarOcupantes de ecossistema.Cubo agora é privado.
-    do{
-        sorteio_x = rand()%x+1;
-        sorteio_z = rand()%z+1;
-    } while(Ecossistema::aquario.dimensao[y].grid[sorteio_x][sorteio_z].ocupante[0]!=NULL);
-
-    while(Ecossistema::aquario.dimensao[sorteio_y].grid[sorteio_x][sorteio_z].ocupante[0]!=NULL){
-        sorteio_y++;
-    }
-    Ecossistema::ocupar(sorteio_x,sorteio_y,sorteio_z,0,this);
-}
-*/
