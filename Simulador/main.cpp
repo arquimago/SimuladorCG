@@ -24,35 +24,37 @@ int main ()
 
     //posicionar plantas pedras e peixes
     //
-    for (int i=0 ; i < qtdPedra ; i++) new Pedra();
-    for (int i=0 ; i < qtdPlanta ; i++) new Planta(taxaCrescimentoPlanta);
-    for (int i=0 ; i < qtdPeixe ; i++) new Peixe(taxaDiminuicaoPeixe);
+    for (int i=0 ; i <= qtdPedra; i++) new Pedra();
+    for (int i=0 ; i <= qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
+    for (int i=0 ; i <= qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
+
 
 
 
 
     //programa rodando
-    /*
     while(true)
     {
-        ringue.desenhar();
-        for (int k=0; k<altura; k++)
+        //ringue.desenhar();
+        for (int k=1; k<=altura; k++)
         {
-            for (int j=0; j<largura; j++)
+            for (int j=1; j<=largura; j++)
             {
-                for (int i=0; i<comprimento; i++)
+                for (int i=1; i<=comprimento; i++)
                 {
-                    Posicionavel ocupante** = Ecossistema::identificarOcupantes(i,j,k);
-                    for (int pos = 0, pos < 2, pos++)
-                        if (ocupante[0] != NULL) //TEM ALGO
+                    Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
+                    for (int pos = 0; pos < 3; pos++)
+                    {
+                        if (ocupante[pos] != NULL) //TEM ALGO
                             ocupante[pos]->agir();
+                    }
 
                 }
             }
         }
     }
 
-    */
+
 }
 
 
