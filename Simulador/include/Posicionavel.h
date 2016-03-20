@@ -21,7 +21,7 @@ class Posicionavel
         //checar em Cubo se a posicao esta ocupada ou nao.
 
 	public:
-		posicao getPosicao();
+		posicao* getPosicao();
 		Posicionavel(int id);
 		//seta id
 		int getId();
@@ -84,7 +84,7 @@ class Peixe: public SerVivo
         //se encontrar planta morde
 		//se encontrar peixe e for maior, come
 		//se encontrar peixe e for menor, morre
-        posicao getDirecao();
+        posicao* getDirecao();
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
 		void morder(Posicionavel*);
