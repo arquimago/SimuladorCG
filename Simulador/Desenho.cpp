@@ -31,6 +31,30 @@ Desenho::Desenho(int argc, char** argv)
 	glutReshapeFunc(Desenho::reshape);
 }
 
+void Desenho::desenhar_posicionavel (Posicionavel** ocupantes)
+{
+	if (ocupantes[0] != NULL)
+	{
+		Desenho::desenhar_pedra();
+		return; //sai da função
+	}
+	
+	Desenho::desenhar_agua();
+	
+	if (ocupantes[1] != NULL)
+	{
+		pos = ocupante[1]->getPosicao();
+		Desenho::desenhar_planta(pos.x,pos.y,pos.z);
+	}
+	
+	if (ocupantes[2] != NULL)
+	{
+		pos = ocupante[2]->getPosicao();
+		Desenho::desenhar_peixe(pos.x,pos.y,pos.z);
+	}
+	
+}
+
 void Desenho::desenhar()
 {   
 	glutMainLoop();
