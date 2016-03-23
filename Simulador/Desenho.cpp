@@ -73,7 +73,7 @@ void Desenho::display(void)
 	//desenhar_peixe(0,0,0);
 	
 	desenhar_planta(0,0,0);
-	desenhar_agua(0,0,0);
+	//desenhar_agua(0,0,0);
 	desenhar_agua(0,1,0);
 	desenhar_agua(0,0,1);
 
@@ -171,71 +171,16 @@ void Desenho::desenhar_pedra(int x, int y, int z)
 
 void Desenho::desenhar_planta(int x, int y, int z)
 {
-	//glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
 
-	/*
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(0.01, 0.01, 0.01);
+        glScalef(0.51, 0.51, 0.51);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         planta->desenhar();
-	glPopMatrix();*/
-	
-		//FRENTE
-    glBegin(GL_QUADS);
-        glColor4f(1.0, 1.0, 0.0, 0.5);
-        glVertex3f( 0.5+x, -0.5+y, -0.5+z);
-        glVertex3f( 0.5+x,  0.5+y, -0.5+z);  
-        glVertex3f(-0.5+x,  0.5+y, -0.5+z);
-        glVertex3f(-0.5+x, -0.5+y, -0.5+z);    
-    glEnd();
-    
-    //TRASEIRA
-	glBegin(GL_QUADS);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f( 0.5+x, -0.5+y, 0.5+z);
-		glVertex3f( 0.5+x,  0.5+y, 0.5+z);
-		glVertex3f(-0.5+x,  0.5+y, 0.5+z);
-		glVertex3f(-0.5+x, -0.5+y, 0.5+z);
-    glEnd();
-    
-	//DIREITA
-	glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f(0.5+x, -0.5+y, -0.5+z);
-		glVertex3f(0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(0.5+x,  0.5+y,  0.5+z);
-		glVertex3f(0.5+x, -0.5+y,  0.5+z);
-	glEnd();
-    
-    //ESQUERDA
-    glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f(-0.5+x, -0.5+y,  0.5+z);
-		glVertex3f(-0.5+x,  0.5+y,  0.5+z);
-		glVertex3f(-0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(-0.5+x, -0.5+y, -0.5+z);
-	glEnd();
- 
-	//TOPO
-	glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f( 0.5+x,  0.5+y,  0.5+z);
-		glVertex3f( 0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(-0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(-0.5+x,  0.5+y,  0.5+z);
-	glEnd();
- 
-	//BASE
-	glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f( 0.5+x, -0.5+y, -0.5+z);
-		glVertex3f( 0.5+x, -0.5+y,  0.5+z);
-		glVertex3f(-0.5+x, -0.5+y,  0.5+z);
-		glVertex3f(-0.5+x, -0.5+y, -0.5+z);
-	glEnd();
+	glPopMatrix();
 
-	//glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
 }
 
 void Desenho::desenhar_peixe(int x, int y, int z)
@@ -321,11 +266,11 @@ void Desenho::keyPressed (unsigned char key, int x, int y)
 		camera.ParaOLado(0.1);
 		display();
 		break;
-	case 'i':      //passinho pra cima
+	case 'k':      //passinho pra cima
 		camera.Mover(setVetor(0.0,-0.3,0.0));
 		display();
 		break;
-	case 'k':      //passinho pra baixo
+	case 'i':      //passinho pra baixo
 		camera.Mover(setVetor(0.0,0.3,0.0));
 		display();
 		break;
