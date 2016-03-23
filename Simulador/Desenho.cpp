@@ -5,10 +5,10 @@
 #include <math.h>
 #include "Desenho.h"
 #include "carregadorObj.cpp"
+#include "CCamera.cpp"
 
-static float posCameraX,posCameraY,posCameraZ;
-static float posVisaoX,posVisaoY,posVisaoZ;
 static Modelo *gold, *orca,*tubarao,*pedra,*planta;
+CCamera camera;
 
 int main(int argc, char** argv){
 	Desenho opengl(argc,argv);
@@ -49,13 +49,12 @@ void Desenho::init(void)
 	tubarao = Modelo::carregarObj((char*)"OBJs/GreatWhite.obj",(char*)"Texturas/GreatWhite.bmp");
 	orca = Modelo::carregarObj((char*)"OBJs/KillerWhale.obj",(char*)"Texturas/KillerWhale.bmp");
 	pedra = Modelo::carregarObj((char*)"OBJs/rock.obj",(char*)"Texturas/rock.bmp");
-	planta = Modelo::carregarObj((char*)"OBJs/alga.obj",(char*)"Texturas/alga.bmp");
+	//planta = Modelo::carregarObj((char*)"OBJs/alga.obj",(char*)"Texturas/alga.bmp");
 	gold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
 	glDisable(GL_TEXTURE_2D);
    
-	posCameraX = 0.1;
-	posCameraY = 0.0;
-	posCameraZ = 0.0;
+    camera.Mover( setVetor(0.0, 0.1, 0.0 ));
+    camera.ParaFrente( 1.0 );
 }
 
 void Desenho::display(void)
@@ -64,18 +63,20 @@ void Desenho::display(void)
 	glLoadIdentity();
 	
 	glMatrixMode(GL_MODELVIEW);
-	gluLookAt(posCameraX, posCameraY, posCameraZ, posVisaoX, posVisaoY, posVisaoZ, 0.0, 1.0, 0.0);
+	camera.Renderizar();
  
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
+	desenhar_eixos();
+	desenhar_pedra(0,0,0);
 	//desenhar_peixe(0,0,0);
-	//desenhar_pedra(0,0,0);
-	desenhar_planta(0,0,0);
+	
+	//desenhar_planta(0,0,0);
 	desenhar_agua(0,0,0);
 	desenhar_agua(0,1,0);
 	desenhar_agua(0,0,1);
-	desenhar_eixos();
+	
 
 	glutSwapBuffers();
 }
@@ -232,40 +233,47 @@ void Desenho::reshape(int w, int h)
 
 void Desenho::keyPressed (unsigned char key, int x, int y)
 {
-	float angulo = 2*M_PI/180;
-	switch(key){
-		case 'a' : //Esquerda
-            posCameraZ = posCameraZ+0.01;
-            posVisaoZ = posVisaoZ+0.01;
-            break;
-		case 'd' : //Direita
-            posCameraZ = posCameraZ-0.01;
-            posVisaoZ = posVisaoZ-0.01;
-            break;
-        case 'w' : //Cima
-            posCameraY = posCameraY+0.01;
-            posVisaoY = posVisaoY+0.01;
-            break;
-		case 's' : //Baixo
-            posCameraY = posCameraY-0.01;
-            posVisaoY = posVisaoY-0.01;
-            break;
-        case 'q' : //+Zoom
-            break;
-        case 'e' : //-Zoom
-            break;
-        case 'j' : //GiraEsquerda
-            posCameraX =  posCameraX*cos(-angulo) + posCameraZ*sin(-angulo);
-            posCameraZ = -posCameraX*sin(-angulo) + posCameraZ*cos(-angulo);
-            break;
-        case 'l' : //GiraDireita
-            posCameraX =  posCameraX*cos(angulo) + posCameraZ*sin(angulo);
-            posCameraZ = -posCameraX*sin(angulo) + posCameraZ*cos(angulo);
-            break;
-		case 'i' : //GiraCima       
-            break;
-		case 'k' : //GiraBaixo         
-            break;
-    }
-    glutPostRedisplay();
+	switch (key) 
+	{
+	case 'a':	//roda pra esquerda
+		camera.RotacaoY(5.0);
+		display();
+		break;
+	case 'd':	//roda pra direita
+		camera.RotacaoY(-5.0);
+		display();
+		break;
+	case 'w':	//anda pra frente	
+		camera.ParaFrente(-0.1) ;
+		display();
+		break;
+	case 's':	//anda pra trás
+		camera.ParaFrente(0.1) ;
+		display();
+		break;
+	case 'q':      //roda pra cima
+		camera.RotacaoX(5.0);
+		display();
+		break;
+	case 'e':	//roda pra baixo	
+		camera.RotacaoX(-5.0);
+		display();
+		break;
+	case 'j':	//passinho pra esquerda
+		camera.ParaOLado(-0.1);
+		display();
+		break;
+	case 'l':	//passinho pra direita
+		camera.ParaOLado(0.1);
+		display();
+		break;
+	case 'i':      //passinho pra cima
+		camera.Mover(setVetor(0.0,-0.3,0.0));
+		display();
+		break;
+	case 'k':      //passinho pra baixo
+		camera.Mover(setVetor(0.0,0.3,0.0));
+		display();
+		break;
+	}
 }

@@ -1,0 +1,47 @@
+void keyPressed(unsigned char key, int x, int y)
+{
+	switch (key) 
+	{
+	case 'a':	//roda pra esquerda
+		camera.RotacaoY(5.0);
+		Display();
+		break;
+	case 'd':	//roda pra direita
+		camera.RotacaoY(-5.0);
+		Display();
+		break;
+	case 'w':	//anda pra frente	
+		camera.ParaFrente(-0.1) ;
+		Display();
+		break;
+	case 's':	//anda pra trás
+		camera.ParaFrente(0.1) ;
+		Display();
+		break;
+	case 'q':      //roda pra cima
+		camera.RotacaoX(5.0);
+		Display();
+		break;
+	case 'e':	//roda pra baixo	
+		camera.RotacaoX(-5.0);
+		Display();
+		break;
+	case 'j':	//passinho pra esquerda
+		camera.ParaOLado(-0.1);
+		Display();
+		break;
+	case 'l':	//passinho pra direita
+		camera.ParaOLado(0.1);
+		Display();
+		break;
+	case 'i':      //passinho pra cima
+		camera.Mover(setVetor(0.0,-0.3,0.0));
+		Display();
+		break;
+	case 'k':      //passinho pra baixo
+		camera.Mover(setVetor(0.0,0.3,0.0));
+		Display();
+		break;
+
+	}
+}
