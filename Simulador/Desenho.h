@@ -1,5 +1,6 @@
 #ifndef DESENHO_H
 #define DESENHO_H
+#include "Posicionavel.cpp"
 
 class Desenho
 {
