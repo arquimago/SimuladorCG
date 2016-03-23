@@ -43,14 +43,14 @@ void Desenho::desenhar_posicionavel (Posicionavel** ocupantes)
 	
 	if (ocupantes[1] != NULL)
 	{
-		pos = ocupante[1]->getPosicao();
-		Desenho::desenhar_planta(pos.x,pos.y,pos.z);
+		posicao* pos = ocupante[1]->getPosicao();
+		Desenho::desenhar_planta(pos->x,pos->y,pos->z);
 	}
 	
 	if (ocupantes[2] != NULL)
 	{
-		pos = ocupante[2]->getPosicao();
-		Desenho::desenhar_peixe(pos.x,pos.y,pos.z);
+		posicao* pos = ocupante[2]->getPosicao();
+		Desenho::desenhar_peixe(pos->x,pos->y,pos->z);
 	}
 	
 }
@@ -217,7 +217,11 @@ void Desenho::desenhar_peixe(int x, int y, int z)
     //localização x y z
     Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     Peixe* peixe = (Peixe*) ocupante[2];
-    posicao direcao = peixe->getDirecao();
+    posicao* frente = peixe->getDirecao();
+    posicao direcao;
+    direcao.x = frente->x;
+    direcao.y = frente->y;
+    direcao.z = frente->z;
 
     float escala = (peixe->getMassa())/1000;
     float angulo,vetorx,vetory,vetorz = 0;
