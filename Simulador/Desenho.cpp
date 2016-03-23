@@ -6,6 +6,7 @@
 #include "Desenho.h"
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
+#include "Posicionavel.h"
 
 static Modelo *gold, *orca,*tubarao,*pedra,*planta;
 CCamera camera;
@@ -183,31 +184,97 @@ void Desenho::desenhar_planta(int x, int y, int z)
 	glDisable(GL_TEXTURE_2D);
 }
 
+
 void Desenho::desenhar_peixe(int x, int y, int z)
 {
+    //escala
+    //ROTACIONAR PARA DIRECAO x y z
+    //localização x y z
+    Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
+    Peixe* peixe = (Peixe*) ocupante[2];
+    posicao direcao = peixe->getDirecao();
+
+    float escala = (peixe->getMassa())/1000;
+    float angulo,vetorx,vetory,vetorz = 0;
+
+
+
+
+    //rotacionar peixe
+    //definir angulo,vetorx,vetory,vetorz
+    //diagonais
+    if (direcao.x > 0 && direcao.y > 0 && direcao.z > 0)
+    {
+
+    }
+    if (direcao.x > 0 && direcao.y < 0 && direcao.z > 0)
+    {
+
+    }
+    if (direcao.x < 0 && direcao.y > 0 && direcao.z > 0)
+    {
+
+    }
+    if (direcao.x < 0 && direcao.y < 0 && direcao.z > 0)
+    {
+
+    }
+    if (direcao.x > 0 && direcao.y > 0 && direcao.z < 0)
+    {
+
+    }
+    if (direcao.x > 0 && direcao.y < 0 && direcao.z < 0)
+    {
+
+    }
+    if (direcao.x < 0 && direcao.y > 0 && direcao.z < 0)
+    {
+
+    }
+    if (direcao.x < 0 && direcao.y < 0 && direcao.z < 0)
+    {
+
+    }
+    //lados
+    if (direcao.x == 0 && direcao.z == 0 && direcao.y>0)
+    {
+
+    }
+    if (direcao.x == 0 && direcao.z == 0 && direcao.y<0)
+    {
+
+    }
+    if (direcao.x > 0 && direcao.z == 0 && direcao.y == 0)
+    {
+
+    }
+    if (direcao.x < 0 && direcao.z == 0 && direcao.y == 0)
+    {
+
+    }
+    if (direcao.x == 0 && direcao.z < 0 && direcao.y == 0)
+    {
+
+    }
+    if (direcao.x == 0 && direcao.z > 0 && direcao.y == 0)
+    {
+
+    }
+
+
+
 	glEnable(GL_TEXTURE_2D);
 	glScalef(0.5, 0.5, 0.5);
-  
-	glPushMatrix();
-        glTranslatef(-1.5, 0.0, 0.0);
-        glScalef(0.01, 0.01, 0.01);
-        glColor4f (1.0, 1.0, 1.0, 1.0);
-        tubarao->desenhar();
-	glPopMatrix();
-	
+
     glPushMatrix();
-		glTranslatef(0.0, 0.0, 0.0);
-        glScalef(10.0, 10.0, 10.0);
+		glTranslatef(x, y, z); //posicao
+        glScalef(10.0*escala, 10.0*escala, 10.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
+		///glRotatef(angulo,vetorx,vetory,vetorz);
+		glRotatef(0,direcao.x,direcao.y,direcao.z);
         gold->desenhar();
 	glPopMatrix();
-	
-	glPushMatrix();
-		glTranslatef(1.5, 0.0, 0.0);
-        glScalef(10.0, 10.0, 10.0);
-		glColor4f (1.0, 1.0, 1.0, 1.0);
-        gold->desenhar();
-	glPopMatrix();
+
 	glDisable(GL_TEXTURE_2D);
 }
 
