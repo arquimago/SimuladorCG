@@ -23,7 +23,7 @@ class Desenho
 		static void desenhar_planta(int x, int y, int z);
 		static void desenhar_peixe(int x, int y, int z);
 		static void desenhar_planta_e_peixe(int x, int y, int z);
-		static void desenhar_posicionavel(Posicionavel**);
+		static void desenhar_posicionavel(Posicionavel** ocupantes);
 };
 
 #endif // DESENHO_H
