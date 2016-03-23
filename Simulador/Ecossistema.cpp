@@ -3,9 +3,13 @@
 #include "stdio.h"
 
 cubo Ecossistema::aquario;
+posicao Ecossistema::limites;
 
 void Ecossistema::inicializar (int x, int y, int z)
 {
+    limites.x = x;
+    limites.y = y;
+    limites.z = z;
     y+=2;
     x+=2;
     z+=2;
@@ -24,7 +28,23 @@ void Ecossistema::inicializar (int x, int y, int z)
             aquario.dimensao[i].grid[j] = new unidade[z];
         }
     }
+    //seta tudo como null
+    for(int i = 0; i < y; i++)
+    {
+        for(int j = 0; j < x; j++)
+        {
+            for(int k = 0; k < z; k++)
+            {
+                    Ecossistema::ocupar(j,i,k,0,NULL);
+                    Ecossistema::ocupar(j,i,k,1,NULL);
+                    Ecossistema::ocupar(j,i,k,2,NULL);
+            }
+        }
+    }
 
+    Pedra* pedra = new Pedra();
+    //cria uma nova pedra que cai até o fundo
+    //cria as paredes do cubo de pedra
     for(int i = 0; i < y; i++)
     {
         for(int j = 0; j < x; j++)
@@ -33,15 +53,7 @@ void Ecossistema::inicializar (int x, int y, int z)
             {
                 if(i==0||i==y-1||k==0||k==z-1||j==0||j==x-1)
                 {
-                    Ecossistema::ocupar(j,i,k,0,new Pedra());
-                    Ecossistema::ocupar(j,i,k,1,NULL);
-                    Ecossistema::ocupar(j,i,k,2,NULL);
-                }
-                else
-                {
-                    Ecossistema::ocupar(j,i,k,0,NULL);
-                    Ecossistema::ocupar(j,i,k,1,NULL);
-                    Ecossistema::ocupar(j,i,k,2,NULL);
+                    Ecossistema::ocupar(j,i,k,0,pedra);
                 }
             }
         }
@@ -49,17 +61,12 @@ void Ecossistema::inicializar (int x, int y, int z)
 }
 
 Posicionavel** Ecossistema::identificarOcupantes (int x, int y, int z)
-{
-   Posicionavel** ocupantes = new Posicionavel*[2];
-   ocupantes[0]==aquario.dimensao[y].grid[x][z].ocupante[0];
-   ocupantes[1]==aquario.dimensao[y].grid[x][z].ocupante[1];
-   ocupantes[2]==aquario.dimensao[y].grid[x][z].ocupante[2];
-
-   return ocupantes;
-
-}
+{return aquario.dimensao[y].grid[x][z].ocupante;}
 
 void Ecossistema::ocupar (int x, int y, int z,int i, Posicionavel* corpo)
 {
     aquario.dimensao[y].grid[x][z].ocupante[i] = corpo;
 }
+
+posicao* Ecossistema::getLimites()
+{return &limites;}
