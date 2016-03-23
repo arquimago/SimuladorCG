@@ -12,19 +12,20 @@ typedef struct {
 class Posicionavel
 //pedra planta e peixe herdam dessa classe.
 {
-	private:
+	protected:
 		posicao localizacao;
 		int id; //identificador de posicionavel
 		void posicionar();
+		//peixe e planta tem a mesma função, pedra sobrecarrega
         //codigo para gerar uma posicao aleatoria x y z
         //checar em Cubo se a posicao esta ocupada ou nao.
-        //pedra e planta sobrecarregam essa fun��o, pois tem propriedades especiais para ela.
+
 	public:
-		posicao getPosicao();
+		posicao* getPosicao();
 		Posicionavel(int id);
 		//seta id
 		int getId();
-		void setPosicao(posicao posicaoNova);
+		void setPosicao(int x,int y, int z);
 		void agir();
 		//planta e peixe vão sobrescrever esse metodo
 };
@@ -33,7 +34,7 @@ class Posicionavel
 class SerVivo: public Posicionavel
 //pedra planta e peixe herdam dessa classe.
 {
-	private:
+	protected:
 		int massa;
 		int limite;
         int taxa;
@@ -72,9 +73,8 @@ class Peixe: public SerVivo
         //se for parede retorna pedra
         void virar();
         //muda aleatoriamente sua dire��o. testar para nao ficar de cabe�a para baixo
-		void posicionar();
-		//qualquer lugar onde não há pedra, ou(planta e peixe)
 	public:
+		Peixe(int taxaInicial, int x, int y, int z, int massa);  //construtor da explosão
 		Peixe(int taxaInicial);
 		//construtor. seta os valores iniciais de massa e dire��o (aleatoria). chama metodo posicionar.
         //chama construtor de serVivo, passando a massa e taxa e 1500 como limite
@@ -84,7 +84,7 @@ class Peixe: public SerVivo
         //se encontrar planta morde
 		//se encontrar peixe e for maior, come
 		//se encontrar peixe e for menor, morre
-        posicao getDirecao();
+        posicao* getDirecao();
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
 		void morder(Posicionavel*);
@@ -100,11 +100,8 @@ class Planta: public SerVivo
 	private:
 		void crescer();
 		//aumenta massa e chama a fun��o privada diminuir e explodir caso passe do limite
-		void posicionar();
-		//pedra e planta sempre sao alocadas no ch�o
-		//planta nao acumula em cima de outras
 	public:
-
+		Planta(int taxaInicial, int x, int y, int z, int massa);  //construtor da explosão
 		Planta(int taxaInicial);
 		//construtor. chama metodo posicionar.
         //chama construtor de serVivo, passando a massa e taxa, e 1000 como limite
@@ -128,3 +125,5 @@ class Pedra: public Posicionavel
 
 
 #endif // POSICIONAVEL_H
+
+
