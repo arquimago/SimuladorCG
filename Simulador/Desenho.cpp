@@ -54,7 +54,7 @@ void Desenho::init(void)
 	gold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
 	glDisable(GL_TEXTURE_2D);
    
-    camera.Mover( setVetor(0.0, 0.1, 0.0 ));
+    camera.Mover( setVetor(0.0, 0.0, 0.5 ));
     camera.ParaFrente( 1.0 );
 }
 
@@ -174,6 +174,7 @@ void Desenho::desenhar_planta(int x, int y, int z)
 {
 	glEnable(GL_TEXTURE_2D);
 
+	
 	glPushMatrix();
         glTranslatef(x, y, z);
         glScalef(0.51, 0.51, 0.51);
@@ -333,12 +334,12 @@ void Desenho::keyPressed (unsigned char key, int x, int y)
 		camera.ParaOLado(0.1);
 		display();
 		break;
-	case 'k':      //passinho pra cima
-		camera.Mover(setVetor(0.0,-0.3,0.0));
+	case 'i':      //passinho pra cima
+		camera.Mover(setVetor(0.0,0.3,0.0));
 		display();
 		break;
-	case 'i':      //passinho pra baixo
-		camera.Mover(setVetor(0.0,0.3,0.0));
+	case 'k':      //passinho pra baixo
+		camera.Mover(setVetor(0.0,-0.3,0.0));
 		display();
 		break;
 	}
