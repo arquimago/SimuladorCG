@@ -1,0 +1,1 @@
+g++ ARQUIVO_FONTE.cpp -o EXECUTAVEL.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
