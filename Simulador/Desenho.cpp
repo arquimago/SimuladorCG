@@ -6,7 +6,6 @@
 #include "Desenho.h"
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
-#include "Posicionavel.cpp"
 
 static Modelo *gold, *orca,*tubarao,*pedra,*planta;
 CCamera camera;
