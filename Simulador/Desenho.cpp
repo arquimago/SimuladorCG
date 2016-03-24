@@ -73,10 +73,10 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	
-	posicao limites = Ecossistema::getLimites();
-	int comprimento = limites.x;
-	int altura = limites.y;
-	int largura = limites.z;
+	posicao* limites = Ecossistema::getLimites();
+	int comprimento = limites->x;
+	int altura = limites->y;
+	int largura = limites->z;
 	for (int k=1; k<=altura; k++)
             for (int j=1; j<=largura; j++)
                 for (int i=1; i<=comprimento; i++)
