@@ -9,8 +9,13 @@
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
 
-static Modelo *modeloGold, *modeloOrca,*modeloTubarao,*modeloPedra,*modeloPlanta;
-static CCamera camera;
+static Modelo *gold, *orca,*tubarao,*pedra,*planta;
+CCamera camera;
+
+int main(int argc, char** argv){
+	Desenho opengl(argc,argv);
+	opengl.desenhar();
+}
 
 Desenho::Desenho(int argc, char** argv)
 {
@@ -27,13 +32,37 @@ Desenho::Desenho(int argc, char** argv)
 	glutReshapeFunc(Desenho::reshape);
 }
 
+void Desenho::desenhar_posicionavel (int x, int y, int z)
+{
+	Posicionavel** ocupantes = Ecossistema::identificarOcupantes(x,y,z);
+	
+	Desenho::desenhar_agua(x,y,z);
+	
+	if (ocupantes[0] != NULL)
+	{
+		Desenho::desenhar_pedra(x,y,z);
+		return; //sai da função
+	}
+	
+	if (ocupantes[1] != NULL)
+	{
+		Desenho::desenhar_planta(x,y,z);
+	}
+	
+	if (ocupantes[2] != NULL)
+	{
+		Desenho::desenhar_peixe(x,y,z);
+	}
+	
+}
+
 void Desenho::desenhar()
 {   
 	glutMainLoop();
 
-	delete modeloOrca;
-	delete modeloGold;
-	delete modeloTubarao;
+	delete orca;
+	delete gold;
+	delete tubarao;
 }
 
 void Desenho::init(void)
@@ -43,11 +72,11 @@ void Desenho::init(void)
 	glShadeModel (GL_SMOOTH);
 	
 	char *texturasPeixe[] = {NULL, NULL, (char*)"Texturas/GOLDFISH.bmp",(char*)"Texturas/Olho.bmp", NULL};
-	//modeloTubarao = Modelo::carregarObj((char*)"OBJs/GreatWhite.obj",(char*)"Texturas/GreatWhite.bmp");
-	//modeloOrca = Modelo::carregarObj((char*)"OBJs/KillerWhale.obj",(char*)"Texturas/KillerWhale.bmp");
-	modeloPedra = Modelo::carregarObj((char*)"OBJs/rock.obj",(char*)"Texturas/rock.bmp");
-	modeloPlanta = Modelo::carregarObj((char*)"OBJs/alga.obj",(char*)"Texturas/alga.bmp");
-	modeloGold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
+	tubarao = Modelo::carregarObj((char*)"OBJs/GreatWhite.obj",(char*)"Texturas/GreatWhite.bmp");
+	orca = Modelo::carregarObj((char*)"OBJs/KillerWhale.obj",(char*)"Texturas/KillerWhale.bmp");
+	pedra = Modelo::carregarObj((char*)"OBJs/rock.obj",(char*)"Texturas/rock.bmp");
+	planta = Modelo::carregarObj((char*)"OBJs/alga.obj",(char*)"Texturas/alga.bmp");
+	gold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
 	glDisable(GL_TEXTURE_2D);
    
     camera.Mover( setVetor(0.0, 0.0, 0.5 ));
@@ -65,18 +94,15 @@ void Desenho::display(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	
 	desenhar_eixos();
+	//desenhar_pedra(0,0,0);
+	desenhar_peixe(0,0,0);
 	
-	posicao* limites = Ecossistema::getLimites();
-	int comprimento = limites->x;
-	int altura = limites->y;
-	int largura = limites->z;
-	for (int k=1; k<=altura; k++)
-            for (int j=1; j<=largura; j++)
-                for (int i=1; i<=comprimento; i++)
-			desenhar_posicao(i,k,j);
-      
+	//desenhar_planta(0,0,0);
+	//desenhar_agua(0,0,0);
+	desenhar_agua(0,1,0);
+	desenhar_agua(0,0,1);
+
 	glutSwapBuffers();
 }
 
@@ -96,32 +122,6 @@ void Desenho::desenhar_eixos()
         glVertex3f(0.0, 0.0, 0.0);
         glVertex3f(0.0, 0.0, 1.0);    
     glEnd();
-}
-
-void Desenho::desenhar_posicao (int x, int y, int z)
-{
-	desenhar_agua(x, y, z);
-	
-	Posicionavel** ocupantes = Ecossistema::identificarOcupantes(x,y,z);
-	Pedra* pedra = (Pedra*) ocupantes[0];
-	Planta* planta = (Planta*) ocupantes[1];
-	Peixe* peixe = (Peixe*) ocupantes[2];
-	
-	if (pedra != NULL)
-	{
-		desenhar_pedra(x, y, z);
-		return;
-	}
-	
-	if (planta != NULL)
-	{
-		desenhar_planta(planta, x, y-0.25, z);
-	}
-	
-	if (peixe != NULL)
-	{
-		desenhar_peixe(peixe, x, y+0.25, z);
-	}
 }
 
 void Desenho::desenhar_agua(int x, int y, int z)
@@ -189,104 +189,136 @@ void Desenho::desenhar_pedra(int x, int y, int z)
         glTranslatef(x, y, z);
         glScalef(1, 1, 1);
         glColor4f (1.0, 1.0, 1.0, 1.0);
-        modeloPedra->desenhar();
+        pedra->desenhar();
 	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
 }
 
-void Desenho::desenhar_planta(Planta* planta, int x, int y, int z)
+void Desenho::desenhar_planta(int x, int y, int z)
 {
 	glEnable(GL_TEXTURE_2D);
 
-    float escala = (planta->getMassa())/1000;
 	
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(0.51*escala, 0.51*escala, 0.51*escala);
+        glScalef(0.51, 0.51, 0.51);
         glColor4f (1.0, 1.0, 1.0, 1.0);
-        modeloPlanta->desenhar();
+        planta->desenhar();
 	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
 }
 
 
-void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
+void Desenho::desenhar_peixe(int x, int y, int z)
 {
-    posicao *direcao = peixe->getDirecao();
+    //escala
+    //ROTACIONAR PARA DIRECAO x y z
+    //localização x y z
+    /*Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
+    Peixe* peixe = (Peixe*) ocupante[2];
+
+    posicao* frente = peixe->getDirecao();
+    posicao direcao;
+    direcao.x = frente->x;
+    direcao.y = frente->y;
+    direcao.z = frente->z;
 
     float escala = (peixe->getMassa())/1000;
-    float angulo;
+    float angulo,vetorx,vetory,vetorz = 0;*/
 
-    if (direcao->x > 0 && direcao->y > 0 && direcao->z > 0)
+	float escala=1;
+	posicao direcao;
+	direcao.x=1;
+	direcao.y=1;
+	direcao.z=1;
+	
+
+
+    //rotacionar peixe
+    //definir angulo,vetorx,vetory,vetorz
+    //diagonais
+    if (direcao.x > 0 && direcao.y > 0 && direcao.z > 0)
     {
 
     }
-    if (direcao->x > 0 && direcao->y < 0 && direcao->z > 0)
+    if (direcao.x > 0 && direcao.y < 0 && direcao.z > 0)
     {
 
     }
-    if (direcao->x < 0 && direcao->y > 0 && direcao->z > 0)
+    if (direcao.x < 0 && direcao.y > 0 && direcao.z > 0)
     {
 
     }
-    if (direcao->x < 0 && direcao->y < 0 && direcao->z > 0)
+    if (direcao.x < 0 && direcao.y < 0 && direcao.z > 0)
     {
 
     }
-    if (direcao->x > 0 && direcao->y > 0 && direcao->z < 0)
+    if (direcao.x > 0 && direcao.y > 0 && direcao.z < 0)
     {
 
     }
-    if (direcao->x > 0 && direcao->y < 0 && direcao->z < 0)
+    if (direcao.x > 0 && direcao.y < 0 && direcao.z < 0)
     {
 
     }
-    if (direcao->x < 0 && direcao->y > 0 && direcao->z < 0)
+    if (direcao.x < 0 && direcao.y > 0 && direcao.z < 0)
     {
 
     }
-    if (direcao->x < 0 && direcao->y < 0 && direcao->z < 0)
+    if (direcao.x < 0 && direcao.y < 0 && direcao.z < 0)
     {
 
     }
-    
-    //Lados
-    if (direcao->x == 0 && direcao->z == 0 && direcao->y>0)
+    //lados
+    if (direcao.x == 0 && direcao.z == 0 && direcao.y>0)
     {
 
     }
-    if (direcao->x == 0 && direcao->z == 0 && direcao->y<0)
+    if (direcao.x == 0 && direcao.z == 0 && direcao.y<0)
     {
 
     }
-    if (direcao->x > 0 && direcao->z == 0 && direcao->y == 0)
+    if (direcao.x > 0 && direcao.z == 0 && direcao.y == 0)
     {
 
     }
-    if (direcao->x < 0 && direcao->z == 0 && direcao->y == 0)
+    if (direcao.x < 0 && direcao.z == 0 && direcao.y == 0)
     {
 
     }
-    if (direcao->x == 0 && direcao->z < 0 && direcao->y == 0)
+    if (direcao.x == 0 && direcao.z < 0 && direcao.y == 0)
     {
 
     }
-    if (direcao->x == 0 && direcao->z > 0 && direcao->y == 0)
+    if (direcao.x == 0 && direcao.z > 0 && direcao.y == 0)
     {
 
     }
+
 	
 	glEnable(GL_TEXTURE_2D);
+	glScalef(0.5, 0.5, 0.5);
 
     glPushMatrix();
-		glTranslatef(x, y, z);
-        glScalef(10.0*escala, 10.0*escala, 10.0*escala);
+		glTranslatef(x, y, z); //posicao
+        glScalef(10.0*escala, 10.0*escala, 10.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
-		glRotatef(angulo, direcao->x, direcao->y, direcao->z);
-        modeloGold->desenhar();
+		///glRotatef(angulo,vetorx,vetory,vetorz);
+		//glRotatef(45,direcao.x,direcao.y,direcao.z);
+		glRotatef(315,1,0,0);
+		glRotatef(135,0,1,0);
+		glRotatef(0,0,0,1);
+        gold->desenhar();
 	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void Desenho::desenhar_planta_e_peixe(int x, int y, int z)
+{
+	glEnable(GL_TEXTURE_2D);
 
 	glDisable(GL_TEXTURE_2D);
 }
