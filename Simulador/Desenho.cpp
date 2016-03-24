@@ -70,9 +70,18 @@ void Desenho::display(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
+	
 	desenhar_eixos();
-	desenhar_posicao(0,0,0);
-
+	
+	posicao limites = Ecossistema::getLimites();
+	int comprimento = limites.x;
+	int altura = limites.y;
+	int largura = limites.z;
+	for (int k=1; k<=altura; k++)
+            for (int j=1; j<=largura; j++)
+                for (int i=1; i<=comprimento; i++)
+			desenhar_posicao(i,k,j);
+      
 	glutSwapBuffers();
 }
 
