@@ -30,26 +30,26 @@ Desenho::Desenho(int argc, char** argv)
 	glutReshapeFunc(Desenho::reshape);
 }
 
-void Desenho::desenhar_posicionavel (Posicionavel** ocupantes)
+void Desenho::desenhar_posicionavel (int x, int y, int z)
 {
+	Posicionavel** ocupantes = Ecossistema::identificarOcupantes(x,y,z);
+	
+	Desenho::desenhar_agua(x,y,z);
+	
 	if (ocupantes[0] != NULL)
 	{
-		Desenho::desenhar_pedra();
+		Desenho::desenhar_pedra(x,y,z);
 		return; //sai da função
 	}
 	
-	Desenho::desenhar_agua();
-	
 	if (ocupantes[1] != NULL)
 	{
-		posicao* pos = ocupante[1]->getPosicao();
-		Desenho::desenhar_planta(pos->x,pos->y,pos->z);
+		Desenho::desenhar_planta(x,y,z);
 	}
 	
 	if (ocupantes[2] != NULL)
 	{
-		posicao* pos = ocupante[2]->getPosicao();
-		Desenho::desenhar_peixe(pos->x,pos->y,pos->z);
+		Desenho::desenhar_peixe(x,y,z);
 	}
 	
 }
