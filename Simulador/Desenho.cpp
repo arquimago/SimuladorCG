@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Desenho.h"
+#include "Ecossistema.cpp"
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
 
@@ -94,9 +95,9 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	//desenhar_pedra(0,0,0);
-	//desenhar_peixe(0,0,0);
+	desenhar_peixe(0,0,0);
 	
-	desenhar_planta(0,0,0);
+	//desenhar_planta(0,0,0);
 	//desenhar_agua(0,0,0);
 	desenhar_agua(0,1,0);
 	desenhar_agua(0,0,1);
@@ -214,8 +215,9 @@ void Desenho::desenhar_peixe(int x, int y, int z)
     //escala
     //ROTACIONAR PARA DIRECAO x y z
     //localização x y z
-    Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
+    /*Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     Peixe* peixe = (Peixe*) ocupante[2];
+
     posicao* frente = peixe->getDirecao();
     posicao direcao;
     direcao.x = frente->x;
@@ -223,9 +225,14 @@ void Desenho::desenhar_peixe(int x, int y, int z)
     direcao.z = frente->z;
 
     float escala = (peixe->getMassa())/1000;
-    float angulo,vetorx,vetory,vetorz = 0;
+    float angulo,vetorx,vetory,vetorz = 0;*/
 
-
+	float escala=1;
+	posicao direcao;
+	direcao.x=1;
+	direcao.y=1;
+	direcao.z=1;
+	
 
 
     //rotacionar peixe
@@ -289,8 +296,7 @@ void Desenho::desenhar_peixe(int x, int y, int z)
 
     }
 
-
-
+	
 	glEnable(GL_TEXTURE_2D);
 	glScalef(0.5, 0.5, 0.5);
 
@@ -299,7 +305,7 @@ void Desenho::desenhar_peixe(int x, int y, int z)
         glScalef(10.0*escala, 10.0*escala, 10.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
 		///glRotatef(angulo,vetorx,vetory,vetorz);
-		glRotatef(0,direcao.x,direcao.y,direcao.z);
+		glRotatef(180,direcao.x,direcao.y,direcao.z);
         gold->desenhar();
 	glPopMatrix();
 
