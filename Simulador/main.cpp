@@ -30,12 +30,12 @@ int main (int argc, char** argv)
 
 
 
-	opengl.desenhar();
+
 
     //programa rodando
     while(true)
-    {
-        //ringue.desenhar();
+    {   
+    	opengl.desenhar();
         for (int k=1; k<=altura; k++)
         {
             for (int j=1; j<=largura; j++)
