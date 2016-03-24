@@ -12,11 +12,6 @@
 static Modelo *modeloGold, *modeloOrca,*modeloTubarao,*modeloPedra,*modeloPlanta;
 static CCamera camera;
 
-int main(int argc, char** argv){
-	Desenho opengl(argc,argv);
-	opengl.desenhar();
-}
-
 Desenho::Desenho(int argc, char** argv)
 {
 	glutInit(&argc, argv);
