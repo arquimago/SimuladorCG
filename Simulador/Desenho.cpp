@@ -8,9 +8,58 @@
 #include "Ecossistema.cpp"
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
+#include "stdio.h"
 
 static Modelo *modeloGold, *modeloOrca,*modeloTubarao,*modeloPedra,*modeloPlanta;
 static CCamera camera;
+
+int main (int argc, char** argv)
+{
+	//ler arquivo de beatriz
+
+    int qtdPeixe = 3;
+    int qtdPedra = 20;
+    int qtdPlanta = 4;
+    int altura = 3;  //y     0  2
+    int largura = 6; //z  0  5
+    int comprimento = 4;//x 0 3
+    int taxaCrescimentoPlanta = 15;
+    int taxaDiminuicaoPeixe = 10;
+
+    //inicializar cubo
+    //inicializar posicoes de pedras, plantas e peixes
+    Ecossistema::inicializar(comprimento,altura,largura);
+	Desenho opengl(argc,argv);
+
+    //posicionar plantas pedras e peixes
+    //
+    for (int i=0 ; i <= qtdPedra; i++) new Pedra();
+    for (int i=0 ; i <= qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
+    for (int i=0 ; i <= qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
+
+    //programa rodando
+    while(true)
+    {   
+    	opengl.desenhar();
+        for (int k=1; k<=altura; k++)
+        {
+            for (int j=1; j<=largura; j++)
+            {
+                for (int i=1; i<=comprimento; i++)
+                {
+                    Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
+                    for (int pos = 0; pos < 3; pos++)
+                    {
+                        if (ocupante[pos] != NULL) //TEM ALGO
+                            ocupante[pos]->agir();
+                    }
+
+                }
+            }
+        }
+    }	
+	
+}
 
 Desenho::Desenho(int argc, char** argv)
 {
@@ -65,17 +114,23 @@ void Desenho::display(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	
 	desenhar_eixos();
 	
 	posicao* limites = Ecossistema::getLimites();
 	int comprimento = limites->x;
 	int altura = limites->y;
 	int largura = limites->z;
-	for (int k=1; k<=altura; k++)
-            for (int j=1; j<=largura; j++)
-                for (int i=1; i<=comprimento; i++)
-			desenhar_posicao(i,k,j);
+	
+	desenhar_agua(comprimento, altura, largura);
+	
+	for (int k=1; k<=altura; k++){
+		for (int j=1; j<=largura; j++){
+			for (int i=1; i<=comprimento; i++){
+				desenhar_posicao(i,k,j);
+				//desenhar_pedra(i,k,j);
+			}
+		}
+	}
       
 	glutSwapBuffers();
 }
@@ -100,12 +155,12 @@ void Desenho::desenhar_eixos()
 
 void Desenho::desenhar_posicao (int x, int y, int z)
 {
-	desenhar_agua(x, y, z);
-	
 	Posicionavel** ocupantes = Ecossistema::identificarOcupantes(x,y,z);
 	Pedra* pedra = (Pedra*) ocupantes[0];
 	Planta* planta = (Planta*) ocupantes[1];
 	Peixe* peixe = (Peixe*) ocupantes[2];
+	
+	//desenhar_planta(planta, 1, 1, 1);
 	
 	if (pedra != NULL)
 	{
@@ -120,20 +175,23 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	
 	if (peixe != NULL)
 	{
-		desenhar_peixe(peixe, x, y+0.25, z);
+		//desenhar_peixe(peixe, x, y+0.25, z);
 	}
+	
+	//desenhar_agua(x, y, z);
 }
 
 void Desenho::desenhar_agua(int x, int y, int z)
 {
 	//FRENTE
     glBegin(GL_QUADS);
-        glColor4f(0.0, 0.0, 1.0, 0.5);
+        glColor4f(0.0, 0.0, 1.0, 0.2);
         glVertex3f( 0.5+x, -0.5+y, -0.5+z);
         glVertex3f( 0.5+x,  0.5+y, -0.5+z);  
         glVertex3f(-0.5+x,  0.5+y, -0.5+z);
         glVertex3f(-0.5+x, -0.5+y, -0.5+z);    
     glEnd();
+    
     
     //TRASEIRA
 	glBegin(GL_QUADS);
@@ -179,6 +237,7 @@ void Desenho::desenhar_agua(int x, int y, int z)
 		glVertex3f(-0.5+x, -0.5+y,  0.5+z);
 		glVertex3f(-0.5+x, -0.5+y, -0.5+z);
 	glEnd();
+
 }
 
 void Desenho::desenhar_pedra(int x, int y, int z)
@@ -199,11 +258,11 @@ void Desenho::desenhar_planta(Planta* planta, int x, int y, int z)
 {
 	glEnable(GL_TEXTURE_2D);
 
-    float escala = (planta->getMassa())/1000;
+    float escala = (planta->getMassa())/1000.0;
 	
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(0.51*escala, 0.51*escala, 0.51*escala);
+        glScalef(3*escala, 3*escala, 3*escala);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPlanta->desenhar();
 	glPopMatrix();
@@ -214,77 +273,58 @@ void Desenho::desenhar_planta(Planta* planta, int x, int y, int z)
 
 void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
 {
-    posicao *direcao = peixe->getDirecao();
+    posicao* frente = peixe->getDirecao();
+    posicao direcao;
+    direcao.x = frente->x;
+    direcao.y = frente->y;
+    direcao.z = frente->z;
 
     float escala = (peixe->getMassa())/1000;
-    float angulo;
-
-    if (direcao->x > 0 && direcao->y > 0 && direcao->z > 0)
-    {
-
-    }
-    if (direcao->x > 0 && direcao->y < 0 && direcao->z > 0)
-    {
-
-    }
-    if (direcao->x < 0 && direcao->y > 0 && direcao->z > 0)
-    {
-
-    }
-    if (direcao->x < 0 && direcao->y < 0 && direcao->z > 0)
-    {
-
-    }
-    if (direcao->x > 0 && direcao->y > 0 && direcao->z < 0)
-    {
-
-    }
-    if (direcao->x > 0 && direcao->y < 0 && direcao->z < 0)
-    {
-
-    }
-    if (direcao->x < 0 && direcao->y > 0 && direcao->z < 0)
-    {
-
-    }
-    if (direcao->x < 0 && direcao->y < 0 && direcao->z < 0)
-    {
-
-    }
+	//até aqui não mudei
     
-    //Lados
-    if (direcao->x == 0 && direcao->z == 0 && direcao->y>0)
-    {
-
-    }
-    if (direcao->x == 0 && direcao->z == 0 && direcao->y<0)
-    {
-
-    }
-    if (direcao->x > 0 && direcao->z == 0 && direcao->y == 0)
-    {
-
-    }
-    if (direcao->x < 0 && direcao->z == 0 && direcao->y == 0)
-    {
-
-    }
-    if (direcao->x == 0 && direcao->z < 0 && direcao->y == 0)
-    {
-
-    }
-    if (direcao->x == 0 && direcao->z > 0 && direcao->y == 0)
-    {
-
-    }
+	int tabelaAngulos[3][3][3][3] = {
+		{
+			{
+				{315,225,0},{0,270,45},{45,315,0}
+			},{
+				{0,225,0},{0,270,0},{0,315,0}
+			},{
+				{45,225,0},{0,270,315},{315,315,0}
+			}
+		},{
+			{
+				{45,180,0},{90,0,0},{45,0,0}
+			},{
+				{0,180,0},{0,0,0},{0,0,0}
+			},{
+				{315,180,0},{270,0,0},{315,0,0}
+			}
+		},{
+			{
+				{315,135,0},{45,90,0},{45,45,0}
+			},{
+				{0,135,0},{0,90,0},{0,45,0}
+			},{
+				{45,135,0},{315,90,0},{315,45,0}
+			}
+		}
+	};
+	int anguloX = tabelaAngulos[direcao.x+1][direcao.y+1][direcao.z+1][0];
+	int anguloY = tabelaAngulos[direcao.x+1][direcao.y+1][direcao.z+1][1];
+	int anguloZ = tabelaAngulos[direcao.x+1][direcao.y+1][direcao.z+1][2];
+    
 	
 	glEnable(GL_TEXTURE_2D);
+	glScalef(0.5, 0.5, 0.5);
 
     glPushMatrix();
-		glTranslatef(x, y, z);
-        glScalef(10.0*escala, 10.0*escala, 10.0*escala);
+		glScalef(10.0*escala, 10.0*escala, 10.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
-		glRotatef(angulo, direcao->x, direcao->y, direcao->z);
+		glTranslatef(0,0,0);
+		glRotatef(anguloX,1,0,0);
+		glRotatef(anguloY,0,1,0);
+		glRotatef(anguloZ,0,0,1);
+		glTranslatef(x, y, z); //posicao
         modeloGold->desenhar();
 	glPopMatrix();
 
