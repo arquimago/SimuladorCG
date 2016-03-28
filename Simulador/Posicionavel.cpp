@@ -1,7 +1,10 @@
 #include "Ecossistema.h"
 #include <stdlib.h>
-#include <time.h>
 #include "stdio.h"
+#include <ctime>
+#include <iostream>
+#include <unistd.h>
+
 ///POSICIONAVEL
 posicao* Posicionavel::getPosicao()
 {return &this->localizacao;}
@@ -37,8 +40,13 @@ void Posicionavel::agir()
 
 void Posicionavel::posicionar()
 {
-    int sorteio_x, sorteio_z, sorteio_y;
-    srand(rand());
+    //printf("%u  \n", time(NULL));
+	//sleep(1);
+	//printf("%u  \n", time(NULL));
+	//srand((unsigned)time(NULL));
+	//printf("%f  \n", rand());
+	int sorteio_x, sorteio_z, sorteio_y;
+    //srand(rand());
 
     posicao* limites = Ecossistema::getLimites();
     do{

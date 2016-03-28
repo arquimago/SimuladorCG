@@ -13,9 +13,13 @@
 static Modelo *modeloGold, *modeloPedra,*modeloPlanta;
 static CCamera camera;
 
+
 int main (int argc, char** argv)
 {
 	//ler arquivo de beatriz
+	
+	srand((unsigned)time(NULL));
+	srand(rand());
 
     int qtdPeixe = 3;
     int qtdPedra = 20;
