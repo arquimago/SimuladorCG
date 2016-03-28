@@ -32,16 +32,16 @@ int main (int argc, char** argv)
 	
 	//Para leitura do arquivo basta descomentar o bloco abaixo
 	
-	/*FILE *arqInput;
+	FILE *arqInput;
 	arqInput=fopen(argv[1],"r");
 	if(arqInput==NULL){
-		printf("Falha no acesso aos arquivos");
+		printf("Falha no acesso ao arquivo");
 		exit(42);
 	}
 	fscanf(arqInput," %d %d %d",&largura,&altura,&comprimento);
 	fscanf(arqInput," %s %d %d",&lixo,&qtdPeixe, &taxaDiminuicaoPeixe);
 	fscanf(arqInput," %s %d %d",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
-	fscanf(arqInput," %s %d",&lixo,&qtdPedra);*/
+	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
 
 	//para leitura do arquivo basta descomentar o bloco acima
 	
@@ -114,8 +114,16 @@ void Desenho::init(int x, int y, int z)
 	modeloGold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
 	glDisable(GL_TEXTURE_2D);
    
-    camera.Mover( setVetor(-2*x, y/2+0.5, z/2+0.5 ));
+	
 	camera.RotacaoY(-90.0);
+   
+    //Para iniciar a câmera de lado é este bloco
+	camera.Mover( setVetor(-1*(sqrt(y*z))*x, y/2+0.5, z/2+0.5 ));
+			
+	//Para iniciar a câmera de cima é este bloco
+	//camera.Mover( setVetor(x/2+0.5, (sqrt(x*z))*y, z/2+0.5 ));
+	//camera.RotacaoX(-90.0);
+	
 }
 
 void Desenho::display(void)
