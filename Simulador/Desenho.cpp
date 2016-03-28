@@ -28,7 +28,7 @@ int main (int argc, char** argv)
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
 	
-	char lixo[30];
+	char lixo[7];
 	
 	//Para leitura do arquivo basta descomentar o bloco abaixo
 	
@@ -139,7 +139,7 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	
-	//desenhar_peixe(new Peixe(10),3,3,3);
+	desenhar_peixe(new Peixe(10),3,3,3);
 	//desenhar_pedra(3,2,3);
 	
 	
@@ -194,12 +194,13 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	
 	if (planta != NULL)
 	{
-		//desenhar_planta(planta, x, y-0.25, z);
+		desenhar_planta(planta, x , y-0.25 , z);
+		
 	}
 	
 	if (peixe != NULL)
 	{
-		//desenhar_peixe(peixe, x, y+0.25, z);
+		desenhar_peixe(peixe, x, y+0.25, z);
 	}
 }
 
@@ -271,7 +272,7 @@ void Desenho::desenhar_pedra(int x, int y, int z)
 	glDisable(GL_TEXTURE_2D);
 }
 
-void Desenho::desenhar_planta(Planta* planta, int x, int y, int z)
+void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
 {
 	glEnable(GL_TEXTURE_2D);
 
@@ -283,17 +284,18 @@ void Desenho::desenhar_planta(Planta* planta, int x, int y, int z)
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPlanta->desenhar();
 	glPopMatrix();
-
+	 
 	glDisable(GL_TEXTURE_2D);
 }
 
 
-void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
+void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
 {
     posicao* frente = peixe->getDirecao();
     
     float escala = (peixe->getMassa())/1000.0;
-	    
+	printf("Posicao x = %.2f y = %.2f z = %.2f \n", x,y,z);
+	
 	int tabelaAngulos[3][3][3][3] = {
 		{
 			{
@@ -330,13 +332,12 @@ void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
 	glEnable(GL_TEXTURE_2D);
 
     glPushMatrix();
-		glScalef(100.0*escala, 100.0*escala, 100.0*escala); //escala peixe
+		glTranslatef(x, y, z); //posicao
+		glScalef(50.0*escala, 50.0*escala, 50.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
-		//glTranslatef(0,0,0);
 		glRotatef(anguloX,1,0,0);
 		glRotatef(anguloY,0,1,0);
 		glRotatef(anguloZ,0,0,1);
-		glTranslatef(x, y, z); //posicao
         modeloGold->desenhar();
 	glPopMatrix();
 

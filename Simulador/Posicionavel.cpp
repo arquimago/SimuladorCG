@@ -40,20 +40,17 @@ void Posicionavel::agir()
 
 void Posicionavel::posicionar()
 {
-    //printf("%u  \n", time(NULL));
-	//sleep(1);
-	//printf("%u  \n", time(NULL));
-	//srand((unsigned)time(NULL));
-	//printf("%f  \n", rand());
-	int sorteio_x, sorteio_z, sorteio_y;
-    //srand(rand());
-
+    int sorteio_x, sorteio_z, sorteio_y;
+    
+	int i = 0;
     posicao* limites = Ecossistema::getLimites();
     do{
-        sorteio_x = (rand() % limites->x) + 1;
+        i++;
+		sorteio_x = (rand() % limites->x) + 1;
 		sorteio_y = (rand() % limites->y) + 1;
         sorteio_z = (rand() % limites->z) + 1;
-    } while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL &&
+		//printf("sorteio %d x = %d y = %d z = %d\n", i,sorteio_x,sorteio_y,sorteio_z);
+    } while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL ||
 	Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[this->getId()]!=NULL);
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }

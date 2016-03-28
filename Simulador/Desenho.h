@@ -22,8 +22,8 @@ class Desenho
 		static void desenhar_posicao(int x, int y, int z);
 		static void desenhar_agua(int x, int y, int z);
 		static void desenhar_pedra(int x, int y, int z);
-		static void desenhar_planta(Planta* planta, int x, int y, int z);
-		static void desenhar_peixe(Peixe* peixe, int x, int y, int z);
+		static void desenhar_planta(Planta* planta, float x, float y, float z);
+		static void desenhar_peixe(Peixe* peixe, float x, float y, float z);
 };
 
 #endif // DESENHO_H
