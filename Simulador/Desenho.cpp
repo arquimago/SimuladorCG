@@ -279,7 +279,7 @@ void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
     direcao.y = frente->y;
     direcao.z = frente->z;
 
-    float escala = (peixe->getMassa())/1000;
+    float escala = (peixe->getMassa())/1000.0;
 	//até aqui não mudei
     
 	int tabelaAngulos[3][3][3][3] = {
