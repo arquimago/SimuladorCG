@@ -16,12 +16,10 @@ static CCamera camera;
 
 int main (int argc, char** argv)
 {
-	//ler arquivo de beatriz
-	
 	srand((unsigned)time(NULL));
 	srand(rand());
-
-    int qtdPeixe = 3;
+		
+	int qtdPeixe = 3;
     int qtdPedra = 20;
     int qtdPlanta = 4;
     int altura = 3;  //y     0  2
@@ -29,7 +27,24 @@ int main (int argc, char** argv)
     int comprimento = 4;//x 0 3
     int taxaCrescimentoPlanta = 15;
     int taxaDiminuicaoPeixe = 10;
+	
+	char lixo[30];
+	
+	//Para leitura do arquivo basta descomentar o bloco abaixo
+	
+	/*FILE *arqInput;
+	arqInput=fopen(argv[1],"r");
+	if(arqInput==NULL){
+		printf("Falha no acesso aos arquivos");
+		exit(42);
+	}
+	fscanf(arqInput," %d %d %d",&largura,&altura,&comprimento);
+	fscanf(arqInput," %s %d %d",&lixo,&qtdPeixe, &taxaDiminuicaoPeixe);
+	fscanf(arqInput," %s %d %d",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
+	fscanf(arqInput," %s %d",&lixo,&qtdPedra);*/
 
+	//para leitura do arquivo basta descomentar o bloco acima
+	
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,altura,largura);
@@ -202,10 +217,10 @@ void Desenho::desenhar_agua(int x, int y, int z)
 	
 		//esquerda
 	glBegin(GL_POLYGON);
-		glVertex3f(0.5, 0.5, z+0.5);
 		glVertex3f(0.5, 0.5, 0.5);
+		glVertex3f(0.5, 0.5, z+0.5);
+		glVertex3f(0.5, y+0.5, z+0.5);
         glVertex3f(0.5, y+0.5, 0.5);
-        glVertex3f(0.5, y+0.5, z+0.5);
     glEnd();    
 	
 		//frente
@@ -228,8 +243,9 @@ void Desenho::desenhar_agua(int x, int y, int z)
 	glBegin(GL_POLYGON);
 		glVertex3f(0.5, 0.5, 0.5);
         glVertex3f(x+0.5, 0.5, 0.5);
-        glVertex3f(0.5, y+0.5, 0.5);
         glVertex3f(x+0.5, y+0.5, 0.5);
+		glVertex3f(0.5, y+0.5, 0.5);
+        
 	glEnd();
 }
 
