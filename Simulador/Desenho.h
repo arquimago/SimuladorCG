@@ -5,7 +5,7 @@
 class Desenho
 {
     public:
-        Desenho(int argc, char** argv);
+        Desenho(int argc, char** argv,int x, int y, int z);
         void desenhar();
         //~Desenho();
 
@@ -13,7 +13,7 @@ class Desenho
 
     
 	private:
-		static void init(void);
+		static void init(int x, int y, int z);
 		static void display(void);
 		static void reshape(int w, int h);
 		static void keyPressed(unsigned char key, int x, int y);

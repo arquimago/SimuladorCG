@@ -10,7 +10,7 @@
 #include "CCamera.cpp"
 #include "stdio.h"
 
-static Modelo *modeloGold, *modeloOrca,*modeloTubarao,*modeloPedra,*modeloPlanta;
+static Modelo *modeloGold, *modeloPedra,*modeloPlanta;
 static CCamera camera;
 
 int main (int argc, char** argv)
@@ -29,7 +29,7 @@ int main (int argc, char** argv)
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,altura,largura);
-	Desenho opengl(argc,argv);
+	Desenho opengl(argc,argv,comprimento,altura,largura);
 
     //posicionar plantas pedras e peixes
     //
@@ -61,7 +61,7 @@ int main (int argc, char** argv)
 	
 }
 
-Desenho::Desenho(int argc, char** argv)
+Desenho::Desenho(int argc, char** argv,int x, int y, int z)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -69,7 +69,7 @@ Desenho::Desenho(int argc, char** argv)
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow ("Aquario");
 	
-	init();
+	init(x,y,z);
 	
 	glutDisplayFunc(Desenho::display); 
 	glutKeyboardFunc(Desenho::keyPressed);
@@ -80,27 +80,23 @@ void Desenho::desenhar()
 {   
 	glutMainLoop();
 
-	delete modeloOrca;
 	delete modeloGold;
-	delete modeloTubarao;
 }
 
-void Desenho::init(void)
+void Desenho::init(int x, int y, int z)
 {
 	glClearColor (0.0, 0.0, 0.0, 0.0);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel (GL_SMOOTH);
 	
 	char *texturasPeixe[] = {NULL, NULL, (char*)"Texturas/GOLDFISH.bmp",(char*)"Texturas/Olho.bmp", NULL};
-	//modeloTubarao = Modelo::carregarObj((char*)"OBJs/GreatWhite.obj",(char*)"Texturas/GreatWhite.bmp");
-	//modeloOrca = Modelo::carregarObj((char*)"OBJs/KillerWhale.obj",(char*)"Texturas/KillerWhale.bmp");
 	modeloPedra = Modelo::carregarObj((char*)"OBJs/rock.obj",(char*)"Texturas/rock.bmp");
 	modeloPlanta = Modelo::carregarObj((char*)"OBJs/alga.obj",(char*)"Texturas/alga.bmp");
 	modeloGold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
 	glDisable(GL_TEXTURE_2D);
    
-    camera.Mover( setVetor(0.0, 0.0, 0.5 ));
-    camera.ParaFrente( 1.0 );
+    camera.Mover( setVetor(-2*x, y/2+0.5, z/2+0.5 ));
+	camera.RotacaoY(-90.0);
 }
 
 void Desenho::display(void)
@@ -116,21 +112,24 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	
+	//desenhar_peixe(new Peixe(10),3,3,3);
+	//desenhar_pedra(3,2,3);
+	
+	
 	posicao* limites = Ecossistema::getLimites();
 	int comprimento = limites->x;
 	int altura = limites->y;
 	int largura = limites->z;
 	
-	desenhar_agua(comprimento, altura, largura);
 	
 	for (int k=1; k<=altura; k++){
 		for (int j=1; j<=largura; j++){
 			for (int i=1; i<=comprimento; i++){
 				desenhar_posicao(i,k,j);
-				//desenhar_pedra(i,k,j);
 			}
 		}
 	}
+	desenhar_agua(comprimento, altura, largura);
       
 	glutSwapBuffers();
 }
@@ -160,8 +159,6 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	Planta* planta = (Planta*) ocupantes[1];
 	Peixe* peixe = (Peixe*) ocupantes[2];
 	
-	//desenhar_planta(planta, 1, 1, 1);
-	
 	if (pedra != NULL)
 	{
 		desenhar_pedra(x, y, z);
@@ -170,74 +167,66 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	
 	if (planta != NULL)
 	{
-		desenhar_planta(planta, x, y-0.25, z);
+		//desenhar_planta(planta, x, y-0.25, z);
 	}
 	
 	if (peixe != NULL)
 	{
 		//desenhar_peixe(peixe, x, y+0.25, z);
 	}
-	
-	//desenhar_agua(x, y, z);
 }
 
 void Desenho::desenhar_agua(int x, int y, int z)
 {
-	//FRENTE
-    glBegin(GL_QUADS);
-        glColor4f(0.0, 0.0, 1.0, 0.2);
-        glVertex3f( 0.5+x, -0.5+y, -0.5+z);
-        glVertex3f( 0.5+x,  0.5+y, -0.5+z);  
-        glVertex3f(-0.5+x,  0.5+y, -0.5+z);
-        glVertex3f(-0.5+x, -0.5+y, -0.5+z);    
-    glEnd();
-    
-    
-    //TRASEIRA
-	glBegin(GL_QUADS);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f( 0.5+x, -0.5+y, 0.5+z);
-		glVertex3f( 0.5+x,  0.5+y, 0.5+z);
-		glVertex3f(-0.5+x,  0.5+y, 0.5+z);
-		glVertex3f(-0.5+x, -0.5+y, 0.5+z);
-    glEnd();
-    
-	//DIREITA
-	glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f(0.5+x, -0.5+y, -0.5+z);
-		glVertex3f(0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(0.5+x,  0.5+y,  0.5+z);
-		glVertex3f(0.5+x, -0.5+y,  0.5+z);
-	glEnd();
-    
-    //ESQUERDA
+		glColor4f(0.0, 0.0, 1.0, 0.2);
+		
+		//baixo
     glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f(-0.5+x, -0.5+y,  0.5+z);
-		glVertex3f(-0.5+x,  0.5+y,  0.5+z);
-		glVertex3f(-0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(-0.5+x, -0.5+y, -0.5+z);
+		glVertex3f(0.5, 0.5, 0.5);
+        glVertex3f(0.5, 0.5, z+0.5);
+        glVertex3f(x+0.5, 0.5, z+0.5);
+        glVertex3f(x+0.5, 0.5, 0.5);
 	glEnd();
- 
-	//TOPO
+	
+		//cima
 	glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f( 0.5+x,  0.5+y,  0.5+z);
-		glVertex3f( 0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(-0.5+x,  0.5+y, -0.5+z);
-		glVertex3f(-0.5+x,  0.5+y,  0.5+z);
+		glVertex3f(0.5, y+0.5, 0.5);
+        glVertex3f(x+0.5, y+0.5, 0.5);
+        glVertex3f(x+0.5, y+0.5, z+0.5);
+        glVertex3f(0.5, y+0.5, z+0.5);
 	glEnd();
- 
-	//BASE
+	
+		//esquerda
 	glBegin(GL_POLYGON);
-		//glColor4f (0.0, 0.0, 1.0, 1.0);
-		glVertex3f( 0.5+x, -0.5+y, -0.5+z);
-		glVertex3f( 0.5+x, -0.5+y,  0.5+z);
-		glVertex3f(-0.5+x, -0.5+y,  0.5+z);
-		glVertex3f(-0.5+x, -0.5+y, -0.5+z);
+		glVertex3f(0.5, 0.5, z+0.5);
+		glVertex3f(0.5, 0.5, 0.5);
+        glVertex3f(0.5, y+0.5, 0.5);
+        glVertex3f(0.5, y+0.5, z+0.5);
+    glEnd();    
+	
+		//frente
+	glBegin(GL_POLYGON);
+		glVertex3f(0.5, 0.5, z+0.5);
+        glVertex3f(x+0.5, 0.5, z+0.5);
+        glVertex3f(x+0.5, y+0.5, z+0.5);
+        glVertex3f(0.5, y+0.5, z+0.5);
 	glEnd();
-
+		
+		//direita
+	glBegin(GL_POLYGON);
+		glVertex3f(x+0.5, 0.5, 0.5);
+        glVertex3f(x+0.5, 0.5, z+0.5);
+        glVertex3f(x+0.5, y+0.5, z+0.5);
+        glVertex3f(x+0.5, y+0.5, 0.5);
+	glEnd();
+		
+		//trás
+	glBegin(GL_POLYGON);
+		glVertex3f(0.5, 0.5, 0.5);
+        glVertex3f(x+0.5, 0.5, 0.5);
+        glVertex3f(0.5, y+0.5, 0.5);
+        glVertex3f(x+0.5, y+0.5, 0.5);
+	glEnd();
 }
 
 void Desenho::desenhar_pedra(int x, int y, int z)
@@ -246,7 +235,7 @@ void Desenho::desenhar_pedra(int x, int y, int z)
 
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(1, 1, 1);
+        glScalef(0.9999, 0.9999, 0.9999);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPedra->desenhar();
 	glPopMatrix();
@@ -274,14 +263,9 @@ void Desenho::desenhar_planta(Planta* planta, int x, int y, int z)
 void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
 {
     posicao* frente = peixe->getDirecao();
-    posicao direcao;
-    direcao.x = frente->x;
-    direcao.y = frente->y;
-    direcao.z = frente->z;
-
-    float escala = (peixe->getMassa())/1000.0;
-	//até aqui não mudei
     
+    float escala = (peixe->getMassa())/1000.0;
+	    
 	int tabelaAngulos[3][3][3][3] = {
 		{
 			{
@@ -309,18 +293,18 @@ void Desenho::desenhar_peixe(Peixe* peixe, int x, int y, int z)
 			}
 		}
 	};
-	int anguloX = tabelaAngulos[direcao.x+1][direcao.y+1][direcao.z+1][0];
-	int anguloY = tabelaAngulos[direcao.x+1][direcao.y+1][direcao.z+1][1];
-	int anguloZ = tabelaAngulos[direcao.x+1][direcao.y+1][direcao.z+1][2];
+	
+	int anguloX = tabelaAngulos[frente->x+1][frente->y+1][frente->z+1][0];
+	int anguloY = tabelaAngulos[frente->x+1][frente->y+1][frente->z+1][1];
+	int anguloZ = tabelaAngulos[frente->x+1][frente->y+1][frente->z+1][2];
     
 	
 	glEnable(GL_TEXTURE_2D);
-	glScalef(0.5, 0.5, 0.5);
 
     glPushMatrix();
-		glScalef(10.0*escala, 10.0*escala, 10.0*escala); //escala peixe
+		glScalef(100.0*escala, 100.0*escala, 100.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
-		glTranslatef(0,0,0);
+		//glTranslatef(0,0,0);
 		glRotatef(anguloX,1,0,0);
 		glRotatef(anguloY,0,1,0);
 		glRotatef(anguloZ,0,0,1);
@@ -337,7 +321,8 @@ void Desenho::reshape(int w, int h)
    
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-1.0, 1.0, -1.0, 1.0, -100.0, 100.0);
+	glFrustum(-1.0, 1.0, -1.0, 1.0, -100.0, 100.0);
+	gluPerspective(40.0,(GLdouble)w/(GLdouble)h,0.5,20.0);
    
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
