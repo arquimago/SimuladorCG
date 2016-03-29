@@ -64,12 +64,15 @@ void SerVivo::explodir(){
 	if(id == 1) numero_filhotes = rand()%15+12;
 	else numero_filhotes = rand()%14+13;
 	
+	posicao pai;
+	pai.x = (posicao_pai->x);
+	pai.y = (posicao_pai->y);
+	pai.z = (posicao_pai->z);
+	
 	this->morrer();
 	
 	massa_filhotes = (this->getMassa())/numero_filhotes;
-	int pos_x = -1;
-	int pos_y = -1;
-	int pos_z = -1;
+	int pos_x,pos_y,pos_z;
 	int total_vagas = 0;
 	bool filhotes[3][3][3];//se tiver vaga recebe true, senão recebe false
 	
@@ -77,19 +80,15 @@ void SerVivo::explodir(){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
                 posicao filho;
-				filho.x = (posicao_pai->x)+i-1;
-				filho.y = (posicao_pai->y)+j-1;
-				filho.z = (posicao_pai->z)+k-1;
-				printf("chegou\n");
-				//Posicionavel** ocupante = Ecossistema::identificarOcupantes(filho.x,filho.y,filho.z);
-				printf("alocou\n");
-				if((i==1&&j==1&&k==1&&id==2)/*||ocupante[0]!=NULL*/){
+				filho.x = (pai.x)+i-1;
+				filho.y = (pai.y)+j-1;
+				filho.z = (pai.z)+k-1;
+				Posicionavel** ocupante = Ecossistema::identificarOcupantes(filho.x,filho.y,filho.z);
+				if((i==1&&j==1&&k==1&&id==2)||ocupante[0]!=NULL){
 					filhotes[i][j][k] = false;
-					printf("false\n");
 				} else {
 					filhotes[i][j][k] = true;
 					total_vagas++;
-					printf("true\n");
 				}
 			}
 		}
@@ -104,10 +103,10 @@ void SerVivo::explodir(){
 			pos_z = rand()%3;
 		}while(!filhotes[pos_x][pos_y][pos_z]);
 
-		//if(id == 1)
-        //    new Planta(this->getTaxa(),(posicao_pai->x)+pos_x-1, (posicao_pai->y)+pos_y-1, (posicao_pai->z)+pos_z-1, massa_filhotes);
-		//else
-		//    new Peixe(this->getTaxa(),(posicao_pai->x)+pos_x-1, (posicao_pai->y)+pos_y-1, (posicao_pai->z)+pos_z-1, massa_filhotes);
+		if(id == 1)
+            new Planta(this->getTaxa(),pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
+		else
+		    new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
 	

@@ -1,4 +1,4 @@
 6 3 4
-peixes 0 1
-plantas 1 1
+peixes 1 1
+plantas 0 1
 pedras 0
