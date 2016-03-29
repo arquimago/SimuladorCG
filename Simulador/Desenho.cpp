@@ -42,6 +42,11 @@ int main (int argc, char** argv)
 	fscanf(arqInput," %s %d %d",&lixo,&qtdPeixe, &taxaDiminuicaoPeixe);
 	fscanf(arqInput," %s %d %d",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
 	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
+	
+	printf(" %d %d %d \n",largura,altura,comprimento);
+	printf(" %s %d %d \n",lixo,qtdPeixe,taxaDiminuicaoPeixe);
+	printf(" %s %d %d \n",lixo,qtdPlanta,taxaCrescimentoPlanta);
+	printf(" %s %d \n\n",lixo,qtdPedra);
 
 	//para leitura do arquivo basta descomentar o bloco acima
 	
@@ -59,7 +64,7 @@ int main (int argc, char** argv)
     //programa rodando
     while(true)
     {   
-    	opengl.desenhar();
+		glutMainLoop();
         for (int k=1; k<=altura; k++)
         {
             for (int j=1; j<=largura; j++)
@@ -93,13 +98,6 @@ Desenho::Desenho(int argc, char** argv,int x, int y, int z)
 	glutDisplayFunc(Desenho::display); 
 	glutKeyboardFunc(Desenho::keyPressed);
 	glutReshapeFunc(Desenho::reshape);
-}
-
-void Desenho::desenhar()
-{   
-	glutMainLoop();
-
-	delete modeloGold;
 }
 
 void Desenho::init(int x, int y, int z)
@@ -364,43 +362,34 @@ void Desenho::keyPressed (unsigned char key, int x, int y)
 	{
 	case 'a':	//roda pra esquerda
 		camera.RotacaoY(5.0);
-		display();
 		break;
 	case 'd':	//roda pra direita
 		camera.RotacaoY(-5.0);
-		display();
 		break;
 	case 'w':	//anda pra frente	
-		camera.ParaFrente(-0.1) ;
-		display();
+		camera.ParaFrente(-0.1);
 		break;
 	case 's':	//anda pra trás
 		camera.ParaFrente(0.1) ;
-		display();
 		break;
 	case 'q':      //roda pra cima
 		camera.RotacaoX(5.0);
-		display();
 		break;
 	case 'e':	//roda pra baixo	
 		camera.RotacaoX(-5.0);
-		display();
 		break;
 	case 'j':	//passinho pra esquerda
 		camera.ParaOLado(-0.1);
-		display();
 		break;
 	case 'l':	//passinho pra direita
 		camera.ParaOLado(0.1);
-		display();
 		break;
 	case 'i':      //passinho pra cima
 		camera.Mover(setVetor(0.0,0.3,0.0));
-		display();
 		break;
 	case 'k':      //passinho pra baixo
 		camera.Mover(setVetor(0.0,-0.3,0.0));
-		display();
 		break;
 	}
+	glutPostRedisplay();
 }

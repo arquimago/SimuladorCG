@@ -165,7 +165,8 @@ void Peixe::virar()
 
 void Peixe::agir()
 {
-    this->fome();
+    /*
+	this->fome();
 
     Posicionavel** proximo = this->verAFrente();
     Pedra* pedra = (Pedra*) proximo[0];
@@ -197,6 +198,8 @@ void Peixe::agir()
     else if (planta != NULL)
         //nao tem peixe mas tem planta
         this->morder(planta);
+	
+	*/
 }
 
 void Peixe::nadar()
