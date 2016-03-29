@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include "stdio.h"
 #include <ctime>
-#include <iostream>
-#include <unistd.h>
 
 ///POSICIONAVEL
 posicao* Posicionavel::getPosicao()
@@ -165,7 +163,7 @@ void Peixe::virar()
 
 void Peixe::agir()
 {
-    /*
+	printf("agindo...\n");
 	this->fome();
 
     Posicionavel** proximo = this->verAFrente();
@@ -198,8 +196,7 @@ void Peixe::agir()
     else if (planta != NULL)
         //nao tem peixe mas tem planta
         this->morder(planta);
-	
-	*/
+	printf("#peideisai\n");
 }
 
 void Peixe::nadar()
@@ -247,7 +244,7 @@ Posicionavel** Peixe::verAFrente()
 
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {
-    this->localizacao.x = 0;
+	this->localizacao.x = 0;
     this->localizacao.y = 0;
     this->localizacao.z = 0;
     this->virar();
@@ -256,6 +253,7 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 
 Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
 {
+	printf("peixe EXPLODIDO\n");
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     Peixe* peixe = (Peixe*)ocupante[2];
 	if(peixe != NULL) //há peixe
@@ -338,28 +336,3 @@ void Pedra::posicionar()
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
 }
 
-
-
-
-
-
-/*
-void Pedra::posicionar()
-{
-    int sorteio_x, sorteio_z;
-    int sorteio_y = 1;
-
-    srand (time(NULL));
-
-    //tales, use o metodo identificarOcupantes de ecossistema.Cubo agora é privado.
-    do{
-        sorteio_x = rand()%x+1;
-        sorteio_z = rand()%z+1;
-    } while(Ecossistema::aquario.dimensao[y].grid[sorteio_x][sorteio_z].ocupante[0]!=NULL);
-
-    while(Ecossistema::aquario.dimensao[sorteio_y].grid[sorteio_x][sorteio_z].ocupante[0]!=NULL){
-        sorteio_y++;
-    }
-    Ecossistema::ocupar(sorteio_x,sorteio_y,sorteio_z,0,this);
-}
-*/

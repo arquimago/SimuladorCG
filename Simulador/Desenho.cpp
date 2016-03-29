@@ -19,14 +19,14 @@ int main (int argc, char** argv)
 	srand((unsigned)time(NULL));
 	srand(rand());
 		
-	int qtdPeixe = 3;
-    int qtdPedra = 20;
-    int qtdPlanta = 4;
-    int altura = 3;  //y     0  2
-    int largura = 6; //z  0  5
-    int comprimento = 4;//x 0 3
-    int taxaCrescimentoPlanta = 15;
-    int taxaDiminuicaoPeixe = 10;
+	int qtdPeixe;
+    int qtdPedra;
+    int qtdPlanta;
+    int altura;  //y     0  2
+    int largura; //z  0  5
+    int comprimento;//x 0 3
+    int taxaCrescimentoPlanta;
+    int taxaDiminuicaoPeixe;
 	
 	char lixo[7];
 	
@@ -43,10 +43,10 @@ int main (int argc, char** argv)
 	fscanf(arqInput," %s %d %d",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
 	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
 	
-	printf(" %d %d %d \n",largura,altura,comprimento);
-	printf(" %s %d %d \n",lixo,qtdPeixe,taxaDiminuicaoPeixe);
-	printf(" %s %d %d \n",lixo,qtdPlanta,taxaCrescimentoPlanta);
-	printf(" %s %d \n\n",lixo,qtdPedra);
+	//printf(" %d %d %d \n",largura,altura,comprimento);
+	//printf(" %s %d %d \n",lixo,qtdPeixe,taxaDiminuicaoPeixe);
+	//printf(" %s %d %d \n",lixo,qtdPlanta,taxaCrescimentoPlanta);
+	//printf(" %s %d \n\n",lixo,qtdPedra);
 
 	//para leitura do arquivo basta descomentar o bloco acima
 	
@@ -57,32 +57,11 @@ int main (int argc, char** argv)
 
     //posicionar plantas pedras e peixes
     //
-    for (int i=0 ; i <= qtdPedra; i++) new Pedra();
-    for (int i=0 ; i <= qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
-    for (int i=0 ; i <= qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
+    for (int i=0 ; i < qtdPedra; i++) new Pedra();
+    for (int i=0 ; i < qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
+    for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
 
-    //programa rodando
-    while(true)
-    {   
-		glutMainLoop();
-        for (int k=1; k<=altura; k++)
-        {
-            for (int j=1; j<=largura; j++)
-            {
-                for (int i=1; i<=comprimento; i++)
-                {
-                    Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
-                    for (int pos = 0; pos < 3; pos++)
-                    {
-                        if (ocupante[pos] != NULL) //TEM ALGO
-                            ocupante[pos]->agir();
-                    }
-
-                }
-            }
-        }
-    }	
-	
+    glutMainLoop();
 }
 
 Desenho::Desenho(int argc, char** argv,int x, int y, int z)
@@ -137,14 +116,27 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	
-	desenhar_peixe(new Peixe(10),3,3,3);
-	//desenhar_pedra(3,2,3);
-	
-	
 	posicao* limites = Ecossistema::getLimites();
 	int comprimento = limites->x;
 	int altura = limites->y;
 	int largura = limites->z;
+	
+	for (int k=1; k<=altura; k++)
+        {
+			for (int j=1; j<=largura; j++)
+            {
+                for (int i=1; i<=comprimento; i++)
+                {
+					Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
+                    for (int pos = 0; pos < 3; pos++)
+                    {
+                        if (ocupante[pos] != NULL) //TEM ALGO
+                            ocupante[pos]->agir();
+                    }
+
+                }
+            }
+        }
 	
 	
 	for (int k=1; k<=altura; k++){
@@ -157,6 +149,7 @@ void Desenho::display(void)
 	desenhar_agua(comprimento, altura, largura);
       
 	glutSwapBuffers();
+	glutPostRedisplay();
 }
 
 void Desenho::desenhar_eixos()
