@@ -73,16 +73,23 @@ void SerVivo::explodir(){
 	int total_vagas = 0;
 	bool filhotes[3][3][3];//se tiver vaga recebe true, senão recebe false
 	
-	//TA ERRADO AQUI!!! ERRO DE REFERENCIA!
 	for(int i = 0;i < 3;i++){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
-                Posicionavel** pedra = Ecossistema::identificarOcupantes(posicao_pai->x+i-1,posicao_pai->y+j-1,posicao_pai->z+k-1);
-				if((i==1&&j==1&&k==1&&id==2)||pedra!=NULL){
+                posicao filho;
+				filho.x = (posicao_pai->x)+i-1;
+				filho.y = (posicao_pai->y)+j-1;
+				filho.z = (posicao_pai->z)+k-1;
+				printf("chegou\n");
+				//Posicionavel** ocupante = Ecossistema::identificarOcupantes(filho.x,filho.y,filho.z);
+				printf("alocou\n");
+				if((i==1&&j==1&&k==1&&id==2)/*||ocupante[0]!=NULL*/){
 					filhotes[i][j][k] = false;
+					printf("false\n");
 				} else {
 					filhotes[i][j][k] = true;
 					total_vagas++;
+					printf("true\n");
 				}
 			}
 		}
@@ -97,10 +104,10 @@ void SerVivo::explodir(){
 			pos_z = rand()%3;
 		}while(!filhotes[pos_x][pos_y][pos_z]);
 
-		if(id == 1)
-            new Planta(this->getTaxa(),posicao_pai->x+pos_x-1, posicao_pai->y+pos_y-1, posicao_pai->z+pos_z-1, massa_filhotes);
-		else
-            new Peixe(this->getTaxa(),posicao_pai->x+pos_x-1, posicao_pai->y+pos_y-1, posicao_pai->z+pos_z-1, massa_filhotes);
+		//if(id == 1)
+        //    new Planta(this->getTaxa(),(posicao_pai->x)+pos_x-1, (posicao_pai->y)+pos_y-1, (posicao_pai->z)+pos_z-1, massa_filhotes);
+		//else
+		//    new Peixe(this->getTaxa(),(posicao_pai->x)+pos_x-1, (posicao_pai->y)+pos_y-1, (posicao_pai->z)+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
 	
