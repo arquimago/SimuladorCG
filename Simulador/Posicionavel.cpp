@@ -55,22 +55,25 @@ void Posicionavel::posicionar()
 
 ///SERVIVO
 void SerVivo::explodir(){
+	
 	int id = this->getId();//1 planta, 2 peixe
 	int numero_filhotes=0;
 	int massa_filhotes=0;
-	srand (time(NULL));
 	posicao* posicao_pai = this->getPosicao();
 
 	if(id == 1) numero_filhotes = rand()%15+12;
 	else numero_filhotes = rand()%14+13;
-
-    this->morrer();
+	
+	this->morrer();
+	
 	massa_filhotes = (this->getMassa())/numero_filhotes;
 	int pos_x = -1;
 	int pos_y = -1;
 	int pos_z = -1;
 	int total_vagas = 0;
 	bool filhotes[3][3][3];//se tiver vaga recebe true, senão recebe false
+	
+	//TA ERRADO AQUI!!! ERRO DE REFERENCIA!
 	for(int i = 0;i < 3;i++){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
@@ -100,6 +103,8 @@ void SerVivo::explodir(){
             new Peixe(this->getTaxa(),posicao_pai->x+pos_x-1, posicao_pai->y+pos_y-1, posicao_pai->z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
+	
+	delete this;
 }
 
 int SerVivo::getTaxa()
@@ -123,7 +128,9 @@ int SerVivo::sangrar()
 
 
 void SerVivo::morrer()
-{this->setPosicao(0,0,0);}
+{
+	this->setPosicao(0,0,0);
+}
 
 void SerVivo::diminuir(int massaPerdida)
 {
@@ -135,9 +142,10 @@ void SerVivo::diminuir(int massaPerdida)
 
 void SerVivo::aumentar(int massaGanha)
 {
-   this->massa = this->getMassa() + massaGanha;
-   if (this->massa> this->limite)
-        this->explodir();
+   this->massa += massaGanha;
+   if (this->massa > this->limite){
+		this->explodir();
+   }
 }
 
 ///PEIXE
@@ -319,7 +327,6 @@ void Pedra::posicionar()
     int sorteio_x, sorteio_z;
     int sorteio_y = 0;
     posicao* limites = Ecossistema::getLimites();
-    srand(rand());
     Posicionavel** ocupante;
     do{
         sorteio_x = (rand()%limites->x) + 1;

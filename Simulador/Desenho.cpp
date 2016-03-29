@@ -128,10 +128,14 @@ void Desenho::display(void)
                 for (int i=1; i<=comprimento; i++)
                 {
 					Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
-                    for (int pos = 0; pos < 3; pos++)
+                    for (int pos = 1; pos < 3; pos++)
                     {
-                        if (ocupante[pos] != NULL) //TEM ALGO
-                            ocupante[pos]->agir();
+                        if (ocupante[pos] != NULL && pos == 1){
+							((Planta*) ocupante[pos])->agir();
+						} else if (ocupante[pos] != NULL && pos == 2){
+							((Peixe*) ocupante[pos])->agir();
+							
+						}                         						 
                     }
 
                 }
@@ -268,7 +272,7 @@ void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
 	glEnable(GL_TEXTURE_2D);
 
     float escala = (planta->getMassa())/1000.0;
-	
+	//printf("%d %d\n", planta->getMassa(),planta->getTaxa());
 	glPushMatrix();
         glTranslatef(x, y, z);
         glScalef(3*escala, 3*escala, 3*escala);
@@ -285,7 +289,7 @@ void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
     posicao* frente = peixe->getDirecao();
     
     float escala = (peixe->getMassa())/1000.0;
-	printf("Posicao x = %.2f y = %.2f z = %.2f \n", x,y,z);
+	//printf("Posicao x = %.2f y = %.2f z = %.2f \n", x,y,z);
 	
 	int tabelaAngulos[3][3][3][3] = {
 		{
