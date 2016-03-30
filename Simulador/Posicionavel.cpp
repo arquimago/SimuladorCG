@@ -140,10 +140,13 @@ void SerVivo::morrer()
 
 void SerVivo::diminuir(int massaPerdida)
 {
-    if (massaPerdida < this->massa)
-        this->massa = this->massa- massaPerdida;
-    else
-        this->morrer();
+	if (massaPerdida < this->massa){
+		this->massa -= massaPerdida;
+	}
+    else {
+		this->morrer();
+		delete this;
+	}
 }
 
 void SerVivo::aumentar(int massaGanha)
@@ -177,26 +180,25 @@ void Peixe::virar()
 
 void Peixe::agir()
 {
-	printf("agindo...\n");
+	
 	this->fome();
-
+	
     Posicionavel** proximo = this->verAFrente();
-    Pedra* pedra = (Pedra*) proximo[0];
-
-    while (pedra != NULL)
+    
+	//Problema no funcionamento aqui dentro, as vezes dá loop infinito
+	/*while (proximo[0]!=NULL)
     {
         //enquanto houver pedra
         //mudar de direção até achar direção viavel
         this->virar();
+			
         Posicionavel** proximo = this->verAFrente();
-        pedra = (Pedra*) proximo[0];
-    }
+		printf("viu?");
+    }*/
     Planta* planta = (Planta*) proximo[1];
-    Peixe* peixe = (Peixe*)proximo[2];
-
+    Peixe* peixe = (Peixe*) proximo[2];
     //não é pedra
     this->nadar();
-
     if (peixe != NULL)
     {
         //tem peixe
@@ -210,20 +212,19 @@ void Peixe::agir()
     else if (planta != NULL)
         //nao tem peixe mas tem planta
         this->morder(planta);
-	printf("#peideisai\n");
 }
 
 void Peixe::nadar()
 {
     posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
-    posicao* proximaPosicao;
+    posicao proximaPosicao;
 
-    proximaPosicao->x = posicaoAtual->x + direcaoAtual->x;
-    proximaPosicao->y = posicaoAtual->y + direcaoAtual->y;
-    proximaPosicao->z = posicaoAtual->z + posicaoAtual->z;
+    proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
+    proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
+    proximaPosicao.z = posicaoAtual->z + posicaoAtual->z;
 
-    this->setPosicao(proximaPosicao->x,proximaPosicao->y,proximaPosicao->z);
+    this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
 void Peixe::morder(Posicionavel* alvo)
@@ -245,15 +246,15 @@ int Peixe::sangrar()
 
 Posicionavel** Peixe::verAFrente()
 {
-    posicao* direcaoAtual = this->getDirecao();
+	posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
-    posicao* proximaPosicao;
+    posicao proximaPosicao;
+	
+    proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
+    proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
+    proximaPosicao.z = posicaoAtual->z + posicaoAtual->z;
 
-    proximaPosicao->x = posicaoAtual->x + direcaoAtual->x;
-    proximaPosicao->y = posicaoAtual->y + direcaoAtual->y;
-    proximaPosicao->z = posicaoAtual->z + posicaoAtual->z;
-
-    return Ecossistema::identificarOcupantes(proximaPosicao->x,proximaPosicao->y,proximaPosicao->z);
+    return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
@@ -296,10 +297,13 @@ Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,ta
 {
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     	Planta* planta = (Planta*)ocupante[1];
-	if(planta != NULL) //há planta, uma planta "come" a outra
+	if(planta != NULL) { //há planta, uma planta "come" a outra
 		planta->aumentar(massa);
-	else //se nao tem, seta a posicao
+		delete this;
+	} 
+	else { //se nao tem, seta a posicao
 		this->setPosicao(x,y,z);
+	}
 }
 
 
