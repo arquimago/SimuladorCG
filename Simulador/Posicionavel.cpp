@@ -199,6 +199,7 @@ void Peixe::agir()
     Peixe* peixe = (Peixe*) proximo[2];
     //não é pedra
     this->nadar();
+	
     if (peixe != NULL)
     {
         //tem peixe
