@@ -8,8 +8,10 @@
 #include "Ecossistema.cpp"
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
-#include "stdio.h"
+#include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
 
 static Modelo *modeloGold, *modeloPedra,*modeloPlanta;
 static CCamera camera;
@@ -39,21 +41,25 @@ int main (int argc, char** argv)
 		printf("Falha no acesso ao arquivo");
 		exit(42);
 	}
-	//fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
-	//fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
-	//fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
-	//fscanf(arqInput," %s %d",&lixo,&qtdPedra);
 		
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,altura,largura);
 	Desenho opengl(argc,argv,comprimento,altura,largura);
-
-    //posicionar plantas pedras e peixes
-    printf("Taxa lida = %d\n", taxaDiminuicaoPeixe);
+	
+	fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
+	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
+	int taxaPeixe = taxaDiminuicaoPeixe;
+	//Por algum motivo satanico a taxaDiminuicaoPeixe se perde na proxima linha
+	//então salvei em taxaPeixe
+	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
+	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
+	   
+    
     for (int i=0 ; i < qtdPedra; i++) new Pedra();
     for (int i=0 ; i < qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
-    for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
+    //Sobre taxaPeixe leia linha 53
+	for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaPeixe);
 
     glutMainLoop();
 }
@@ -89,10 +95,10 @@ void Desenho::init(int x, int y, int z)
 	camera.RotacaoY(-90.0);
    
     //Para iniciar a câmera de lado é este bloco
-	camera.Mover( setVetor(-1*(sqrt(y*z))*x, y/2+0.5, z/2+0.5 ));
+	camera.Mover( setVetor(-1*(y*z)/2, y/2+0.5, z/2+0.5 ));
 			
 	//Para iniciar a câmera de cima é este bloco
-	//camera.Mover( setVetor(x/2+0.5, (sqrt(x*z))*y, z/2+0.5 ));
+	//camera.Mover( setVetor(x/2+0.5, (x*z)/2, z/2+0.5 ));
 	//camera.RotacaoX(-90.0);
 	
 }
