@@ -38,6 +38,7 @@ class SerVivo: public Posicionavel
 		int massa;
 		int limite;
         int taxa;
+		bool agiu;
 
 		void setMassa(int massa);
 	public:
@@ -46,6 +47,8 @@ class SerVivo: public Posicionavel
 		//seta massa e taxa iniciais e limites iniciais
         int getTaxa();
 		int getMassa();
+		bool getAgiu();
+		void setAgiu();
         void explodir();
         //chama a fun��o morrer e aloca varios peixes menores no Cubo
 		void diminuir(int qtd);

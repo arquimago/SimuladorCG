@@ -61,8 +61,11 @@ void SerVivo::explodir(){
 	int massa_filhotes=0;
 	posicao* posicao_pai = this->getPosicao();
 
-	if(id == 1) numero_filhotes = rand()%15+12;
-	else numero_filhotes = rand()%14+13;
+	//if(id == 1) numero_filhotes = rand()%15+12;
+	//else numero_filhotes = rand()%14+13;
+	
+	if(id == 1) numero_filhotes = rand()%9+1;
+	else numero_filhotes = rand()%8+1;
 	
 	posicao pai;
 	pai.x = (posicao_pai->x);
@@ -127,11 +130,19 @@ SerVivo::SerVivo(int massa,int taxa, int limite, int id):Posicionavel(id)
     this->massa = massa;
     this->taxa = taxa;
     this->limite = limite;
+	this->agiu = false;
 }
 
 int SerVivo::sangrar()
 {} //sobrecarregavel
 
+bool SerVivo::getAgiu(){
+	return this->agiu;
+}
+
+void SerVivo::setAgiu(){
+	this->agiu = !this->agiu;
+}
 
 void SerVivo::morrer()
 {
@@ -164,7 +175,6 @@ posicao* Peixe::getDirecao()
 
 void Peixe::virar()
 {
-    srand(time(NULL));
     //seta direcoes aleatorias entre -1,0,1
     int x = 0,y = 0,z = 0;
     while (x == 0 && y == 0 && z == 0) //enquanto não possuir uma direção
@@ -180,21 +190,20 @@ void Peixe::virar()
 
 void Peixe::agir()
 {
-	
-	this->fome();
-	
+	this->setAgiu();
     Posicionavel** proximo = this->verAFrente();
-    
+	
 	//Problema no funcionamento aqui dentro, as vezes dá loop infinito
-	/*while (proximo[0]!=NULL)
+	while (proximo[0]!=NULL)
     {
         //enquanto houver pedra
         //mudar de direção até achar direção viavel
         this->virar();
 			
-        Posicionavel** proximo = this->verAFrente();
-		printf("viu?");
-    }*/
+        proximo = this->verAFrente();
+		//printf("virando?");
+    }
+	
     Planta* planta = (Planta*) proximo[1];
     Peixe* peixe = (Peixe*) proximo[2];
     //não é pedra
@@ -204,15 +213,21 @@ void Peixe::agir()
     {
         //tem peixe
         //testes das massas
-        if (peixe->getMassa() >= this->getMassa())
-            peixe->morder(this);
-        else
-            this->morder(peixe);
-
+        if (peixe->getMassa() >= this->getMassa()){
+			peixe->morder(this);
+		}
+        else{
+			this->morder(peixe);
+		}
     }
-    else if (planta != NULL)
-        //nao tem peixe mas tem planta
-        this->morder(planta);
+    else if (planta != NULL){
+		//nao tem peixe mas tem planta
+        
+		this->morder(planta);
+		
+	}
+	
+	this->fome();
 }
 
 void Peixe::nadar()
@@ -223,7 +238,7 @@ void Peixe::nadar()
 
     proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
     proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
-    proximaPosicao.z = posicaoAtual->z + posicaoAtual->z;
+    proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
 
     this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
@@ -231,17 +246,23 @@ void Peixe::nadar()
 void Peixe::morder(Posicionavel* alvo)
 {
     SerVivo* ser = (SerVivo*) alvo;
+	if(ser->getId()==1){
+		ser = (Planta*)ser;
+	}else {
+		ser = (Peixe*)ser;
+	}
     this->aumentar(ser->sangrar());
 }
 
 void Peixe::fome()
-{this->diminuir(this->getTaxa());}
+{
+	this->diminuir(this->getTaxa());
+}
 
 int Peixe::sangrar()
 {
     int massa = this->getMassa();
-    this->diminuir(0);
-    this->morrer();
+    this->diminuir(massa);
     return massa;
 }
 
@@ -253,7 +274,7 @@ Posicionavel** Peixe::verAFrente()
 	
     proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
     proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
-    proximaPosicao.z = posicaoAtual->z + posicaoAtual->z;
+    proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
 
     return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
@@ -269,9 +290,9 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 
 Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
 {
-	printf("peixe EXPLODIDO\n");
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
-    Peixe* peixe = (Peixe*)ocupante[2];
+    
+	Peixe* peixe = (Peixe*)ocupante[2];
 	if(peixe != NULL) //há peixe
 	{
 		//testes das massas
@@ -321,7 +342,8 @@ int Planta::sangrar()
 }
 
 void Planta::agir()
-{this->crescer();}
+{	this->setAgiu();
+	this->crescer();}
 
 void Planta::crescer()
 {this->aumentar(this->getTaxa());}
@@ -330,8 +352,6 @@ void Planta::crescer()
 ///Pedra
 Pedra::Pedra():Posicionavel(0)
 {this->posicionar();}
-
-
 
 void Pedra::posicionar()
 {

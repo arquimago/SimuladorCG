@@ -9,6 +9,7 @@
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
 #include "stdio.h"
+#include <unistd.h>
 
 static Modelo *modeloGold, *modeloPedra,*modeloPlanta;
 static CCamera camera;
@@ -19,14 +20,14 @@ int main (int argc, char** argv)
 	srand((unsigned)time(NULL));
 	srand(rand());
 		
-	int qtdPeixe;
-    int qtdPedra;
-    int qtdPlanta;
-    int altura;  //y     0  2
-    int largura; //z  0  5
-    int comprimento;//x 0 3
-    int taxaCrescimentoPlanta;
-    int taxaDiminuicaoPeixe;
+	int qtdPeixe=2;
+    int qtdPedra=20;
+    int qtdPlanta=2;
+    int altura=3;  //y     0  2
+    int largura=6; //z  0  5
+    int comprimento=4;//x 0 3
+    int taxaCrescimentoPlanta=15;
+    int taxaDiminuicaoPeixe=10;
 	
 	char lixo[7];
 	
@@ -38,25 +39,18 @@ int main (int argc, char** argv)
 		printf("Falha no acesso ao arquivo");
 		exit(42);
 	}
-	fscanf(arqInput," %d %d %d",&largura,&altura,&comprimento);
-	fscanf(arqInput," %s %d %d",&lixo,&qtdPeixe, &taxaDiminuicaoPeixe);
-	fscanf(arqInput," %s %d %d",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
-	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
-	
-	//printf(" %d %d %d \n",largura,altura,comprimento);
-	//printf(" %s %d %d \n",lixo,qtdPeixe,taxaDiminuicaoPeixe);
-	//printf(" %s %d %d \n",lixo,qtdPlanta,taxaCrescimentoPlanta);
-	//printf(" %s %d \n\n",lixo,qtdPedra);
-
-	//para leitura do arquivo basta descomentar o bloco acima
-	
+	//fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
+	//fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
+	//fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
+	//fscanf(arqInput," %s %d",&lixo,&qtdPedra);
+		
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
     Ecossistema::inicializar(comprimento,altura,largura);
 	Desenho opengl(argc,argv,comprimento,altura,largura);
 
     //posicionar plantas pedras e peixes
-    //
+    printf("Taxa lida = %d\n", taxaDiminuicaoPeixe);
     for (int i=0 ; i < qtdPedra; i++) new Pedra();
     for (int i=0 ; i < qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
     for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
@@ -130,18 +124,40 @@ void Desenho::display(void)
 					Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
                     for (int pos = 1; pos < 3; pos++)
                     {
-                        if (ocupante[pos] != NULL && pos == 1){
-							((Planta*) ocupante[pos])->agir();
-						} else if (ocupante[pos] != NULL && pos == 2){
-							((Peixe*) ocupante[pos])->agir();
-							
-						}                         						 
+						if (ocupante[pos] != NULL){
+							bool agiu = ((SerVivo*)ocupante[pos])->getAgiu();
+							if(!agiu){
+								if (pos == 1){
+									((Planta*) ocupante[pos])->agir();
+								} else {
+									((Peixe*) ocupante[pos])->agir();
+								}
+							}
+						}                      						 
                     }
-
                 }
             }
         }
 	
+	for (int k=1; k<=altura; k++)
+    {
+		for (int j=1; j<=largura; j++)
+        {
+            for (int i=1; i<=comprimento; i++)
+            {
+				Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
+                for (int pos = 1; pos < 3; pos++)
+                {
+					if (ocupante[pos] != NULL){
+						bool agiu = ((SerVivo*)ocupante[pos])->getAgiu();
+						if(agiu){
+							((SerVivo*)ocupante[pos])->setAgiu();
+						}
+					}
+				}
+            }
+        }
+    }
 	
 	for (int k=1; k<=altura; k++){
 		for (int j=1; j<=largura; j++){
@@ -151,7 +167,9 @@ void Desenho::display(void)
 		}
 	}
 	desenhar_agua(comprimento, altura, largura);
-      
+	
+    Sleep(150);
+	
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
@@ -272,10 +290,9 @@ void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
 	glEnable(GL_TEXTURE_2D);
 
     float escala = (planta->getMassa())/1000.0;
-	//printf("%d %d\n", planta->getMassa(),planta->getTaxa());
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(3*escala, 3*escala, 3*escala);
+        glScalef(escala, escala, escala);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPlanta->desenhar();
 	glPopMatrix();
