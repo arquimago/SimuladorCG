@@ -113,7 +113,7 @@ void SerVivo::explodir(){
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
 	
-	delete this;
+	//delete this;
 }
 
 int SerVivo::getTaxa()
@@ -156,7 +156,7 @@ void SerVivo::diminuir(int massaPerdida)
 	}
     else {
 		this->morrer();
-		delete this;
+		//delete this;
 	}
 }
 
@@ -321,7 +321,7 @@ Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,ta
     	Planta* planta = (Planta*)ocupante[1];
 	if(planta != NULL) { //há planta, uma planta "come" a outra
 		planta->aumentar(massa);
-		delete this;
+		//delete this;
 	} 
 	else { //se nao tem, seta a posicao
 		this->setPosicao(x,y,z);

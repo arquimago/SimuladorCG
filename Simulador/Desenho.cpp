@@ -132,6 +132,7 @@ void Desenho::display(void)
                     {
 						if (ocupante[pos] != NULL){
 							bool agiu = ((SerVivo*)ocupante[pos])->getAgiu();
+							Posicionavel** morto = Ecossistema::identificarOcupantes(0,0,0);
 							if(!agiu){
 								if (pos == 1){
 									((Planta*) ocupante[pos])->agir();
@@ -139,6 +140,7 @@ void Desenho::display(void)
 									((Peixe*) ocupante[pos])->agir();
 								}
 							}
+										
 						}                      						 
                     }
                 }
