@@ -167,7 +167,7 @@ void Desenho::display(void)
                     {
 						if (ocupante[pos] != NULL){
 							bool agiu = ((SerVivo*)ocupante[pos])->getAgiu();
-							Posicionavel** morto = Ecossistema::identificarOcupantes(0,0,0);
+							//Posicionavel** morto = Ecossistema::identificarOcupantes(0,0,0);
 							if(!agiu){
 								if (pos == 1){
 									((Planta*) ocupante[pos])->agir();
@@ -180,8 +180,8 @@ printf("____________________\n") ;
 printf("____________________\n") ;
 														}
 							}
-							delete morto[2];
-							delete morto[1];
+							//delete morto[2];
+							//delete morto[1];
 										
 						}                      						 
                     }
@@ -339,7 +339,7 @@ void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
     float escala = (planta->getMassa())/1000.0;
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(escala, escala, escala);
+        glScalef(0.8*escala, 0.8*escala, 0.8*escala);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPlanta->desenhar();
 	glPopMatrix();

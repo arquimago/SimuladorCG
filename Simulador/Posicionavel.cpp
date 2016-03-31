@@ -83,11 +83,13 @@ void SerVivo::explodir(){
 	for(int i = 0;i < 3;i++){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
-                posicao filho;
+                if(pai.x==0||pai.y==0||pai.z==0) break;
+				posicao filho;
 				filho.x = (pai.x)+i-1;
 				filho.y = (pai.y)+j-1;
 				filho.z = (pai.z)+k-1;
 				Posicionavel** ocupante = Ecossistema::identificarOcupantes(filho.x,filho.y,filho.z);
+				
 				if((i==1&&j==1&&k==1&&id==2)||ocupante[0]!=NULL){
 					filhotes[i][j][k] = false;
 				} else {
