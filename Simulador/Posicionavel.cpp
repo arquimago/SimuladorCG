@@ -174,6 +174,7 @@ posicao* Peixe::getDirecao()
 
 void Peixe::virar()
 {
+	printf("peixe virando");
     //seta direcoes aleatorias entre -1,0,1
     int x = 0,y = 0,z = 0;
     while (x == 0 && y == 0 && z == 0) //enquanto não possuir uma direção
@@ -185,10 +186,12 @@ void Peixe::virar()
     this->direcao.x= x;
     this->direcao.y= y;
     this->direcao.z= z;
+    printf("peixe virou");
 }
 
 void Peixe::agir()
 {
+	printf("peixe agindo");
 	bool explodiu = false;
 	this->setAgiu();
     Posicionavel** proximo = this->verAFrente();
@@ -210,6 +213,7 @@ void Peixe::agir()
         //testes das massas
         if (((Peixe*) proximo[2])->getMassa() >= this->getMassa()){
 			((Peixe*) proximo[2])->morder(this);
+			printf("peixe parando de agir porque foi mordido");
 			return;
 		} else{
 			explodiu = this->morder(((Peixe*) proximo[2]));
@@ -223,10 +227,12 @@ void Peixe::agir()
 		this->nadar();
 		this->fome();
 	}	
+	printf("peixe agiu");
 }
 
 void Peixe::nadar()
 {
+	printf("peixe nadando");
     posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
@@ -236,10 +242,12 @@ void Peixe::nadar()
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
     
 	this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
+	printf("peixe nadou");
 }
 
 bool Peixe::morder(Posicionavel* alvo)
 {
+	printf("peixe mordendo");
     int m;
 	SerVivo* ser = (SerVivo*) alvo;
 	if(ser->getId()==1){
@@ -247,23 +255,29 @@ bool Peixe::morder(Posicionavel* alvo)
 	}else{
 		m = ((Peixe*) ser)->sangrar();
 	}
+	printf("peixe mordeu");
 	return this->aumentar(m);
 }
 
 void Peixe::fome()
 {
+	printf("inicio de fome de peixe");
 	this->diminuir(this->getTaxa());
+	printf("fim de fome de peixe");
 }
 
 int Peixe::sangrar()
 {
+	printf("peixe sangrando");
     int massa = this->getMassa();
     this->diminuir(massa);
+    printf("peixe sangrou");
     return massa;
 }
 
 Posicionavel** Peixe::verAFrente()
 {
+	printf("peixe vendo a frente");
 	posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
@@ -271,13 +285,13 @@ Posicionavel** Peixe::verAFrente()
     proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
     proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
-
+printf("peixe viu a frente");
     return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {
-	this->localizacao.x = 0;
+    this->localizacao.x = 0;
     this->localizacao.y = 0;
     this->localizacao.z = 0;
     this->virar();
@@ -286,6 +300,7 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 
 Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
 {
+	printf("novo peixe de explosão nascendo");
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     
 	if(ocupante[2]!= NULL) //há peixe
@@ -303,6 +318,7 @@ Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxa
 		this->virar();
         this->setPosicao(x,y,z);
 	}
+	printf("peixe de explosão nasceu");
 }
 
 
