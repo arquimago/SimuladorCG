@@ -19,22 +19,22 @@ static CCamera camera;
 bool pausado = false;
 bool ehCamera = false;
 int creu=150;
-int altura=3;  //y     0  2
-int largura=6; //z  0  5
-int comprimento=4;//x 0 3
+int altura=0;  //y     0  2
+int largura=0; //z  0  5
+int comprimento=0;//x 0 3
 
 int main (int argc, char** argv)
 {
 	srand((unsigned)time(NULL));
 	srand(rand());
 		
-	int qtdPeixe=2;
-    int qtdPedra=20;
-    int qtdPlanta=2;
-    int taxaCrescimentoPlanta=15;
-    int taxaDiminuicaoPeixe=10;
+	int qtdPeixe=0;
+    int qtdPedra=0;
+    int qtdPlanta=0;
+    int taxaCrescimentoPlanta=0;
+    int taxaDiminuicaoPeixe=0;
 	
-	char lixo[7];
+	char lixo[8];
 	
 	//Para leitura do arquivo basta descomentar o bloco abaixo
 	
@@ -47,16 +47,12 @@ int main (int argc, char** argv)
 		
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
-    
 	
 	fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
 	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
-	int taxaPeixe = taxaDiminuicaoPeixe;
-	//Por algum motivo satanico a taxaDiminuicaoPeixe se perde na proxima linha
-	//então salvei em taxaPeixe
-	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
+	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta,	&taxaCrescimentoPlanta);
+	printf("%d\n",taxaDiminuicaoPeixe);
 	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
-	
 	
 	Ecossistema::inicializar(comprimento,altura,largura);
 	Desenho opengl(argc,argv,comprimento,altura,largura);
@@ -64,8 +60,7 @@ int main (int argc, char** argv)
     
     for (int i=0 ; i < qtdPedra; i++) new Pedra();
     for (int i=0 ; i < qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
-    //Sobre taxaPeixe leia linha 53
-	for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaPeixe);
+	for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
 	
 	glutMainLoop();
 }
