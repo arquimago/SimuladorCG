@@ -18,6 +18,7 @@ Posicionavel::Posicionavel(int id)
     this->localizacao.z = 0;
 }
 
+
 void Posicionavel::setPosicao(int x, int y, int z)
 {
     //seta posicao atual no cubo para nulo
@@ -30,7 +31,6 @@ void Posicionavel::setPosicao(int x, int y, int z)
     this->localizacao.z = z;
     //seta nova posicao no cubo
     Ecossistema::ocupar(localizacao.x, localizacao.y, localizacao.z,this->getId(), this);
-
 }
 
 void Posicionavel::agir()
@@ -54,7 +54,7 @@ void Posicionavel::posicionar()
 
 ///SERVIVO
 void SerVivo::explodir(){
-	
+
 	int id = this->getId();//1 planta, 2 peixe
 	int numero_filhotes=0;
 	int massa_filhotes=0;
@@ -71,8 +71,10 @@ void SerVivo::explodir(){
 	pai.y = (posicao_pai->y);
 	pai.z = (posicao_pai->z);
 	
+
 	this->morrer();
 	
+
 	massa_filhotes = (this->getMassa())/numero_filhotes;
 	int pos_x,pos_y,pos_z;
 	int total_vagas = 0;
@@ -111,11 +113,13 @@ void SerVivo::explodir(){
 			new Planta(this->getTaxa(),pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
 		}
 		else{
+
 			new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
 		}
 		filhotes[pos_x][pos_y][pos_z] = false;
 		    
 	}
+
 }
 
 int SerVivo::getTaxa()
@@ -182,7 +186,7 @@ posicao* Peixe::getDirecao()
 {return &this->direcao;}
 
 void Peixe::virar()
-{
+{	
     //seta direcoes aleatorias entre -1,0,1
     int x = 0,y = 0,z = 0;
     while (x == 0 && y == 0 && z == 0) //enquanto não possuir uma direção
@@ -236,6 +240,7 @@ void Peixe::agir()
 
 void Peixe::nadar()
 {
+
     posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
@@ -245,14 +250,16 @@ void Peixe::nadar()
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
     
 	this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
+
 }
 
 bool Peixe::morder(Posicionavel* alvo)
 {
+
+/*
 	if(this->getPosicao()->x == 0){
-		printf("peixe morto mordendo\n");
 		return false;
-	}	
+	}	*/
 	int mordida;
 	SerVivo* ser = (SerVivo*) alvo;
 	if(ser->getId()==1){
@@ -260,12 +267,15 @@ bool Peixe::morder(Posicionavel* alvo)
 	}else{
 		mordida = ((Peixe*) ser)->sangrar();
 	}
+
 	return this->aumentar(mordida);
 }
 
 void Peixe::fome()
 {
+
 	this->diminuir(this->getTaxa());
+
 }
 
 int Peixe::sangrar()
@@ -273,10 +283,12 @@ int Peixe::sangrar()
     int massa = this->getMassa();
     this->diminuir(massa);
     return massa;
+
 }
 
 Posicionavel** Peixe::verAFrente()
 {
+
 	posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
@@ -284,14 +296,11 @@ Posicionavel** Peixe::verAFrente()
     proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
     proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
-    return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
+	return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
 Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 {
-    this->localizacao.x = 0;
-    this->localizacao.y = 0;
-    this->localizacao.z = 0;
     this->virar();
     this->posicionar();
 }
@@ -300,23 +309,30 @@ Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxa
 {
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     
-	if(ocupante[2]!= NULL) //há peixe
+	if(ocupante[2]!= NULL)
 	{
-		//testes das massas
-        if (((Peixe*)ocupante[2])->getMassa() >= this->getMassa()){
+		if (((Peixe*)ocupante[2])->getMassa() >= this->getMassa())
+		{ 
 			((Peixe*)ocupante[2])->morder(this);
+			return;
 		}
         else{
-			this->morder(((Peixe*)ocupante[2]));
-		}   	
+			
+			int massa = ((Peixe*)ocupante[2])->getMassa();
+			((Peixe*)ocupante[2])->morrer();
+			this->virar();
+			this->setPosicao(x,y,z);
+			this->aumentar(massa);
+		}
 	}
-	else //se nao tem, seta a posicao
+	else
 	{
 		this->virar();
-        this->setPosicao(x,y,z);
+		this->setPosicao(x,y,z);
 	}
+	
 }
-
+		
 
 ///PLANTA
 

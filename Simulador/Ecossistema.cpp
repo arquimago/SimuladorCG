@@ -62,7 +62,12 @@ void Ecossistema::inicializar (int x, int y, int z)
 
 Posicionavel** Ecossistema::identificarOcupantes (int x, int y, int z)
 {	//printf("Ocupantes da posicao %d %d %d\n",x,y,z);
-	return aquario.dimensao[y].grid[x][z].ocupante;}
+	if (x<0 || y < 0 || z < 0)
+		printf("-------------------BUSCANDO LIMITE INFERIOR\n");
+	if (x>6 || y > 5 || z > 8)
+		printf(" ------------------BUSCANDO LIMITE SUPERIOR\n");		
+	return aquario.dimensao[y].grid[x][z].ocupante;
+}
 
 void Ecossistema::ocupar (int x, int y, int z,int i, Posicionavel* corpo)
 {	
