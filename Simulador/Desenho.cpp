@@ -16,6 +16,9 @@
 static Modelo *modeloGold, *modeloPedra,*modeloPlanta;
 static CCamera camera;
 
+int altura=3;  //y     0  2
+int largura=6; //z  0  5
+int comprimento=4;//x 0 3
 
 int main (int argc, char** argv)
 {
@@ -25,9 +28,6 @@ int main (int argc, char** argv)
 	int qtdPeixe=2;
     int qtdPedra=20;
     int qtdPlanta=2;
-    int altura=3;  //y     0  2
-    int largura=6; //z  0  5
-    int comprimento=4;//x 0 3
     int taxaCrescimentoPlanta=15;
     int taxaDiminuicaoPeixe=10;
 	
@@ -44,16 +44,20 @@ int main (int argc, char** argv)
 		
     //inicializar cubo
     //inicializar posicoes de pedras, plantas e peixes
-    Ecossistema::inicializar(comprimento,altura,largura);
-	Desenho opengl(argc,argv,comprimento,altura,largura);
+    
 	
 	fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
+	printf("%d %d %d\n",largura,altura, comprimento);
 	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
 	int taxaPeixe = taxaDiminuicaoPeixe;
 	//Por algum motivo satanico a taxaDiminuicaoPeixe se perde na proxima linha
 	//então salvei em taxaPeixe
 	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta, &taxaCrescimentoPlanta);
 	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
+	
+	
+	Ecossistema::inicializar(comprimento,altura,largura);
+	Desenho opengl(argc,argv,comprimento,altura,largura);
 	   
     
     for (int i=0 ; i < qtdPedra; i++) new Pedra();
@@ -81,6 +85,18 @@ Desenho::Desenho(int argc, char** argv,int x, int y, int z)
 
 void Desenho::init(int x, int y, int z)
 {
+	GLfloat luz0_pontual[] = {0.3, 0.5, 0.5, 1.0};
+    GLfloat luz0_difuso[] = {0.6, 0.6, 0.6, 1.0};
+    GLfloat luz0_especular[] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat luz0_ambiente[] = {0.1, 0.1, 0.1, 1.0};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, luz0_pontual);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, luz0_difuso);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, luz0_especular);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, luz0_ambiente);
+    
+    glEnable(GL_LIGHT0);
+	
 	glClearColor (0.0, 0.0, 0.0, 0.0);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel (GL_SMOOTH);
@@ -96,6 +112,7 @@ void Desenho::init(int x, int y, int z)
    
     //Para iniciar a câmera de lado é este bloco
 	camera.Mover( setVetor(-1*(y*z)/2, y/2+0.5, z/2+0.5 ));
+	//camera.Mover( setVetor(-3, 1, 1));
 			
 	//Para iniciar a câmera de cima é este bloco
 	//camera.Mover( setVetor(x/2+0.5, (x*z)/2, z/2+0.5 ));
@@ -110,6 +127,24 @@ void Desenho::display(void)
 	
 	glMatrixMode(GL_MODELVIEW);
 	camera.Renderizar();
+	
+	GLfloat posicao_luz[] = {comprimento/2+1, 2*altura+1, largura/2+1};
+	//GLfloat posicao_luz[] = {0, 0, 0};
+    glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
+   
+    GLfloat mat_diffuse[] = {1.0, 1.0, 1.0, 1.0};    
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_diffuse);
+    
+    glPushMatrix();
+    glTranslatef(posicao_luz[0],posicao_luz[1],posicao_luz[2]); 
+   
+    glEnable(GL_LIGHTING);
+    glColor3f (1.0, 1.0, 0.0);
+    glutSolidSphere(0.05,50,50);
+    glDisable(GL_LIGHTING);
+   
+    glPopMatrix();
  
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -178,7 +213,7 @@ void Desenho::display(void)
 	}
 	desenhar_agua(comprimento, altura, largura);
 	
-    Sleep(150);
+	Sleep(100);
 	
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -205,25 +240,22 @@ void Desenho::desenhar_eixos()
 void Desenho::desenhar_posicao (int x, int y, int z)
 {
 	Posicionavel** ocupantes = Ecossistema::identificarOcupantes(x,y,z);
-	Pedra* pedra = (Pedra*) ocupantes[0];
-	Planta* planta = (Planta*) ocupantes[1];
-	Peixe* peixe = (Peixe*) ocupantes[2];
 	
-	if (pedra != NULL)
+	if (ocupantes[0] != NULL)
 	{
 		desenhar_pedra(x, y, z);
 		return;
 	}
 	
-	if (planta != NULL)
+	if (ocupantes[1] != NULL)
 	{
-		desenhar_planta(planta, x , y-0.25 , z);
+		desenhar_planta(((Planta*) ocupantes[1]), x , y-0.25 , z);
 		
 	}
 	
-	if (peixe != NULL)
+	if (ocupantes[2] != NULL)
 	{
-		desenhar_peixe(peixe, x, y+0.25, z);
+		desenhar_peixe(((Peixe*) ocupantes[2]), x, y+0.25, z);
 	}
 }
 

@@ -47,7 +47,6 @@ void Posicionavel::posicionar()
 		sorteio_x = (rand() % limites->x) + 1;
 		sorteio_y = (rand() % limites->y) + 1;
         sorteio_z = (rand() % limites->z) + 1;
-		//printf("sorteio %d x = %d y = %d z = %d\n", i,sorteio_x,sorteio_y,sorteio_z);
     } while(Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[0]!=NULL ||
 	Ecossistema::identificarOcupantes(sorteio_x, sorteio_y, sorteio_z)[this->getId()]!=NULL);
     setPosicao(sorteio_x,sorteio_y,sorteio_z);
@@ -99,7 +98,6 @@ void SerVivo::explodir(){
 	if(total_vagas < numero_filhotes) numero_filhotes = total_vagas;
 	//se tiver menos vagas que filhotes, reduzo o numero de filhotes pro total de vagas, senão o proximo loop poderia ser infinito
 	//daria pra otimizar os sorteios com um vetor de ponteiros e tal, mas sem tempo pra otimizar agora.
-	printf("%s explodiu!\n %d filhotes\n",(id==1?"planta":"peixe"), numero_filhotes);
 	for(int i = 0; i < numero_filhotes; i++){
 		do{
 			pos_x = rand()%3;
@@ -211,9 +209,7 @@ void Peixe::agir()
 		//tem peixe
         //testes das massas
         if (((Peixe*) proximo[2])->getMassa() >= this->getMassa()){
-			//printf("sendo comido\n");
 			((Peixe*) proximo[2])->morder(this);
-			//peixe morreu, acaba!
 			return;
 		} else{
 			explodiu = this->morder(((Peixe*) proximo[2]));
@@ -245,7 +241,6 @@ void Peixe::nadar()
 bool Peixe::morder(Posicionavel* alvo)
 {
     int m;
-	printf("peixe comendo\n");
 	SerVivo* ser = (SerVivo*) alvo;
 	if(ser->getId()==1){
 		m = ((Planta*) ser)->sangrar();
@@ -293,24 +288,18 @@ Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxa
 {
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     
-	printf("colocando filhote de massa %d\n", this->getMassa());
-	printf("Posicao %d %d %d\n", x,y,z);
-	printf("filhote");
 	if(ocupante[2]!= NULL) //há peixe
 	{
 		//testes das massas
         if (((Peixe*)ocupante[2])->getMassa() >= this->getMassa()){
-			printf(" sendo comido\n");
 			((Peixe*)ocupante[2])->morder(this);
 		}
         else{
-			printf(" comendo\n");
 			this->morder(((Peixe*)ocupante[2]));
 		}   	
 	}
 	else //se nao tem, seta a posicao
 	{
-        printf(" virando\n");
 		this->virar();
         this->setPosicao(x,y,z);
 	}
@@ -325,19 +314,14 @@ Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000,1)
 
 Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,1)
 {
-	printf("Muda sendo ");
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
 	if(ocupante[1] != NULL) { //há planta, uma planta "come" a outra
-		printf("absorvida\n");
 		((Planta*)ocupante[1])->aumentar(massa);
 	} 
 	else { //se nao tem, seta a posicao
-		printf("plantada\n");
-		printf("%d %d %d\n", x,y,z);
 		this->setPosicao(x,y,z);
 	}
 }
-
 
 int Planta::sangrar()
 {

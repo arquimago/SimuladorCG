@@ -66,7 +66,6 @@ Posicionavel** Ecossistema::identificarOcupantes (int x, int y, int z)
 
 void Ecossistema::ocupar (int x, int y, int z,int i, Posicionavel* corpo)
 {	
-	if(x==-1||y==-1||z==-1||x==6||y==5||z==8) printf("fora do aquario\n");
 	aquario.dimensao[y].grid[x][z].ocupante[i] = corpo;
 }
 
