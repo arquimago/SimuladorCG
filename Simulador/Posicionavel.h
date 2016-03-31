@@ -53,7 +53,7 @@ class SerVivo: public Posicionavel
         //chama a fun��o morrer e aloca varios peixes menores no Cubo
 		void diminuir(int qtd);
 		// diminui massa em qtd pontos por fome/mordida. se a massa chegar a 0, chama a fun��o morrer
-		void aumentar(int qtd);
+		bool aumentar(int qtd);
 		// aumenta massa em qtd pontos por fome/mordida. se a massa chegar a maximo, chama a fun��o explodir
 		void morrer();
 		//tira referencia no cubo e coloca na posicao do limbo, 0,0,0
@@ -90,7 +90,7 @@ class Peixe: public SerVivo
         posicao* getDirecao();
 		void fome();
 		//chama a fun��o privada diminuir com a taxa de diminuição
-		void morder(Posicionavel*);
+		bool morder(Posicionavel*);
 		//chama metodo crescer do peixe de acordo com o retorno de sangrar do mordido
 		int sangrar();
 		//essa fun��o chama a fun��o morrer.

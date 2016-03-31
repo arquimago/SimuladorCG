@@ -64,8 +64,8 @@ void SerVivo::explodir(){
 	//if(id == 1) numero_filhotes = rand()%15+12;
 	//else numero_filhotes = rand()%14+13;
 	
-	if(id == 1) numero_filhotes = rand()%9+1;
-	else numero_filhotes = rand()%8+1;
+	if(id == 1) numero_filhotes = rand()%8+2;
+	else numero_filhotes = rand()%7+2;
 	
 	posicao pai;
 	pai.x = (posicao_pai->x);
@@ -99,6 +99,7 @@ void SerVivo::explodir(){
 	if(total_vagas < numero_filhotes) numero_filhotes = total_vagas;
 	//se tiver menos vagas que filhotes, reduzo o numero de filhotes pro total de vagas, senão o proximo loop poderia ser infinito
 	//daria pra otimizar os sorteios com um vetor de ponteiros e tal, mas sem tempo pra otimizar agora.
+	printf("%s explodiu!\n %d filhotes\n",(id==1?"planta":"peixe"), numero_filhotes);
 	for(int i = 0; i < numero_filhotes; i++){
 		do{
 			pos_x = rand()%3;
@@ -112,8 +113,6 @@ void SerVivo::explodir(){
 		    new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
-	
-	//delete this;
 }
 
 int SerVivo::getTaxa()
@@ -156,16 +155,18 @@ void SerVivo::diminuir(int massaPerdida)
 	}
     else {
 		this->morrer();
-		//delete this;
 	}
 }
 
-void SerVivo::aumentar(int massaGanha)
+bool SerVivo::aumentar(int massaGanha)
 {
+   bool explodiu = false;
    this->massa += massaGanha;
    if (this->massa > this->limite){
 		this->explodir();
+		explodiu = true;
    }
+   return explodiu;
 }
 
 ///PEIXE
@@ -190,6 +191,7 @@ void Peixe::virar()
 
 void Peixe::agir()
 {
+	bool explodiu = false;
 	this->setAgiu();
     Posicionavel** proximo = this->verAFrente();
 	
@@ -199,35 +201,32 @@ void Peixe::agir()
         //enquanto houver pedra
         //mudar de direção até achar direção viavel
         this->virar();
-			
         proximo = this->verAFrente();
-		//printf("virando?");
     }
 	
-    Planta* planta = (Planta*) proximo[1];
-    Peixe* peixe = (Peixe*) proximo[2];
     //não é pedra
-    this->nadar();
 	
-    if (peixe != NULL)
+    if (proximo[2] != NULL)
     {
-        //tem peixe
+		//tem peixe
         //testes das massas
-        if (peixe->getMassa() >= this->getMassa()){
-			peixe->morder(this);
+        if (((Peixe*) proximo[2])->getMassa() >= this->getMassa()){
+			//printf("sendo comido\n");
+			((Peixe*) proximo[2])->morder(this);
+			//peixe morreu, acaba!
+			return;
+		} else{
+			explodiu = this->morder(((Peixe*) proximo[2]));
 		}
-        else{
-			this->morder(peixe);
-		}
-    }
-    else if (planta != NULL){
+    } else if (((Planta*) proximo[1]) != NULL){
 		//nao tem peixe mas tem planta
-        
-		this->morder(planta);
-		
+		explodiu = this->morder(((Planta*) proximo[1]));
 	}
 	
-	this->fome();
+	if (!explodiu){
+		this->nadar();
+		this->fome();
+	}	
 }
 
 void Peixe::nadar()
@@ -239,19 +238,21 @@ void Peixe::nadar()
     proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
     proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
-
-    this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
+    
+	this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
-void Peixe::morder(Posicionavel* alvo)
+bool Peixe::morder(Posicionavel* alvo)
 {
-    SerVivo* ser = (SerVivo*) alvo;
+    int m;
+	printf("peixe comendo\n");
+	SerVivo* ser = (SerVivo*) alvo;
 	if(ser->getId()==1){
-		ser = (Planta*)ser;
-	}else {
-		ser = (Peixe*)ser;
+		m = ((Planta*) ser)->sangrar();
+	}else{
+		m = ((Peixe*) ser)->sangrar();
 	}
-    this->aumentar(ser->sangrar());
+	return this->aumentar(m);
 }
 
 void Peixe::fome()
@@ -292,18 +293,25 @@ Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxa
 {
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     
-	Peixe* peixe = (Peixe*)ocupante[2];
-	if(peixe != NULL) //há peixe
+	printf("colocando filhote de massa %d\n", this->getMassa());
+	printf("Posicao %d %d %d\n", x,y,z);
+	printf("filhote");
+	if(ocupante[2]!= NULL) //há peixe
 	{
 		//testes das massas
-        	if (peixe->getMassa() >= this->getMassa())
-            		peixe->morder(this);
-        	else
-            		this->morder(peixe);
+        if (((Peixe*)ocupante[2])->getMassa() >= this->getMassa()){
+			printf(" sendo comido\n");
+			((Peixe*)ocupante[2])->morder(this);
+		}
+        else{
+			printf(" comendo\n");
+			this->morder(((Peixe*)ocupante[2]));
+		}   	
 	}
 	else //se nao tem, seta a posicao
 	{
-        this->virar();
+        printf(" virando\n");
+		this->virar();
         this->setPosicao(x,y,z);
 	}
 }
@@ -317,13 +325,15 @@ Planta::Planta(int taxaInicial):SerVivo(150,taxaInicial,1000,1)
 
 Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,1)
 {
+	printf("Muda sendo ");
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
-    	Planta* planta = (Planta*)ocupante[1];
-	if(planta != NULL) { //há planta, uma planta "come" a outra
-		planta->aumentar(massa);
-		//delete this;
+	if(ocupante[1] != NULL) { //há planta, uma planta "come" a outra
+		printf("absorvida\n");
+		((Planta*)ocupante[1])->aumentar(massa);
 	} 
 	else { //se nao tem, seta a posicao
+		printf("plantada\n");
+		printf("%d %d %d\n", x,y,z);
 		this->setPosicao(x,y,z);
 	}
 }
@@ -331,14 +341,15 @@ Planta::Planta(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,ta
 
 int Planta::sangrar()
 {
-    int massaAtual = this->getMassa();
+	int massaAtual = this->getMassa();
     this->diminuir(75);
     //diminui massa
-    if (massaAtual >= 75)
-        return 75;
-    else
-        //retorna a quantidade restante da massa
-        return abs(massaAtual - 75);
+    if (massaAtual >= 75){
+		return 75;
+	}else{
+		//retorna a quantidade restante da massa
+		return abs(massaAtual - 75);
+	}	
 }
 
 void Planta::agir()

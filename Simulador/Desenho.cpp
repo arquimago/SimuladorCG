@@ -60,8 +60,8 @@ int main (int argc, char** argv)
     for (int i=0 ; i < qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
     //Sobre taxaPeixe leia linha 53
 	for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaPeixe);
-
-    glutMainLoop();
+	
+	glutMainLoop();
 }
 
 Desenho::Desenho(int argc, char** argv,int x, int y, int z)
@@ -120,7 +120,7 @@ void Desenho::display(void)
 	int comprimento = limites->x;
 	int altura = limites->y;
 	int largura = limites->z;
-	
+		
 	for (int k=1; k<=altura; k++)
         {
 			for (int j=1; j<=largura; j++)
@@ -140,6 +140,8 @@ void Desenho::display(void)
 									((Peixe*) ocupante[pos])->agir();
 								}
 							}
+							delete morto[2];
+							delete morto[1];
 										
 						}                      						 
                     }
@@ -353,7 +355,7 @@ void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
 
     glPushMatrix();
 		glTranslatef(x, y, z); //posicao
-		glScalef(50.0*escala, 50.0*escala, 50.0*escala); //escala peixe
+		glScalef(12.0*escala, 12.0*escala, 12.0*escala); //escala peixe
 		glColor4f (1.0, 1.0, 1.0, 1.0);
 		glRotatef(anguloX,1,0,0);
 		glRotatef(anguloY,0,1,0);

@@ -61,11 +61,13 @@ void Ecossistema::inicializar (int x, int y, int z)
 }
 
 Posicionavel** Ecossistema::identificarOcupantes (int x, int y, int z)
-{return aquario.dimensao[y].grid[x][z].ocupante;}
+{	//printf("Ocupantes da posicao %d %d %d\n",x,y,z);
+	return aquario.dimensao[y].grid[x][z].ocupante;}
 
 void Ecossistema::ocupar (int x, int y, int z,int i, Posicionavel* corpo)
-{
-    aquario.dimensao[y].grid[x][z].ocupante[i] = corpo;
+{	
+	if(x==-1||y==-1||z==-1||x==6||y==5||z==8) printf("fora do aquario\n");
+	aquario.dimensao[y].grid[x][z].ocupante[i] = corpo;
 }
 
 posicao* Ecossistema::getLimites()
