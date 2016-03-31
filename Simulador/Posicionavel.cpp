@@ -56,6 +56,8 @@ void Posicionavel::posicionar()
 void SerVivo::explodir(){
 	
 	int id = this->getId();//1 planta, 2 peixe
+	if (id == 2)
+		printf("peixe explodindo\n");
 	int numero_filhotes=0;
 	int massa_filhotes=0;
 	posicao* posicao_pai = this->getPosicao();
@@ -111,6 +113,8 @@ void SerVivo::explodir(){
 		    new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
+	if (id == 2)
+		printf("peixe explodiu\n");
 }
 
 int SerVivo::getTaxa()
@@ -143,7 +147,11 @@ void SerVivo::setAgiu(){
 
 void SerVivo::morrer()
 {
+	if (this->getId() == 2)
+		printf("peixe morrendo\n");
 	this->setPosicao(0,0,0);
+	if (this->getId() == 2)
+		printf("peixe morreu\n");
 }
 
 void SerVivo::diminuir(int massaPerdida)
@@ -216,10 +224,12 @@ void Peixe::agir()
 			printf("peixe parando de agir porque foi mordido\n");
 			return;
 		} else{
+			printf("peixe mordendo peixe\n");
 			explodiu = this->morder(((Peixe*) proximo[2]));
 		}
     } else if (((Planta*) proximo[1]) != NULL){
 		//nao tem peixe mas tem planta
+		printf("peixe mordendo planta\n");
 		explodiu = this->morder(((Planta*) proximo[1]));
 	}
 	
