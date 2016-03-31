@@ -56,8 +56,6 @@ void Posicionavel::posicionar()
 void SerVivo::explodir(){
 	
 	int id = this->getId();//1 planta, 2 peixe
-	if (id == 2)
-		printf("peixe explodindo\n");
 	int numero_filhotes=0;
 	int massa_filhotes=0;
 	posicao* posicao_pai = this->getPosicao();
@@ -115,8 +113,6 @@ void SerVivo::explodir(){
 		    new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
 		filhotes[pos_x][pos_y][pos_z] = false;
 	}
-	if (id == 2)
-		printf("peixe explodiu\n");
 }
 
 int SerVivo::getTaxa()
@@ -149,11 +145,7 @@ void SerVivo::setAgiu(){
 
 void SerVivo::morrer()
 {
-	if (this->getId() == 2)
-		printf("peixe morrendo\n");
 	this->setPosicao(0,0,0);
-	if (this->getId() == 2)
-		printf("peixe morreu\n");
 }
 
 void SerVivo::diminuir(int massaPerdida)
@@ -184,7 +176,6 @@ posicao* Peixe::getDirecao()
 
 void Peixe::virar()
 {
-	printf("peixe virando\n");
     //seta direcoes aleatorias entre -1,0,1
     int x = 0,y = 0,z = 0;
     while (x == 0 && y == 0 && z == 0) //enquanto não possuir uma direção
@@ -196,12 +187,10 @@ void Peixe::virar()
     this->direcao.x= x;
     this->direcao.y= y;
     this->direcao.z= z;
-    printf("peixe virou\n");
 }
 
 void Peixe::agir()
 {
-	printf("peixe agindo\n");
 	bool explodiu = false;
 	this->setAgiu();
     Posicionavel** proximo = this->verAFrente();
@@ -223,15 +212,12 @@ void Peixe::agir()
         //testes das massas
         if (((Peixe*) proximo[2])->getMassa() >= this->getMassa()){
 			((Peixe*) proximo[2])->morder(this);
-			printf("peixe parando de agir porque foi mordido\n");
 			return;
 		} else{
-			printf("peixe mordendo peixe\n");
 			explodiu = this->morder(((Peixe*) proximo[2]));
 		}
     } else if (((Planta*) proximo[1]) != NULL){
 		//nao tem peixe mas tem planta
-		printf("peixe mordendo planta\n");
 		explodiu = this->morder(((Planta*) proximo[1]));
 	}
 	
@@ -239,12 +225,10 @@ void Peixe::agir()
 		this->nadar();
 		this->fome();
 	}	
-	printf("peixe agiu\n");
 }
 
 void Peixe::nadar()
 {
-	printf("peixe nadando\n");
     posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
@@ -254,42 +238,34 @@ void Peixe::nadar()
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
     
 	this->setPosicao(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
-	printf("peixe nadou\n");
 }
 
 bool Peixe::morder(Posicionavel* alvo)
 {
-	printf("peixe mordendo\n");
-    int m;
+    int mordida;
 	SerVivo* ser = (SerVivo*) alvo;
 	if(ser->getId()==1){
-		m = ((Planta*) ser)->sangrar();
+		mordida = ((Planta*) ser)->sangrar();
 	}else{
-		m = ((Peixe*) ser)->sangrar();
+		mordida = ((Peixe*) ser)->sangrar();
 	}
-	printf("peixe mordeu\n");
-	return this->aumentar(m);
+	return this->aumentar(mordida);
 }
 
 void Peixe::fome()
 {
-	printf("inicio de fome de peixe\n");
 	this->diminuir(this->getTaxa());
-	printf("fim de fome de peixe\n");
 }
 
 int Peixe::sangrar()
 {
-	printf("peixe sangrando\n");
     int massa = this->getMassa();
     this->diminuir(massa);
-    printf("peixe sangrou\n");
     return massa;
 }
 
 Posicionavel** Peixe::verAFrente()
 {
-	printf("peixe vendo a frente\n");
 	posicao* direcaoAtual = this->getDirecao();
     posicao* posicaoAtual = this->getPosicao();
     posicao proximaPosicao;
@@ -297,7 +273,6 @@ Posicionavel** Peixe::verAFrente()
     proximaPosicao.x = posicaoAtual->x + direcaoAtual->x;
     proximaPosicao.y = posicaoAtual->y + direcaoAtual->y;
     proximaPosicao.z = posicaoAtual->z + direcaoAtual->z;
-printf("peixe viu a frente\n");
     return Ecossistema::identificarOcupantes(proximaPosicao.x,proximaPosicao.y,proximaPosicao.z);
 }
 
@@ -312,7 +287,6 @@ Peixe::Peixe(int taxaInicial):SerVivo(100,taxaInicial,1000,2)
 
 Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxaInicial,1000,2)
 {
-	printf("novo peixe de explosão nascendo\n");
 	Posicionavel** ocupante = Ecossistema::identificarOcupantes(x,y,z);
     
 	if(ocupante[2]!= NULL) //há peixe
@@ -330,7 +304,6 @@ Peixe::Peixe(int taxaInicial, int x, int y ,int z, int massa):SerVivo(massa,taxa
 		this->virar();
         this->setPosicao(x,y,z);
 	}
-	printf("peixe de explosão nasceu\n");
 }
 
 

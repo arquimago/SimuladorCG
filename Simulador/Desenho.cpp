@@ -47,7 +47,6 @@ int main (int argc, char** argv)
     
 	
 	fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
-	printf("%d %d %d\n",largura,altura, comprimento);
 	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
 	int taxaPeixe = taxaDiminuicaoPeixe;
 	//Por algum motivo satanico a taxaDiminuicaoPeixe se perde na proxima linha
@@ -103,7 +102,7 @@ void Desenho::init(int x, int y, int z)
 	
 	char *texturasPeixe[] = {NULL, NULL, (char*)"Texturas/GOLDFISH.bmp",(char*)"Texturas/Olho.bmp", NULL};
 	modeloPedra = Modelo::carregarObj((char*)"OBJs/rock.obj",(char*)"Texturas/rock.bmp");
-	modeloPlanta = Modelo::carregarObj((char*)"OBJs/alga.obj",(char*)"Texturas/alga.bmp");
+	modeloPlanta = Modelo::carregarObj((char*)"OBJs/alga2.obj",(char*)"Texturas/alga.bmp");
 	modeloGold = Modelo::carregarObj((char*)"OBJs/GOLDFISH.OBJ", texturasPeixe);
 	glDisable(GL_TEXTURE_2D);
    
@@ -167,22 +166,13 @@ void Desenho::display(void)
                     {
 						if (ocupante[pos] != NULL){
 							bool agiu = ((SerVivo*)ocupante[pos])->getAgiu();
-							//Posicionavel** morto = Ecossistema::identificarOcupantes(0,0,0);
 							if(!agiu){
 								if (pos == 1){
 									((Planta*) ocupante[pos])->agir();
 								} else {
-printf("____________________\n") ;
-									printf("inicio do turno de peixe\n");
 									((Peixe*) ocupante[pos])->agir();
-									printf("fim do turno de peixe\n");
-
-printf("____________________\n") ;
-														}
+								}
 							}
-							//delete morto[2];
-							//delete morto[1];
-										
 						}                      						 
                     }
                 }
@@ -218,7 +208,7 @@ printf("____________________\n") ;
 	}
 	desenhar_agua(comprimento, altura, largura);
 	
-	Sleep(100);
+	Sleep(150);
 	
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -254,7 +244,7 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	
 	if (ocupantes[1] != NULL)
 	{
-		desenhar_planta(((Planta*) ocupantes[1]), x , y-0.25 , z);
+		desenhar_planta(((Planta*) ocupantes[1]), x , y-0.5 , z);
 		
 	}
 	
@@ -339,7 +329,7 @@ void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
     float escala = (planta->getMassa())/1000.0;
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(0.8*escala, 0.8*escala, 0.8*escala);
+        glScalef(0.1*escala, 0.1*escala, 0.1*escala);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPlanta->desenhar();
 	glPopMatrix();
@@ -353,7 +343,6 @@ void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
     posicao* frente = peixe->getDirecao();
     
     float escala = (peixe->getMassa())/1000.0;
-	//printf("Posicao x = %.2f y = %.2f z = %.2f \n", x,y,z);
 	
 	int tabelaAngulos[3][3][3][3] = {
 		{
