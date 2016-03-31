@@ -13,9 +13,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-static Modelo *modeloGold, *modeloPedra,*modeloPlanta;
+static Modelo *modeloGold,*modeloPedra,*modeloPlanta;
 static CCamera camera;
 
+bool pausado = false;
+bool ehCamera = false;
+int creu=150;
 int altura=3;  //y     0  2
 int largura=6; //z  0  5
 int comprimento=4;//x 0 3
@@ -77,7 +80,8 @@ Desenho::Desenho(int argc, char** argv,int x, int y, int z)
 	
 	init(x,y,z);
 	
-	glutDisplayFunc(Desenho::display); 
+	glutDisplayFunc(Desenho::display);
+		
 	glutKeyboardFunc(Desenho::keyPressed);
 	glutReshapeFunc(Desenho::reshape);
 }
@@ -173,7 +177,7 @@ void Desenho::display(void)
 									((Peixe*) ocupante[pos])->agir();
 								}
 							}
-						}                      						 
+						}      	
                     }
                 }
             }
@@ -199,6 +203,13 @@ void Desenho::display(void)
         }
     }
 	
+	if(ehCamera){
+		Sleep(150);
+		ehCamera=false;
+	}else{
+		Sleep(creu);
+	}
+	
 	for (int k=1; k<=altura; k++){
 		for (int j=1; j<=largura; j++){
 			for (int i=1; i<=comprimento; i++){
@@ -207,8 +218,6 @@ void Desenho::display(void)
 		}
 	}
 	desenhar_agua(comprimento, altura, largura);
-	
-	Sleep(150);
 	
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -408,6 +417,7 @@ void Desenho::reshape(int w, int h)
 void Desenho::keyPressed (unsigned char key, int x, int y)
 {
 	key = tolower(key);
+	ehCamera=true;
 	switch (key) 
 	{
 	case 'a':	//roda pra esquerda
@@ -439,6 +449,32 @@ void Desenho::keyPressed (unsigned char key, int x, int y)
 		break;
 	case 'k':      //passinho pra baixo
 		camera.Mover(setVetor(0.0,-0.3,0.0));
+		break;
+	case '1':
+		printf("Velocidade 1\n");
+		creu = 1000;
+		break;
+	case '2':
+		printf("Velocidade 2\n");
+		creu = 650;
+		break;
+	case '3':
+		printf("Velocidade 3\n");
+		creu = 150;
+		break;
+	case '4':
+		printf("Velocidade 4\n");
+		creu = 40;
+		break;
+	case '5':
+		printf("Velocidade 5\n");
+		creu = 1;
+		break;
+	case '0':
+		pausado = !pausado;
+		break;
+	case 27:
+		exit(42);
 		break;
 	}
 	glutPostRedisplay();

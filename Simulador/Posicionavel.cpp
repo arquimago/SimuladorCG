@@ -81,7 +81,7 @@ void SerVivo::explodir(){
 	for(int i = 0;i < 3;i++){
 		for(int j = 0;j < 3;j++){
 			for(int k = 0;k < 3;k++){
-                if(pai.x==0||pai.y==0||pai.z==0) break;
+                //if(pai.x==0||pai.y==0||pai.z==0) break;
 				posicao filho;
 				filho.x = (pai.x)+i-1;
 				filho.y = (pai.y)+j-1;
@@ -107,11 +107,14 @@ void SerVivo::explodir(){
 			pos_z = rand()%3;
 		}while(!filhotes[pos_x][pos_y][pos_z]);
 
-		if(id == 1)
-            new Planta(this->getTaxa(),pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
-		else
-		    new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
+		if(id == 1){
+			new Planta(this->getTaxa(),pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
+		}
+		else{
+			new Peixe(this->getTaxa(), pai.x+pos_x-1, pai.y+pos_y-1, pai.z+pos_z-1, massa_filhotes);
+		}
 		filhotes[pos_x][pos_y][pos_z] = false;
+		    
 	}
 }
 
@@ -160,13 +163,17 @@ void SerVivo::diminuir(int massaPerdida)
 
 bool SerVivo::aumentar(int massaGanha)
 {
-   bool explodiu = false;
-   this->massa += massaGanha;
-   if (this->massa > this->limite){
+	posicao* pos;
+	if (this->getId()==2) {
+		pos = this->getPosicao();
+	}
+	bool explodiu = false;
+	this->massa += massaGanha;
+	if (this->massa > this->limite){
 		this->explodir();
 		explodiu = true;
-   }
-   return explodiu;
+	}
+	return explodiu;
 }
 
 ///PEIXE
@@ -206,7 +213,7 @@ void Peixe::agir()
 	
     //não é pedra
 	
-    if (proximo[2] != NULL)
+    if (proximo[2]!=NULL)
     {
 		//tem peixe
         //testes das massas
@@ -242,7 +249,11 @@ void Peixe::nadar()
 
 bool Peixe::morder(Posicionavel* alvo)
 {
-    int mordida;
+	if(this->getPosicao()->x == 0){
+		printf("peixe morto mordendo\n");
+		return false;
+	}	
+	int mordida;
 	SerVivo* ser = (SerVivo*) alvo;
 	if(ser->getId()==1){
 		mordida = ((Planta*) ser)->sangrar();
