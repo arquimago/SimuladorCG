@@ -172,9 +172,9 @@ void Desenho::display(void)
 								if (pos == 1){
 									((Planta*) ocupante[pos])->agir();
 								} else {
-									printf("peixe agindo");
+									printf("inicio do turno de peixe");
 									((Peixe*) ocupante[pos])->agir();
-									printf("peixe agiu");
+									printf("fim do turno de peixe");
 								}
 							}
 							delete morto[2];
