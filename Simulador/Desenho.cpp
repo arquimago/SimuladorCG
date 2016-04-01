@@ -1,69 +1,14 @@
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-#include <stdlib.h>
-#include <math.h>
-#include <ctype.h>
 #include "Desenho.h"
-#include "Ecossistema.cpp"
 #include "carregadorObj.cpp"
 #include "CCamera.cpp"
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
 
 static Modelo *modeloGold,*modeloPedra,*modeloPlanta;
 static CCamera camera;
-
 bool pausado = false;
 bool ehCamera = false;
 int velocidade=150;
-int altura=0;  //y     0  2
-int largura=0; //z  0  5
-int comprimento=0;//x 0 3
 
-int main (int argc, char** argv)
-{
-	srand((unsigned)time(NULL));
-	srand(rand());
-		
-	int qtdPeixe=0;
-    int qtdPedra=0;
-    int qtdPlanta=0;
-    int taxaCrescimentoPlanta=0;
-    int taxaDiminuicaoPeixe=0;
-	
-	char lixo[8];
-	
-	//Para leitura do arquivo basta descomentar o bloco abaixo
-	
-	FILE *arqInput;
-	arqInput=fopen(argv[1],"r");
-	if(arqInput==NULL){
-		printf("Falha no acesso ao arquivo");
-		exit(42);
-	}
-		
-    //inicializar cubo
-    //inicializar posicoes de pedras, plantas e peixes
-	
-	fscanf(arqInput," %d %d %d\n",&largura,&altura,&comprimento);
-	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPeixe,&taxaDiminuicaoPeixe);
-	fscanf(arqInput," %s %d %d\n",&lixo,&qtdPlanta,	&taxaCrescimentoPlanta);
-	printf("%d\n",taxaDiminuicaoPeixe);
-	fscanf(arqInput," %s %d",&lixo,&qtdPedra);
-	
-	Ecossistema::inicializar(comprimento,altura,largura);
-	Desenho opengl(argc,argv,comprimento,altura,largura);
-	   
-    
-    for (int i=0 ; i < qtdPedra; i++) new Pedra();
-    for (int i=0 ; i < qtdPlanta; i++) new Planta(taxaCrescimentoPlanta);
-	for (int i=0 ; i < qtdPeixe; i++) new Peixe(taxaDiminuicaoPeixe);
-	
-	glutMainLoop();
-}
+
 
 Desenho::Desenho(int argc, char** argv,int x, int y, int z)
 {
@@ -120,6 +65,12 @@ void Desenho::init(int x, int y, int z)
 
 void Desenho::display(void)
 {
+	posicao* limites = Ecossistema::getLimites();
+	int comprimento = limites->x;
+	int altura = limites->y;
+	int largura = limites->z;
+	
+	
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	
@@ -149,10 +100,7 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	
-	posicao* limites = Ecossistema::getLimites();
-	int comprimento = limites->x;
-	int altura = limites->y;
-	int largura = limites->z;
+
 		
 	for (int k=1; k<=altura; k++)
         {

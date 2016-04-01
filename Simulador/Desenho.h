@@ -1,6 +1,16 @@
 #ifndef DESENHO_H
 #define DESENHO_H
-#include "Posicionavel.cpp"
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include "Ecossistema.h"
+
+#include <unistd.h>
+#include <string.h>
+
 
 class Desenho
 {

@@ -1,6 +1,12 @@
-#include "Posicionavel.h"
 #ifndef ECOSSISTEMA_H
 #define ECOSSISTEMA_H
+
+#include "Posicionavel.h"
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctime>
+
 
 
 // definicoes para montar o cubo
