@@ -170,6 +170,10 @@ bool SerVivo::aumentar(int massaGanha)
 	return explodiu;
 }
 
+void SerVivo::agir()
+{
+	//sobrecarregavel
+}
 ///PEIXE
 
 posicao* Peixe::getDirecao()

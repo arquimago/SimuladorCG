@@ -19,6 +19,7 @@ typedef struct {
 	 // 2 é peixe
 } unidade;
 
+
 //plano formado pelas unidades minimas
 typedef struct {
 	 unidade** grid;
@@ -30,6 +31,10 @@ typedef struct {
 	  plano* dimensao;
 	  //vetor de [y] planos
 } cubo;
+
+
+
+
 
 // a ideia dessa classe é armazenar o "mapa" do ecossistema, localizações com ponteiros para os respectivos objetos
 class Ecossistema
