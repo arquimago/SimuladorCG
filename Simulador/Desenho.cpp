@@ -386,7 +386,7 @@ void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
     glPushMatrix();
 		glTranslatef(x, y, z); //posicao
 		glScalef(12.0*escala, 12.0*escala, 12.0*escala); //escala peixe
-		glColor4f (1.0, 1.0, 1.0, 1.0);
+		glColor4f (1.0, 1.0  * escala, 1.0, 1.0); //altera a cor de acordo com a escala
 		glRotatef(anguloX,1,0,0);
 		glRotatef(anguloY,0,1,0);
 		glRotatef(anguloZ,0,0,1);
