@@ -18,7 +18,7 @@ static CCamera camera;
 
 bool pausado = false;
 bool ehCamera = false;
-int creu=150;
+int velocidade=150;
 int altura=0;  //y     0  2
 int largura=0; //z  0  5
 int comprimento=0;//x 0 3
@@ -202,7 +202,7 @@ void Desenho::display(void)
 		Sleep(150);
 		ehCamera=false;
 	}else{
-		Sleep(creu);
+		Sleep(velocidade);
 	}
 	
 	for (int k=1; k<=altura; k++){
@@ -447,23 +447,23 @@ void Desenho::keyPressed (unsigned char key, int x, int y)
 		break;
 	case '1':
 		printf("Velocidade 1\n");
-		creu = 1000;
+		velocidade = 1000;
 		break;
 	case '2':
 		printf("Velocidade 2\n");
-		creu = 650;
+		velocidade = 650;
 		break;
 	case '3':
 		printf("Velocidade 3\n");
-		creu = 150;
+		velocidade = 150;
 		break;
 	case '4':
 		printf("Velocidade 4\n");
-		creu = 40;
+		velocidade = 40;
 		break;
 	case '5':
 		printf("Velocidade 5\n");
-		creu = 1;
+		velocidade = 1;
 		break;
 	case '0':
 		pausado = !pausado;
