@@ -1,7 +1,5 @@
 #ifndef CCAMERA_H
 #define CCAMERA_H
-
-
 #include "GL/glut.h"
 #include "math.h"
 
@@ -24,15 +22,15 @@ class CCamera
 		CCamera();			//inits the values (Position: (0|0|0) Target: (0|0|-1) )
 		void Renderizar ();	//executes some glRotates and a glTranslate command
 							//Note: You should call glLoadIdentity before using Render
-		void Mover ( Vetor3d Direction );
-		void RotacaoX ( GLfloat Angle );
-		void RotacaoY ( GLfloat Angle );
-		void ParaFrente ( GLfloat Distance );
-		void ParaOLado ( GLfloat Distance );
+		void Mover (Vetor3d Direction);
+		void RotacaoX (GLfloat Angle);
+		void RotacaoY (GLfloat Angle);
+		void ParaFrente (GLfloat Distance);
+		void ParaOLado (GLfloat Distance);
 		Vetor3d GetPosicao();
 };
 
-Vetor3d setVetor ( GLfloat x, GLfloat y, GLfloat z );
-void somaVetorAVetor ( Vetor3d * Dst, Vetor3d * V2);
+Vetor3d setVetor (GLfloat x, GLfloat y, GLfloat z);
+void somaVetorAVetor (Vetor3d * Dst, Vetor3d * V2);
 
 #endif

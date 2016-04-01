@@ -54,7 +54,7 @@ void Desenho::init(int x, int y, int z)
 	camera.RotacaoY(-90.0);
    
     //Para iniciar a câmera de lado é este bloco
-	camera.Mover( setVetor(-1*(y*z)/2, y/2+0.5, z/2+0.5 ));
+	camera.Mover( setVetor(-1 * (y * z) / 2, y / 2 + 0.5, z / 2 + 0.5 ));
 	//camera.Mover( setVetor(-3, 1, 1));
 			
 	//Para iniciar a câmera de cima é este bloco
@@ -77,7 +77,7 @@ void Desenho::display(void)
 	glMatrixMode(GL_MODELVIEW);
 	camera.Renderizar();
 	
-	GLfloat posicao_luz[] = {comprimento/2+1, 2*altura+1, largura/2+1};
+	GLfloat posicao_luz[] = {comprimento / 2 + 1, 2 * altura + 1, largura / 2 + 1};
 	//GLfloat posicao_luz[] = {0, 0, 0};
     glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz);
    
@@ -102,11 +102,11 @@ void Desenho::display(void)
 	
 
 		
-	for (int k=1; k<=altura; k++)
+	for (int k = 1; k<=altura; k++)
         {
-			for (int j=1; j<=largura; j++)
+			for (int j = 1; j<=largura; j++)
             {
-                for (int i=1; i<=comprimento; i++)
+                for (int i = 1; i<=comprimento; i++)
                 {
 					Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
                     for (int pos = 1; pos < 3; pos++)
@@ -126,11 +126,11 @@ void Desenho::display(void)
             }
         }
 	
-	for (int k=1; k<=altura; k++)
+	for (int k = 1; k<=altura; k++)
     {
-		for (int j=1; j<=largura; j++)
+		for (int j = 1; j<=largura; j++)
         {
-            for (int i=1; i<=comprimento; i++)
+            for (int i = 1; i<=comprimento; i++)
             {
 				Posicionavel** ocupante = Ecossistema::identificarOcupantes(i,k,j);
                 for (int pos = 1; pos < 3; pos++)
@@ -153,9 +153,9 @@ void Desenho::display(void)
 		Sleep(velocidade);
 	}
 	
-	for (int k=1; k<=altura; k++){
-		for (int j=1; j<=largura; j++){
-			for (int i=1; i<=comprimento; i++){
+	for (int k = 1; k<=altura; k++){
+		for (int j = 1; j<=largura; j++){
+			for (int i = 1; i<=comprimento; i++){
 				desenhar_posicao(i,k,j);
 			}
 		}
@@ -196,13 +196,13 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	
 	if (ocupantes[1] != NULL)
 	{
-		desenhar_planta(((Planta*) ocupantes[1]), x , y-0.5 , z);
+		desenhar_planta(((Planta*) ocupantes[1]), x , y - 0.5 , z);
 		
 	}
 	
 	if (ocupantes[2] != NULL)
 	{
-		desenhar_peixe(((Peixe*) ocupantes[2]), x, y+0.25, z);
+		desenhar_peixe(((Peixe*) ocupantes[2]), x, y + 0.25, z); //coloca peixe e planta um pouco afastados na unidade do cubo
 	}
 }
 
@@ -213,49 +213,49 @@ void Desenho::desenhar_agua(int x, int y, int z)
 		//baixo
     glBegin(GL_POLYGON);
 		glVertex3f(0.5, 0.5, 0.5);
-        glVertex3f(0.5, 0.5, z+0.5);
-        glVertex3f(x+0.5, 0.5, z+0.5);
+        glVertex3f(0.5, 0.5, z + 0.5);
+        glVertex3f(x+0.5, 0.5, z + 0.5);
         glVertex3f(x+0.5, 0.5, 0.5);
 	glEnd();
 	
 		//cima
 	glBegin(GL_POLYGON);
-		glVertex3f(0.5, y+0.5, 0.5);
-        glVertex3f(x+0.5, y+0.5, 0.5);
-        glVertex3f(x+0.5, y+0.5, z+0.5);
-        glVertex3f(0.5, y+0.5, z+0.5);
+		glVertex3f(0.5, y + 0.5, 0.5);
+        glVertex3f(x + 0.5, y + 0.5, 0.5);
+        glVertex3f(x + 0.5, y + 0.5, z + 0.5);
+        glVertex3f(0.5, y + 0.5, z + 0.5);
 	glEnd();
 	
 		//esquerda
 	glBegin(GL_POLYGON);
 		glVertex3f(0.5, 0.5, 0.5);
-		glVertex3f(0.5, 0.5, z+0.5);
-		glVertex3f(0.5, y+0.5, z+0.5);
-        glVertex3f(0.5, y+0.5, 0.5);
+		glVertex3f(0.5, 0.5, z + 0.5);
+		glVertex3f(0.5, y + 0.5, z + 0.5);
+        glVertex3f(0.5, y + 0.5, 0.5);
     glEnd();    
 	
 		//frente
 	glBegin(GL_POLYGON);
-		glVertex3f(0.5, 0.5, z+0.5);
-        glVertex3f(x+0.5, 0.5, z+0.5);
-        glVertex3f(x+0.5, y+0.5, z+0.5);
-        glVertex3f(0.5, y+0.5, z+0.5);
+		glVertex3f(0.5, 0.5, z + 0.5);
+        glVertex3f(x + 0.5, 0.5, z + 0.5);
+        glVertex3f(x + 0.5, y + 0.5, z + 0.5);
+        glVertex3f(0.5, y + 0.5, z + 0.5);
 	glEnd();
 		
 		//direita
 	glBegin(GL_POLYGON);
-		glVertex3f(x+0.5, 0.5, 0.5);
-        glVertex3f(x+0.5, 0.5, z+0.5);
-        glVertex3f(x+0.5, y+0.5, z+0.5);
-        glVertex3f(x+0.5, y+0.5, 0.5);
+		glVertex3f(x + 0.5, 0.5, 0.5);
+        glVertex3f(x + 0.5, 0.5, z + 0.5);
+        glVertex3f(x + 0.5, y + 0.5, z + 0.5);
+        glVertex3f(x + 0.5, y + 0.5, 0.5);
 	glEnd();
 		
 		//trás
 	glBegin(GL_POLYGON);
 		glVertex3f(0.5, 0.5, 0.5);
-        glVertex3f(x+0.5, 0.5, 0.5);
-        glVertex3f(x+0.5, y+0.5, 0.5);
-		glVertex3f(0.5, y+0.5, 0.5);
+        glVertex3f(x + 0.5, 0.5, 0.5);
+        glVertex3f(x + 0.5, y + 0.5, 0.5);
+		glVertex3f(0.5, y + 0.5, 0.5);
         
 	glEnd();
 }
@@ -281,7 +281,7 @@ void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
     float escala = (planta->getMassa())/1000.0;
 	glPushMatrix();
         glTranslatef(x, y, z);
-        glScalef(0.1*escala, 0.1*escala, 0.1*escala);
+        glScalef(0.1 * escala, 0.1 * escala, 0.1 * escala);
         glColor4f (1.0, 1.0, 1.0, 1.0);
         modeloPlanta->desenhar();
 	glPopMatrix();
@@ -294,7 +294,7 @@ void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
 {
     posicao* frente = peixe->getDirecao();
     
-    float escala = (peixe->getMassa())/1000.0;
+    float escala = (peixe->getMassa()) / 1000.0; //escala entre 0 e 1
 	
 	int tabelaAngulos[3][3][3][3] = {
 		{
@@ -324,16 +324,16 @@ void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
 		}
 	};
 	
-	int anguloX = tabelaAngulos[frente->x+1][frente->y+1][frente->z+1][0];
-	int anguloY = tabelaAngulos[frente->x+1][frente->y+1][frente->z+1][1];
-	int anguloZ = tabelaAngulos[frente->x+1][frente->y+1][frente->z+1][2];
+	int anguloX = tabelaAngulos[frente->x + 1][frente->y + 1][frente->z + 1][0];
+	int anguloY = tabelaAngulos[frente->x + 1][frente->y + 1][frente->z + 1][1];
+	int anguloZ = tabelaAngulos[frente->x + 1][frente->y + 1][frente->z + 1][2];
     
 	
 	glEnable(GL_TEXTURE_2D);
 
     glPushMatrix();
 		glTranslatef(x, y, z); //posicao
-		glScalef(12.0*escala, 12.0*escala, 12.0*escala); //escala peixe
+		glScalef(12.0 * escala, 12.0 * escala, 12.0 * escala); //escala peixe
 		glColor4f (1.0,1.0 - escala, 1.0 - escala, 1.0); //altera a cor de acordo com a escala
 		glRotatef(anguloX,1,0,0);
 		glRotatef(anguloY,0,1,0);

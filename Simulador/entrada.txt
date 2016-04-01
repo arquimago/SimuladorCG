@@ -1,4 +1,4 @@
 4 3 6
 peixes 10 10
 plantas 30 15
-pedras 0
+pedras 20

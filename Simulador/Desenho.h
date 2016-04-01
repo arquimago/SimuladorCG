@@ -7,21 +7,12 @@
 #include <math.h>
 #include <ctype.h>
 #include "Ecossistema.h"
-
 #include <unistd.h>
 #include <string.h>
 
 
 class Desenho
 {
-    public:
-        Desenho(int argc, char** argv,int x, int y, int z);
-        void desenhar();
-        //~Desenho();
-
-    protected:
-
-    
 	private:
 		static void init(int x, int y, int z);
 		static void display(void);
@@ -34,6 +25,13 @@ class Desenho
 		static void desenhar_pedra(int x, int y, int z);
 		static void desenhar_planta(Planta* planta, float x, float y, float z);
 		static void desenhar_peixe(Peixe* peixe, float x, float y, float z);
+	
+	
+    protected:
+		
+	public:
+        Desenho(int argc, char** argv,int x, int y, int z);
+        void desenhar();
 };
 
 #endif // DESENHO_H

@@ -1,6 +1,6 @@
 #include "CCamera.h"
 
-Vetor3d setVetor ( GLfloat x, GLfloat y, GLfloat z )
+Vetor3d setVetor (GLfloat x, GLfloat y, GLfloat z)
 {
 	Vetor3d temp;
 	temp.x = x;
@@ -9,7 +9,7 @@ Vetor3d setVetor ( GLfloat x, GLfloat y, GLfloat z )
 	return temp;
 }
 
-void somaVetorAVetor ( Vetor3d * destino, Vetor3d * v)
+void somaVetorAVetor (Vetor3d * destino, Vetor3d * v)
 {
 	destino->x += v->x;
 	destino->y += v->y;
@@ -18,7 +18,6 @@ void somaVetorAVetor ( Vetor3d * destino, Vetor3d * v)
 
 CCamera::CCamera()
 {
-	//Padroes OpenGL ?
 	Posicao = setVetor(0.0, 0.0, 0.0);
 	Direcao = setVetor(0.0 ,0.0, -1.0);
 	DirecaoMudou = false;
@@ -34,13 +33,13 @@ void CCamera::GetDirecao()
 {
 	Vetor3d Passo1, Passo2;
 	//Normaliza o angulo Y e rotaciona em volta do eixo Y:
-	Passo1.x = cos( (RotatedY + 90.0) * M_PI/180);
-	Passo1.z = -sin( (RotatedY + 90.0) * M_PI/180);
+	Passo1.x = cos( (RotatedY + 90.0) * M_PI / 180);
+	Passo1.z = -sin( (RotatedY + 90.0) * M_PI / 180);
 	//Normaliza o angulo Y e rotaciona em volta do eixo X:
-	double cosX = cos (RotatedX * M_PI/180);
+	double cosX = cos (RotatedX * M_PI / 180);
 	Passo2.x = Passo1.x * cosX;
 	Passo2.z = Passo1.z * cosX;
-	Passo2.y = sin(RotatedX * M_PI/180);
+	Passo2.y = sin(RotatedX * M_PI / 180);
 	//Sem rotação em Z
 	Direcao = Passo2;
 	//Todos os valores de direção ficam entre -1 e 1
@@ -52,19 +51,19 @@ void CCamera::Mover (Vetor3d direcao)
 	somaVetorAVetor(&Posicao, &direcao);
 }
 
-void CCamera::RotacaoX ( GLfloat angulo )
+void CCamera::RotacaoX (GLfloat angulo)
 {
 	RotatedX += angulo;
 	DirecaoMudou = true;
 }
 	
-void CCamera::RotacaoY ( GLfloat angulo )
+void CCamera::RotacaoY (GLfloat angulo)
 {
 	RotatedY += angulo;
 	DirecaoMudou = true;
 }
 
-void CCamera::ParaFrente ( GLfloat distancia )
+void CCamera::ParaFrente (GLfloat distancia)
 {
 	if (DirecaoMudou) GetDirecao();
 	Vetor3d VetorMovimento;
@@ -73,17 +72,17 @@ void CCamera::ParaFrente ( GLfloat distancia )
 	VetorMovimento.x = Direcao.x * -distancia;
 	VetorMovimento.y = Direcao.y * -distancia;
 	VetorMovimento.z = Direcao.z * -distancia;
-	somaVetorAVetor(&Posicao, &VetorMovimento );
+	somaVetorAVetor(&Posicao, &VetorMovimento);
 }
 
-void CCamera::ParaOLado ( GLfloat distancia )
+void CCamera::ParaOLado (GLfloat distancia)
 {
 	if (DirecaoMudou) GetDirecao();
 	Vetor3d VetorMovimento;
 	VetorMovimento.z = -Direcao.x * -distancia;
 	VetorMovimento.y = 0.0;
 	VetorMovimento.x = Direcao.z * -distancia;
-	somaVetorAVetor(&Posicao, &VetorMovimento );
+	somaVetorAVetor(&Posicao, &VetorMovimento);
 }
 
 void CCamera::Renderizar()
@@ -91,5 +90,5 @@ void CCamera::Renderizar()
 	glRotatef(-RotatedX , 1.0, 0.0, 0.0);
 	glRotatef(-RotatedY , 0.0, 1.0, 0.0);
 	glRotatef(-RotatedZ , 0.0, 0.0, 1.0);
-	glTranslatef( -Posicao.x, -Posicao.y, -Posicao.z );
+	glTranslatef(-Posicao.x, -Posicao.y, -Posicao.z);
 }

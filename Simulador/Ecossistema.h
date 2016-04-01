@@ -40,11 +40,10 @@ class Ecossistema
 	public:
 	    static posicao* getLimites();
 		static void inicializar (int x, int y, int z);
-		// grid = new unidade [x,z];   dimensao = new plano [y];
 		//inicializar tudo como nulo
         // arredores de pedra
 		static Posicionavel** identificarOcupantes (int x, int y, int z);
-		// retorna quem ocupa o local   retorna null se não tem
+		// retorna quem ocupa o local
         static void ocupar(int x,int y, int z, int i,Posicionavel* corpo);
         //seta posicionavel no cubo
 };
