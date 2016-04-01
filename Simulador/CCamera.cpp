@@ -33,20 +33,22 @@ Vetor3d CCamera::GetPosicao(){
 void CCamera::GetDirecao()
 {
 	Vetor3d Passo1, Passo2;
-	//Rotaciona em volta do eixo Y:
+	//Normaliza o angulo Y e rotaciona em volta do eixo Y:
 	Passo1.x = cos( (RotatedY + 90.0) * M_PI/180);
 	Passo1.z = -sin( (RotatedY + 90.0) * M_PI/180);
-	//Rotaciona em volta do eixo X:
+	//Normaliza o angulo Y e rotaciona em volta do eixo X:
 	double cosX = cos (RotatedX * M_PI/180);
 	Passo2.x = Passo1.x * cosX;
 	Passo2.z = Passo1.z * cosX;
 	Passo2.y = sin(RotatedX * M_PI/180);
 	//Sem rotação em Z
 	Direcao = Passo2;
+	//Todos os valores de direção ficam entre -1 e 1
 }
 
 void CCamera::Mover (Vetor3d direcao)
 {
+	//soma o vetor direção ao vetor posição
 	somaVetorAVetor(&Posicao, &direcao);
 }
 
@@ -66,6 +68,8 @@ void CCamera::ParaFrente ( GLfloat distancia )
 {
 	if (DirecaoMudou) GetDirecao();
 	Vetor3d VetorMovimento;
+	/*multiplica a distância pelo vetor direção que possui
+	valores entre -1 e 1 e soma esse vetor ao vetor posição*/
 	VetorMovimento.x = Direcao.x * -distancia;
 	VetorMovimento.y = Direcao.y * -distancia;
 	VetorMovimento.z = Direcao.z * -distancia;
@@ -82,7 +86,7 @@ void CCamera::ParaOLado ( GLfloat distancia )
 	somaVetorAVetor(&Posicao, &VetorMovimento );
 }
 
-void CCamera::Renderizar( )
+void CCamera::Renderizar()
 {
 	glRotatef(-RotatedX , 1.0, 0.0, 0.0);
 	glRotatef(-RotatedY , 0.0, 1.0, 0.0);
