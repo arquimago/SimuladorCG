@@ -8,8 +8,6 @@ bool pausado = false;
 bool ehCamera = false;
 int velocidade=150;
 
-
-
 Desenho::Desenho(int argc, char** argv,int x, int y, int z)
 {
 	glutInit(&argc, argv);
@@ -100,8 +98,29 @@ void Desenho::display(void)
 	
 	desenhar_eixos();
 	
+	logica_simulador(altura,largura,comprimento);
+	
+	if(ehCamera){
+		Sleep(150);
+		ehCamera=false;
+	}else{
+		Sleep(velocidade);
+	}
+	
+	for (int k = 1; k<=altura; k++){
+		for (int j = 1; j<=largura; j++){
+			for (int i = 1; i<=comprimento; i++){
+				desenhar_posicao(i,k,j);
+			}
+		}
+	}
+	desenhar_agua(comprimento, altura, largura);
+	
+	glutSwapBuffers();
+	glutPostRedisplay();
+}
 
-		
+void Desenho::logica_simulador(int altura,int largura,int comprimento){
 	for (int k = 1; k<=altura; k++)
         {
 			for (int j = 1; j<=largura; j++)
@@ -145,25 +164,6 @@ void Desenho::display(void)
             }
         }
     }
-	
-	if(ehCamera){
-		Sleep(150);
-		ehCamera=false;
-	}else{
-		Sleep(velocidade);
-	}
-	
-	for (int k = 1; k<=altura; k++){
-		for (int j = 1; j<=largura; j++){
-			for (int i = 1; i<=comprimento; i++){
-				desenhar_posicao(i,k,j);
-			}
-		}
-	}
-	desenhar_agua(comprimento, altura, largura);
-	
-	glutSwapBuffers();
-	glutPostRedisplay();
 }
 
 void Desenho::desenhar_eixos()
@@ -196,13 +196,15 @@ void Desenho::desenhar_posicao (int x, int y, int z)
 	
 	if (ocupantes[1] != NULL)
 	{
+		/*diminuo Y de 0.5 para a planta nascer na base do cubo,
+		podendo surgir na superfície da pedra*/
 		desenhar_planta(((Planta*) ocupantes[1]), x , y - 0.5 , z);
-		
 	}
 	
 	if (ocupantes[2] != NULL)
 	{
-		desenhar_peixe(((Peixe*) ocupantes[2]), x, y + 0.25, z); //coloca peixe e planta um pouco afastados na unidade do cubo
+		//soma-se 0.25 ao valor de Y para afastar o peixe do centro do cubo
+		desenhar_peixe(((Peixe*) ocupantes[2]), x, y + 0.25, z);
 	}
 }
 

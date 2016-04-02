@@ -25,7 +25,7 @@ class Desenho
 		static void desenhar_pedra(int x, int y, int z);
 		static void desenhar_planta(Planta* planta, float x, float y, float z);
 		static void desenhar_peixe(Peixe* peixe, float x, float y, float z);
-	
+		static void logica_simulador(int altura,int largura,int comprimento);
 	
     protected:
 		
