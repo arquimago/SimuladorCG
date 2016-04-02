@@ -1,5 +1,23 @@
-g++ ARQUIVO_FONTE.cpp -o EXECUTAVEL.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
+Para compilar o projeto usamos o comando
 
-g++ desenho.cpp -o desenho.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
+$ g++ main.cpp desenho.cpp posicionavel.cpp ecossistema.cpp -o desenho.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
 
-g++ main.cpp desenho.cpp posicionavel.cpp ecossistema.cpp -o desenho.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
+
+Os comandos do programa são os seguintes:
+
+W - faz a câmera ir  pra frente.
+S - faz a câmera ir para trás.
+A - gira a câmera em torno de seu eixo Y para a esquerda
+D - gira a câmera em torno de seu eixo Y para a direita
+Q - gira a câmera em torno de seu eixo X para frente
+E - gira a câmera em torno de seu eixo X para trás
+I - faz a câmera subir
+K - faz a câmera descer
+J - faz a câmera caminhar para o lado esquerdo
+L - faz a câmera caminhar para o lado esquerdo
+ESC - finaliza o programa
+1 - redesenha a tela a cada 1 segundo
+2 - redesenha a tela a cada 650 milisegundos
+3 - redesenha a tela a cada 150 milisegundos
+4 - redesenha a tela a cada 40 milisegundos
+5 - redesenha a tela a cada 1 milisegundo

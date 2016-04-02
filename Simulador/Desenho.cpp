@@ -120,7 +120,8 @@ void Desenho::display(void)
 	glutPostRedisplay();
 }
 
-void Desenho::logica_simulador(int altura,int largura,int comprimento){
+void Desenho::logica_simulador(int altura,int largura,int comprimento)
+{
 	for (int k = 1; k<=altura; k++)
         {
 			for (int j = 1; j<=largura; j++)
@@ -290,7 +291,6 @@ void Desenho::desenhar_planta(Planta* planta, float x, float y, float z)
 	 
 	glDisable(GL_TEXTURE_2D);
 }
-
 
 void Desenho::desenhar_peixe(Peixe* peixe, float x, float y, float z)
 {
