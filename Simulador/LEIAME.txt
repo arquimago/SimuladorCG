@@ -1,7 +1,10 @@
-Para compilar o projeto usamos o comando
+Para compilar o projeto no windows usamos o comando
 
-$ g++ main.cpp desenho.cpp posicionavel.cpp ecossistema.cpp -o desenho.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
+> g++ main.cpp desenho.cpp posicionavel.cpp ecossistema.cpp -o desenho.exe -lopengl32 -lfreeglut -lopengl32 -lwinmm -lgdi32 -lglu32
 
+No linux
+
+$ g++ -o desenho main.cpp desenho.cpp posicionavel.cpp ecossistema.cpp -lGL -lGLU -lglut
 
 Os comandos do programa são os seguintes:
 
@@ -21,3 +24,7 @@ ESC - finaliza o programa
 3 - redesenha a tela a cada 150 milisegundos
 4 - redesenha a tela a cada 40 milisegundos
 5 - redesenha a tela a cada 1 milisegundo
+
+Para iniciar o programa basta chamar o executável seguido da entrada conforme especificado.
+
+
